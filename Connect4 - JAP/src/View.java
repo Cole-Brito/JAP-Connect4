@@ -12,6 +12,7 @@ public class View extends JFrame {
 		super("Connect 4");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		//690 x 430 was what was on our draft but seems small now
 		setMinimumSize(new Dimension(690,430));
 		pack();
 		setVisible(true);
