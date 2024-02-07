@@ -55,9 +55,12 @@ public class View extends JFrame {
 	private void generateTileGrid(JPanel content, GridBagConstraints c) {
 		//Grid of buttons 
 		JButton[][] buttons =  new JButton[6][7];
+		Dimension buttonSize = new Dimension(52, 52);
+		
 			for (int i = 0; i < 6; i++) {
 				for (int j = 0; j < 7; j++) {
 					buttons[i][j] = new JButton("Btn " + i + "-" + j);
+					buttons[i][j].setPreferredSize(buttonSize);
 					c.gridx = j;
 					c.gridy = i;
 					content.add(buttons[i][j], c);
