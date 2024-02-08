@@ -1,13 +1,16 @@
+import view.MainWindow;
+
 /**
  * 
  * @author Cole Brito
  *
  */
+
 public class Connect4 {
 
 	public static void main(String[] args) {
 		
-		View view = new View();
+		MainWindow view = new MainWindow();
 		view.setVisible(true);
 		
 

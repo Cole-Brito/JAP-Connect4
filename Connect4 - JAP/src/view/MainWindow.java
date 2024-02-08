@@ -1,14 +1,16 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class View extends JFrame {
+public class MainWindow extends JFrame {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8215973777232473220L;
 
-	View() {
+	public MainWindow() {
 		super("Connect 4");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -17,11 +19,30 @@ public class View extends JFrame {
 		pack();
 		setVisible(true);
 		
+		//Adding the menu bar to the window
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		//Menu items
+		JMenu fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		JMenu gameMenu = new JMenu("Game");
+		menuBar.add(gameMenu);
+		JMenu networkMenu = new JMenu("Network");
+		menuBar.add(networkMenu);
+		JMenu langMenu = new JMenu("Language");
+		menuBar.add(langMenu);
+		JMenu helpMenu = new JMenu("Help");
+		menuBar.add(helpMenu);
+		JMenu viewMenu = new JMenu("View");
+		menuBar.add(viewMenu);
+		
 		JPanel content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		add(content);
 		
 		generateTileGrid(content, c);
+		
 		/*
 		 * Buttons to test gridbaglayout
 		 */
@@ -47,7 +68,7 @@ public class View extends JFrame {
 //		c.gridy = 1;
 //		content.add(bTest4, c);
 		
-	} //end of view
+	} //end of main window
 	
 	/*
 	 * Note: Just made this for practice really, we were going do mouse events
@@ -55,16 +76,15 @@ public class View extends JFrame {
 	 */
 	private void generateTileGrid(JPanel content, GridBagConstraints c) {
 		//Grid of buttons 
-		JButton[][] buttons =  new JButton[6][7];
-		Dimension buttonSize = new Dimension(52, 52);
+		JLabel[][] tile = new JLabel[6][7];
+		ImageIcon emptyTile = new ImageIcon(getClass().getResource("/Connect4Assets/emptyTile.png"));	
 		
 			for (int i = 0; i < 6; i++) {
 				for (int j = 0; j < 7; j++) {
-					buttons[i][j] = new JButton("Btn " + i + "-" + j);
-					buttons[i][j].setPreferredSize(buttonSize);
+					tile[i][j] = new JLabel(emptyTile);
 					c.gridx = j;
 					c.gridy = i;
-					content.add(buttons[i][j], c);
+					content.add(tile[i][j], c);
 				}
 			}
 	}
