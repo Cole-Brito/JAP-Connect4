@@ -1,7 +1,13 @@
+/**
+ * The purpose of this class is to hold the JFrame that will hold all subsequent
+ * containers and menu options
+ * Authors: Cole Brito, Paul Squires 
+ * Professor: 
+ * Last Modified:
+ * Algonquin College CET-CS
+ */
 package view;
-
 import javax.swing.*;
-
 import java.awt.*;
 /**
  * 
@@ -14,6 +20,9 @@ public class MainWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -8215973777232473220L;
+	/**
+	 * 
+	 */
 	public MainWindow() {
 		super("Connect 4");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,7 +44,6 @@ public class MainWindow extends JFrame {
 		content.setBackground(baseBlue);
 		
 		add(content);
-		
 		Gameboard gameboard = new Gameboard();
 		gameboard.generateTileGrid(content, c);
 	} //end of main window
@@ -53,8 +61,8 @@ public class MainWindow extends JFrame {
 		JMenu fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		JMenuItem saveItem = new JMenuItem("Save", null);
-		JMenuItem loadItem = new JMenuItem("Load", null);
 		fileMenu.add(saveItem);
+		JMenuItem loadItem = new JMenuItem("Load", null);
 		fileMenu.add(loadItem);
 		
 		JMenu gameMenu = new JMenu("Game");
@@ -63,6 +71,8 @@ public class MainWindow extends JFrame {
 		gameMenu.add(restartItem);
 		JMenuItem playerItem = new JMenuItem("Player List", null);
 		gameMenu.add(playerItem);
+		JMenuItem modeItem = new JMenuItem("Gamemode", null);
+		gameMenu.add(modeItem);
 		
 		JMenu networkMenu = new JMenu("Network");
 		menuBar.add(networkMenu);
@@ -93,6 +103,17 @@ public class MainWindow extends JFrame {
 		viewMenu.add(themeItem);
 		JMenuItem accessItem = new JMenuItem("Accessablity", null);
 		viewMenu.add(accessItem);
+		
+		//Setting Mnemonics
+		fileMenu.setMnemonic('F');
+		gameMenu.setMnemonic('G');
+		langMenu.setMnemonic('L');
+		viewMenu.setMnemonic('V');
+		helpMenu.setMnemonic('H');
+		networkMenu.setMnemonic('N');
+		
+//		loadItem.addActionListener();
+		
 	}
 	
 }

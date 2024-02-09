@@ -13,6 +13,7 @@ public class Connect4 {
 		MainWindow view = new MainWindow();
 		view.setVisible(true);
 		
+		
 
 	}
 
