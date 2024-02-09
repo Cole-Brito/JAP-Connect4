@@ -1,15 +1,19 @@
 package view;
 
 import javax.swing.*;
-import java.awt.*;
 
+import java.awt.*;
+/**
+ * 
+ * @author Cole Brito
+ *
+ */
 public class MainWindow extends JFrame {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8215973777232473220L;
-
 	public MainWindow() {
 		super("Connect 4");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -18,75 +22,77 @@ public class MainWindow extends JFrame {
 		setMinimumSize(new Dimension(690,430));
 		pack();
 		setVisible(true);
+		//Creating the menu bar
+		generateMenuBar();
+		//Used for content bg
+		Color baseBlue = new Color(159, 181, 218);
 		
+		//Used for panels that display game info (chat box, game info box, turn signifier)
+		//Color infoBlue = new Color(190, 205, 230); 
+		
+		JPanel content = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		content.setBackground(baseBlue);
+		
+		add(content);
+		
+		Gameboard gameboard = new Gameboard();
+		gameboard.generateTileGrid(content, c);
+	} //end of main window
+
+	
+	/**
+	 * Method to create the menu bar and its items 
+	 */
+	private void generateMenuBar() {
 		//Adding the menu bar to the window
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		//Menu items
+		//MenuBar items
 		JMenu fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
+		JMenuItem saveItem = new JMenuItem("Save", null);
+		JMenuItem loadItem = new JMenuItem("Load", null);
+		fileMenu.add(saveItem);
+		fileMenu.add(loadItem);
+		
 		JMenu gameMenu = new JMenu("Game");
 		menuBar.add(gameMenu);
+		JMenuItem restartItem = new JMenuItem("Restart", null);
+		gameMenu.add(restartItem);
+		JMenuItem playerItem = new JMenuItem("Player List", null);
+		gameMenu.add(playerItem);
+		
 		JMenu networkMenu = new JMenu("Network");
 		menuBar.add(networkMenu);
+		JMenuItem hostItem = new JMenuItem("Host", null);
+		networkMenu.add(hostItem);
+		JMenuItem connectItem = new JMenuItem("Connect", null);
+		networkMenu.add(connectItem);
+		JMenuItem disconnectItem = new JMenuItem("Disconnect", null);
+		networkMenu.add(disconnectItem);
+		
 		JMenu langMenu = new JMenu("Language");
 		menuBar.add(langMenu);
+		JMenuItem englishItem = new JMenuItem("English", null);
+		langMenu.add(englishItem);
+		JMenuItem frenchItem = new JMenuItem("French", null);
+		langMenu.add(frenchItem);
+		
 		JMenu helpMenu = new JMenu("Help");
 		menuBar.add(helpMenu);
+		JMenuItem controlsItem = new JMenuItem("How to Play", null);
+		helpMenu.add(controlsItem);
+		JMenuItem aboutItem = new JMenuItem("About", null);
+		helpMenu.add(aboutItem);
+		
 		JMenu viewMenu = new JMenu("View");
 		menuBar.add(viewMenu);
-		
-		JPanel content = new JPanel(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		add(content);
-		
-		generateTileGrid(content, c);
-		
-		/*
-		 * Buttons to test gridbaglayout
-		 */
-//		JButton bTest1, bTest2, bTest3, bTest4;
-//		
-//		bTest1 = new JButton("btn1");
-//		c.gridx = 0;
-//		c.gridy = 0;
-//		content.add(bTest1, c);
-//		
-//		bTest2 = new JButton("btn2");
-//		c.gridx = 1;
-//		c.gridy = 3;
-//		content.add(bTest2, c);
-//		
-//		bTest3 = new JButton("btn3");
-//		c.gridx = 2;
-//		c.gridy = 2;
-//		content.add(bTest3, c);
-//		
-//		bTest4 = new JButton("btn4");
-//		c.gridx = 3;
-//		c.gridy = 1;
-//		content.add(bTest4, c);
-		
-	} //end of main window
-	
-	/*
-	 * Note: Just made this for practice really, we were going do mouse events
-	 * for the play space. Will change this to display the tiles instead
-	 */
-	private void generateTileGrid(JPanel content, GridBagConstraints c) {
-		//Grid of buttons 
-		JLabel[][] tile = new JLabel[6][7];
-		ImageIcon emptyTile = new ImageIcon(getClass().getResource("/Connect4Assets/emptyTile.png"));	
-		
-			for (int i = 0; i < 6; i++) {
-				for (int j = 0; j < 7; j++) {
-					tile[i][j] = new JLabel(emptyTile);
-					c.gridx = j;
-					c.gridy = i;
-					content.add(tile[i][j], c);
-				}
-			}
+		JMenuItem themeItem = new JMenuItem("Theme", null);
+		viewMenu.add(themeItem);
+		JMenuItem accessItem = new JMenuItem("Accessablity", null);
+		viewMenu.add(accessItem);
 	}
 	
 }
