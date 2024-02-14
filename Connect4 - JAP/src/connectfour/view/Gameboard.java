@@ -1,4 +1,4 @@
-package view;
+package connectfour.view;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import javax.swing.*;
@@ -16,7 +16,7 @@ public class Gameboard {
 	 * @param content - The panels this is being added to
 	 * @param c - the constrains from the gridbagLayout
 	 */
-	public void generateTileGrid(JPanel content, GridBagConstraints c) {
+	protected void generateTileGrid(JPanel content, GridBagConstraints c) {
 		//Grid of buttons 	
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
 			for (int i = 0; i < 6; i++) {

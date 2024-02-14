@@ -1,4 +1,4 @@
-import view.MainWindow;
+import connectfour.view.MainWindow;
 
 /**
  * 

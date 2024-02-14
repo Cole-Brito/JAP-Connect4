@@ -6,7 +6,7 @@
  * Last Modified:
  * Algonquin College CET-CS
  */
-package view;
+package connectfour.view;
 import javax.swing.*;
 import java.awt.*;
 /**
@@ -42,10 +42,12 @@ public class MainWindow extends JFrame {
 		JPanel content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		content.setBackground(baseBlue);
-		
 		add(content);
 		Gameboard gameboard = new Gameboard();
 		gameboard.generateTileGrid(content, c);
+		GameInfo gi = new GameInfo(c);
+		content.add(gi);
+		
 	} //end of main window
 
 	
@@ -57,14 +59,16 @@ public class MainWindow extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		//MenuBar items
+		//Creating MenuBar items
+		
+		//File menu and options
 		JMenu fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		JMenuItem saveItem = new JMenuItem("Save", null);
 		fileMenu.add(saveItem);
 		JMenuItem loadItem = new JMenuItem("Load", null);
 		fileMenu.add(loadItem);
-		
+		//Game menu and options
 		JMenu gameMenu = new JMenu("Game");
 		menuBar.add(gameMenu);
 		JMenuItem restartItem = new JMenuItem("Restart", null);
@@ -73,7 +77,7 @@ public class MainWindow extends JFrame {
 		gameMenu.add(playerItem);
 		JMenuItem modeItem = new JMenuItem("Gamemode", null);
 		gameMenu.add(modeItem);
-		
+		//Network menu and options
 		JMenu networkMenu = new JMenu("Network");
 		menuBar.add(networkMenu);
 		JMenuItem hostItem = new JMenuItem("Host", null);
@@ -82,21 +86,21 @@ public class MainWindow extends JFrame {
 		networkMenu.add(connectItem);
 		JMenuItem disconnectItem = new JMenuItem("Disconnect", null);
 		networkMenu.add(disconnectItem);
-		
+		//Language menu and options
 		JMenu langMenu = new JMenu("Language");
 		menuBar.add(langMenu);
 		JMenuItem englishItem = new JMenuItem("English", null);
 		langMenu.add(englishItem);
 		JMenuItem frenchItem = new JMenuItem("French", null);
 		langMenu.add(frenchItem);
-		
+		//Help menu and options
 		JMenu helpMenu = new JMenu("Help");
 		menuBar.add(helpMenu);
 		JMenuItem controlsItem = new JMenuItem("How to Play", null);
 		helpMenu.add(controlsItem);
 		JMenuItem aboutItem = new JMenuItem("About", null);
 		helpMenu.add(aboutItem);
-		
+		//View menu and options
 		JMenu viewMenu = new JMenu("View");
 		menuBar.add(viewMenu);
 		JMenuItem themeItem = new JMenuItem("Theme", null);
