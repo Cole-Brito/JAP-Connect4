@@ -83,8 +83,9 @@ public class ChatBoxContentPane extends JPanel {
 		//TODO: TextPane doesn't seem to use background color
 		chatHistoryPanel.setBackground(uiBackgroundMed);
 		add(chatHistoryPanel, BorderLayout.CENTER);
-/**End Region*/
 		
+		
+		//TODO: Move TextInput panel to a separate class, have chat and gameInfo panels controlled by one layout
 		JPanel textInputPanel = new JPanel();
 		var textPanelLayout = new FlowLayout();//new BoxLayout(textInputPanel, BoxLayout.Y_AXIS);
 		textPanelLayout.setAlignment(FlowLayout.CENTER);
