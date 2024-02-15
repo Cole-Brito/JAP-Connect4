@@ -45,7 +45,7 @@ public class MainWindow extends JFrame {
 		add(content);
 		Gameboard gameboard = new Gameboard();
 		gameboard.generateTileGrid(content, c);
-		GameInfo gi = new GameInfo(c);
+		GameInfo gi = new GameInfo();
 		content.add(gi);
 		
 		
