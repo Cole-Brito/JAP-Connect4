@@ -17,9 +17,10 @@ import java.awt.*;
 public class MainWindow extends JFrame {
 
 	/**
-	 * 
+	 * Serial Version UID, used to compare class versions when deserializing
 	 */
-	private static final long serialVersionUID = -8215973777232473220L;
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */
@@ -29,8 +30,6 @@ public class MainWindow extends JFrame {
 		
 		//690 x 430 was what was on our draft but seems small now
 		setMinimumSize(new Dimension(690,430));
-		pack();
-		setVisible(true);
 		//Creating the menu bar
 		generateMenuBar();
 		//Used for content bg
@@ -39,14 +38,50 @@ public class MainWindow extends JFrame {
 		//Used for panels that display game info (chat box, game info box, turn signifier)
 		//Color infoBlue = new Color(190, 205, 230); 
 		
-		JPanel content = new JPanel(new GridBagLayout());
+		JPanel content = new JPanel(new FlowLayout());
+		this.add(content);
+		
+		var mainBoardPanel = new JPanel(new BorderLayout());
+		content.add(mainBoardPanel);
+		
+		// Add GameBoard panel to content panel
+		JPanel gridPanel = new JPanel(new GridBagLayout());
+		gridPanel.setPreferredSize(new Dimension(472, 402));
 		GridBagConstraints c = new GridBagConstraints();
-		content.setBackground(baseBlue);
-		add(content);
+		gridPanel.setBackground(baseBlue);
+		mainBoardPanel.add(gridPanel, BorderLayout.CENTER);
 		Gameboard gameboard = new Gameboard();
-		gameboard.generateTileGrid(content, c);
-		GameInfo gi = new GameInfo(c);
-		content.add(gi);
+		gameboard.generateTileGrid(gridPanel, c);
+		
+		//var boardLabelPanel = Box.createHorizontalBox();
+		var boardLabelPanel = new JPanel(new FlowLayout());
+		var leftLabel = new JPanel();
+		leftLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		leftLabel.setPreferredSize(new Dimension(182, 46));
+		leftLabel.setBackground(baseBlue);
+		var rightLabel = new JPanel();
+		rightLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		rightLabel.setPreferredSize(new Dimension(182, 46));
+		rightLabel.setBackground(baseBlue);
+		//boardLabelPanel.setMaximumSize(new Dimension(182*2, 60));
+		boardLabelPanel.add(leftLabel);
+		boardLabelPanel.add(rightLabel);
+		mainBoardPanel.add(boardLabelPanel, BorderLayout.NORTH);
+		
+		// Add Chat panel to content panel
+		var rightPanelGroup = Box.createVerticalBox();
+		var gameInfoPanel = new JPanel();
+		gameInfoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		gameInfoPanel.setPreferredSize(new Dimension(218, 100));
+		rightPanelGroup.add(gameInfoPanel);
+		var chatPanel = new ChatBoxContentPane();
+		rightPanelGroup.add(chatPanel);
+		content.add(rightPanelGroup);
+		
+		//GameInfo gi = new GameInfo(c);
+		//content.add(gi);
+		setVisible(true);
+		pack();
 		
 	} //end of main window
 
