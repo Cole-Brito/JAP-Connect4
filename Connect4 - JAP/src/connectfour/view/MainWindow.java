@@ -48,6 +48,8 @@ public class MainWindow extends JFrame {
 		GameInfo gi = new GameInfo(c);
 		content.add(gi);
 		
+		
+		
 	} //end of main window
 
 	
