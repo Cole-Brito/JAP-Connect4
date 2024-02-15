@@ -17,9 +17,10 @@ import java.awt.*;
 public class MainWindow extends JFrame {
 
 	/**
-	 * 
+	 * Serial Version UID, used to compare class versions when deserializing
 	 */
-	private static final long serialVersionUID = -8215973777232473220L;
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */
@@ -29,8 +30,6 @@ public class MainWindow extends JFrame {
 		
 		//690 x 430 was what was on our draft but seems small now
 		setMinimumSize(new Dimension(690,430));
-		pack();
-		setVisible(true);
 		//Creating the menu bar
 		generateMenuBar();
 		//Used for content bg
@@ -39,14 +38,63 @@ public class MainWindow extends JFrame {
 		//Used for panels that display game info (chat box, game info box, turn signifier)
 		//Color infoBlue = new Color(190, 205, 230); 
 		
-		JPanel content = new JPanel(new GridBagLayout());
+		JPanel content = new JPanel(new FlowLayout());
+		this.add(content);
+		
+		var mainBoardPanel = new JPanel(new BorderLayout());
+		content.add(mainBoardPanel);
+		
+		// Add GameBoard panel to content panel
+		JPanel gridPanel = new JPanel(new GridBagLayout());
+		gridPanel.setPreferredSize(new Dimension(472, 402));
+		//gridPanel.setMaximumSize(new Dimension(472, 402));
 		GridBagConstraints c = new GridBagConstraints();
-		content.setBackground(baseBlue);
-		add(content);
+		gridPanel.setBackground(baseBlue);
+		mainBoardPanel.add(gridPanel, BorderLayout.CENTER);
 		Gameboard gameboard = new Gameboard();
+
 		gameboard.generateTileGrid(content, c);
 		GameInfo gi = new GameInfo();
 		content.add(gi);
+
+		gameboard.generateTileGrid(gridPanel, c);
+		
+		//var boardLabelPanel = Box.createHorizontalBox();
+		var boardLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 23));
+		boardLabelPanel.setBackground(baseBlue);
+		//boardLabelPanel.setMaximumSize(new Dimension(182*2, 60));
+		var leftLabelPanel = new JPanel();
+		leftLabelPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		leftLabelPanel.setPreferredSize(new Dimension(182, 46));
+		leftLabelPanel.setBackground(baseBlue);
+		var leftLabel = new JLabel("Connect 4!", JLabel.CENTER);
+		leftLabel.setFont(new Font("arial", Font.ITALIC, 24));
+		leftLabelPanel.add(leftLabel);
+		var rightLabelPanel = new JPanel();
+		rightLabelPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		rightLabelPanel.setPreferredSize(new Dimension(182, 46));
+		rightLabelPanel.setBackground(baseBlue);
+		var rightLabel = new JLabel("Player1's Turn", JLabel.CENTER);
+		rightLabel.setFont(new Font("arial", Font.ITALIC, 24));
+		rightLabelPanel.add(rightLabel);		
+		boardLabelPanel.add(leftLabelPanel);
+		boardLabelPanel.add(rightLabelPanel);
+		mainBoardPanel.add(boardLabelPanel, BorderLayout.NORTH);
+		
+		// Add Chat panel to content panel
+		var rightPanelGroup = Box.createVerticalBox();
+		var gameInfoPanel = new JPanel();
+		gameInfoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		gameInfoPanel.setPreferredSize(new Dimension(218, 100));
+		rightPanelGroup.add(gameInfoPanel);
+		var chatPanel = new ChatBoxContentPane();
+		rightPanelGroup.add(chatPanel);
+		content.add(rightPanelGroup);
+		
+		//GameInfo gi = new GameInfo(c);
+		//content.add(gi);
+		setVisible(true);
+		pack();
 		
 		
 		
