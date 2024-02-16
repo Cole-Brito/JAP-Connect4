@@ -1,1 +1,5 @@
 /bin/
+/labs-jar.err
+/labs-jar.out
+/labs-javac.err
+/labs-javadoc.err
