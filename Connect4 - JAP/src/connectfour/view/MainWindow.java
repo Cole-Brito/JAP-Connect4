@@ -38,15 +38,16 @@ public class MainWindow extends JFrame {
 		//Used for panels that display game info (chat box, game info box, turn signifier)
 		//Color infoBlue = new Color(190, 205, 230); 
 		
-		JPanel content = new JPanel(new FlowLayout());
+		JPanel content = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.add(content);
 		
 		var mainBoardPanel = new JPanel(new BorderLayout());
+		mainBoardPanel.setPreferredSize(new Dimension(472, 400));
+		mainBoardPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		content.add(mainBoardPanel);
 		
 		// Add GameBoard panel to content panel
 		JPanel gridPanel = new JPanel(new GridBagLayout());
-		gridPanel.setPreferredSize(new Dimension(472, 402));
 		//gridPanel.setMaximumSize(new Dimension(472, 402));
 		GridBagConstraints c = new GridBagConstraints();
 		gridPanel.setBackground(baseBlue);
@@ -56,7 +57,7 @@ public class MainWindow extends JFrame {
 		
 		
 		//var boardLabelPanel = Box.createHorizontalBox();
-		var boardLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 23));
+		var boardLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
 		boardLabelPanel.setBackground(baseBlue);
 		//boardLabelPanel.setMaximumSize(new Dimension(182*2, 60));
 		var leftLabelPanel = new JPanel();
@@ -79,9 +80,10 @@ public class MainWindow extends JFrame {
 		
 		// Add Chat panel to content panel
 		var rightPanelGroup = Box.createVerticalBox();
+		//rightLabelPanel.setPreferredSize(new Dimension(218, 400));
 		var gameInfoPanel = new JPanel();
 		gameInfoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		gameInfoPanel.setPreferredSize(new Dimension(218, 100));
+		gameInfoPanel.setPreferredSize(new Dimension(216, 98));
 		rightPanelGroup.add(gameInfoPanel);
 		var chatPanel = new ChatBoxContentPane();
 		rightPanelGroup.add(chatPanel);

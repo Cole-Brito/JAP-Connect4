@@ -12,8 +12,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
@@ -66,11 +68,12 @@ public class ChatBoxContentPane extends JPanel {
 		super();
 		LayoutManager layout = new BorderLayout();
 		this.setLayout(layout);
-		this.setPreferredSize(new Dimension(220, 309));
+		//this.setPreferredSize(new Dimension(220, 309));
 				
 
 		JPanel chatHistoryPanel = new JPanel();
-		chatHistoryPanel.setPreferredSize(new Dimension(218, 248));
+		//chatHistoryPanel.setPreferredSize(new Dimension(218, 246));
+		chatHistoryPanel.setPreferredSize(new Dimension(216, 246));
 		chatHistoryPanel.setBackground(uiBackgroundLight);
 		chatHistoryPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		
@@ -86,19 +89,16 @@ public class ChatBoxContentPane extends JPanel {
 		
 		
 		//TODO: Move TextInput panel to a separate class, have chat and gameInfo panels controlled by one layout
-		JPanel textInputPanel = new JPanel();
-		var textPanelLayout = new FlowLayout();//new BoxLayout(textInputPanel, BoxLayout.Y_AXIS);
-		textPanelLayout.setAlignment(FlowLayout.CENTER);
-		textInputPanel.setLayout(textPanelLayout);
-		textInputPanel.setMinimumSize(new Dimension(218, 57));
-		textInputPanel.setPreferredSize(new Dimension(218, 57));
+		JPanel textInputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 15));
+		//textInputPanel.setMinimumSize(new Dimension(218, 55));
+		textInputPanel.setPreferredSize(new Dimension(216, 55));
 		textInputPanel.setBackground(uiBackgroundLight);
 		textInputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		//textInputPanel.setAlignmentX(CENTER_ALIGNMENT);
 		
 		var inputFieldBox = Box.createHorizontalBox();
 		inputTextField = new JTextField();
-		inputTextField.setMaximumSize(new Dimension(155, 20));
+		//inputTextField.setMaximumSize(new Dimension(155, 20));
 		inputTextField.setPreferredSize(new Dimension(155, 20));
 		//inputTextField.setAlignmentX(0.5f);
 		//inputTextField.setAlignmentY(CENTER_ALIGNMENT);
@@ -108,7 +108,9 @@ public class ChatBoxContentPane extends JPanel {
 		
 		
 		JButton sendButton = new JButton("Send");
-		sendButton.setMaximumSize(new Dimension(80,20));
+		sendButton.setPreferredSize(new Dimension(40,20));
+		sendButton.setMargin(new Insets(0,  0,  0,  0));
+		sendButton.setFont(new Font("arial", Font.PLAIN, 12));
 		//sendButton.setAlignmentX(0.5f);
 		//sendButton.setAlignmentY(CENTER_ALIGNMENT);
 		
