@@ -10,6 +10,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+/**
+ * 
+ * @author Cole Brito, Paul Squires
+ *
+ */
 public class GameInfo extends JPanel{
 
 	String player1 = "";
@@ -30,11 +35,11 @@ public class GameInfo extends JPanel{
     JLabel player2Icon;
     
 	/**
-	 * 
+	 * Serial Version UID, used to compare class versions when deserializing
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 
+	 * Creates the JPanel that displays information about the game and players
 	 * @param
 	 */
 	protected GameInfo() {
@@ -63,7 +68,7 @@ public class GameInfo extends JPanel{
 	}
 	
 	/**
-	 * 
+	 * Method to create a new BufferImage of a 5x5 pixel colored square
 	 * @param color - The color of the piece the player controls
 	 * @return - returns the 5x5 pixel image of the players piece color
 	 */
@@ -77,7 +82,7 @@ public class GameInfo extends JPanel{
     }
 	
 	/**
-	 * 
+	 * sets the players chosen name
 	 * @param name - Name that player 1 has entered
 	 */
 	public void setPlayer1(String name) {
@@ -86,7 +91,7 @@ public class GameInfo extends JPanel{
     }
 
 	/**
-	 * 
+	 * sets the players chosen name
 	 * @param name - Name that player 2 has entered
 	 */
     public void setPlayer2(String name) {
@@ -95,7 +100,7 @@ public class GameInfo extends JPanel{
     }
 
     /**
-     * 
+     * Sets the number of times the player has won
      * @param wins - Total wins achieved by player1
      */
     public void setPlayer1Wins(int wins) {
@@ -104,7 +109,7 @@ public class GameInfo extends JPanel{
     }
 
     /**
-     * 
+     * Sets the number of times the player has won
      * @param wins - Total wins achieved by player2
      */
     public void setPlayer2Wins(int wins) {

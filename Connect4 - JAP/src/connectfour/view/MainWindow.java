@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 /**
  * 
- * @author Cole Brito
+ * @author Cole Brito, Paul Squires
  *
  */
 public class MainWindow extends JFrame {

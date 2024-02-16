@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 /**
  * Class to generate and control the behavior of the game board
- * @author Cole Brito
+ * @author Cole Brito, Paul Squires
  *
  */
 public class Gameboard {
@@ -27,8 +27,8 @@ public class Gameboard {
 	protected void generateTileGrid(JPanel content, GridBagConstraints c) {
 		//Grid of buttons 	
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
-			for (int i = 0; i < 6; i++) {
-				for (int j = 0; j < 7; j++) {
+			for (int i = 0; i < tile.length; i++) {
+				for (int j = 0; j < tile[i].length; j++) {
 					tile[i][j] = new JButton(emptyTile);
 					tile[i][j].setBorder(blackLine);
 					tile[i][j].addActionListener(actionListener);
