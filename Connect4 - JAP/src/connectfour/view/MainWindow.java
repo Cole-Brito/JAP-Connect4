@@ -54,6 +54,7 @@ public class MainWindow extends JFrame {
 		Gameboard gameboard = new Gameboard();
 		gameboard.generateTileGrid(gridPanel, c);
 		
+		
 		//var boardLabelPanel = Box.createHorizontalBox();
 		var boardLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 23));
 		boardLabelPanel.setBackground(baseBlue);

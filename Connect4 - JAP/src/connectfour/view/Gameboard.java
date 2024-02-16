@@ -7,9 +7,9 @@ public class Gameboard {
 	
 	JButton[][] tile = new JButton[6][7];
 	//declaring asset variables 
-	ImageIcon emptyTile = new ImageIcon(getClass().getResource("/Connect4Assets/emptyTile.png"));
-	ImageIcon redTile = new ImageIcon(getClass().getResource("/Connect4Assets/redTile.png"));
-	ImageIcon blackTile = new ImageIcon(getClass().getResource("/Connect4Assets/blackTile.png"));
+	ImageIcon emptyTile = new ImageIcon(getClass().getResource("/images/emptyTile.png"));
+	ImageIcon redTile = new ImageIcon(getClass().getResource("/images/redTile.png"));
+	ImageIcon blackTile = new ImageIcon(getClass().getResource("/images/blackTile.png"));
 	
 	/**
 	 * generates a grid of 52 x 52 pixel buttons holding an image of an empty tile space.
