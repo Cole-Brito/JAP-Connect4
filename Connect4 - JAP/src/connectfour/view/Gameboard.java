@@ -3,6 +3,11 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import javax.swing.*;
 import javax.swing.border.Border;
+/**
+ * Class to generate and control the behavior of the game board
+ * @author Cole Brito
+ *
+ */
 public class Gameboard {
 	
 	JButton[][] tile = new JButton[6][7];

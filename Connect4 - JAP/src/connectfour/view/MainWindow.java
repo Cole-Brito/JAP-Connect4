@@ -53,10 +53,6 @@ public class MainWindow extends JFrame {
 		mainBoardPanel.add(gridPanel, BorderLayout.CENTER);
 		Gameboard gameboard = new Gameboard();
 
-		gameboard.generateTileGrid(content, c);
-		GameInfo gi = new GameInfo();
-		content.add(gi);
-
 		gameboard.generateTileGrid(gridPanel, c);
 		
 		//var boardLabelPanel = Box.createHorizontalBox();
@@ -81,18 +77,17 @@ public class MainWindow extends JFrame {
 		boardLabelPanel.add(rightLabelPanel);
 		mainBoardPanel.add(boardLabelPanel, BorderLayout.NORTH);
 		
-		// Add Chat panel to content panel
+		// Add GameInfo to right panel group
 		var rightPanelGroup = Box.createVerticalBox();
-		var gameInfoPanel = new JPanel();
-		gameInfoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		gameInfoPanel.setPreferredSize(new Dimension(218, 100));
-		rightPanelGroup.add(gameInfoPanel);
+		GameInfo gi = new GameInfo();
+		gi.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		gi.setPreferredSize(new Dimension(218, 100));
+		rightPanelGroup.add(gi);
+		// Add Chat panel to content panel
 		var chatPanel = new ChatBoxContentPane();
 		rightPanelGroup.add(chatPanel);
 		content.add(rightPanelGroup);
 		
-		//GameInfo gi = new GameInfo(c);
-		//content.add(gi);
 		setVisible(true);
 		pack();
 		
