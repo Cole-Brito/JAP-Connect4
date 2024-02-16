@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 /**
  * 
- * @author Cole Brito
+ * @author Cole Brito, Paul Squires
  *
  */
 public class MainWindow extends JFrame {
@@ -53,6 +53,7 @@ public class MainWindow extends JFrame {
 		gridPanel.setBackground(baseBlue);
 		mainBoardPanel.add(gridPanel, BorderLayout.CENTER);
 		Gameboard gameboard = new Gameboard();
+
 		gameboard.generateTileGrid(gridPanel, c);
 		
 		
@@ -78,21 +79,22 @@ public class MainWindow extends JFrame {
 		boardLabelPanel.add(rightLabelPanel);
 		mainBoardPanel.add(boardLabelPanel, BorderLayout.NORTH);
 		
-		// Add Chat panel to content panel
+		// Add GameInfo to right panel group
 		var rightPanelGroup = Box.createVerticalBox();
-		//rightLabelPanel.setPreferredSize(new Dimension(218, 400));
-		var gameInfoPanel = new JPanel();
-		gameInfoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		gameInfoPanel.setPreferredSize(new Dimension(216, 98));
-		rightPanelGroup.add(gameInfoPanel);
+		GameInfo gi = new GameInfo();
+		gi.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		gi.setPreferredSize(new Dimension(216, 98));
+		rightPanelGroup.add(gi);
+		
+		// Add Chat panel to content panel
 		var chatPanel = new ChatBoxContentPane();
 		rightPanelGroup.add(chatPanel);
 		content.add(rightPanelGroup);
 		
-		//GameInfo gi = new GameInfo(c);
-		//content.add(gi);
 		setVisible(true);
 		pack();
+		
+		
 		
 	} //end of main window
 
