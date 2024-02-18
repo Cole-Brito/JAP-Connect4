@@ -17,21 +17,42 @@ import javax.swing.border.Border;
  */
 public class GameInfo extends JPanel{
 
+	/** Player 1 name*/
 	String player1 = "";
+	/** Player 2 name*/
 	String player2 = "";
+	/** Current P1 wins*/
 	int player1Wins = 0;
+	/** Current P2 wins*/
     int player2Wins = 0;
+    
+    /** Store Border used in this UI*/
 	Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
-	//Used for panels that display game info (chat box, game info box, turn signifier)
+	/**Used for panels that display game info (chat box, game info box, turn signifier)*/
 	Color infoBlue = new Color(190, 205, 230);
-	
+
+    /** Player1 Label*/
 	JLabel player1Label;
+
+    /** Player 2 Label*/
     JLabel player2Label;
+
+    /** Total game time label*/
     JLabel gameTimerLabel;
+
+    /** Current turn time label*/
     JLabel turnTimerLabel;
+
+    /** Player 1 Win Label*/
     JLabel player1WinsLabel;
+
+    /** Player 2 Win Label*/
     JLabel player2WinsLabel;
+
+    /** Player 1 Icon holder*/
     JLabel player1Icon;
+    
+    /** Player 2 Icon holder*/
     JLabel player2Icon;
     
 	/**
@@ -40,7 +61,7 @@ public class GameInfo extends JPanel{
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Creates the JPanel that displays information about the game and players
-	 * @param
+	 * 
 	 */
 	protected GameInfo() {
 		super(new GridLayout(4, 2));

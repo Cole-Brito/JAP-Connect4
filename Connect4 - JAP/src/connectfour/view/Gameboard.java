@@ -13,10 +13,14 @@ import javax.swing.border.Border;
  */
 public class Gameboard {
 	
+	/** Array of tile JButtons*/
 	JButton[][] tile = new JButton[6][7];
 	//declaring asset variables 
+	/** Default empty tile slot*/
 	ImageIcon emptyTile = new ImageIcon(getClass().getResource("/images/emptyTile.png"));
+	/** Default player 1 tile slot*/
 	ImageIcon redTile = new ImageIcon(getClass().getResource("/images/redTile.png"));
+	/** Default player 2 tile slot*/
 	ImageIcon blackTile = new ImageIcon(getClass().getResource("/images/blackTile.png"));
 	
 	/**
@@ -39,6 +43,7 @@ public class Gameboard {
 			}
 	}
 	
+	/** Action Listener for testing tile placements*/
 	ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {

@@ -46,7 +46,10 @@ public class ChatBoxContentPane extends JPanel {
 	public final ChatHistoryTextPane chatHistoryTextPane;
 	
 	//TODO: Move to a another class with static definitions for all UI elements
+    /** Default background color medium-blue*/
 	private static final Color uiBackgroundMed = new Color(190, 205, 230);
+
+	/** Default background color light-blue*/
 	private static final Color uiBackgroundLight = new Color(207, 226, 243);
 	
 	/**

@@ -1,0 +1,8 @@
+-----------------[Connect 4 Patch Notes]-----------------
+
+Version 0.1		18/02/2024
+[GUI]
+- Changed the look of the GameInfo panel
+- Got rid of the borders around the chat area and game info area 
+- Changed the colour of the chat box area from blue to white 
+- Changed the graphic in the game info panel

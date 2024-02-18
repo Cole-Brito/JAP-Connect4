@@ -2,6 +2,7 @@ package connectfour.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/** Temporary Controller*/
 public class Controller implements ActionListener {
 
 	/**
