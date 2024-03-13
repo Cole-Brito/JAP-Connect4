@@ -15,7 +15,7 @@ import javax.swing.border.Border;
  * @author Cole Brito, Paul Squires
  *
  */
-public class GameInfo extends JPanel{
+public class GameInfoPanel extends JPanel{
 
 	/** Player 1 name*/
 	String player1 = "";
@@ -63,7 +63,7 @@ public class GameInfo extends JPanel{
 	 * Creates the JPanel that displays information about the game and players
 	 * 
 	 */
-	protected GameInfo() {
+	protected GameInfoPanel() {
 		super(new GridLayout(4, 2));
         setPreferredSize(new Dimension(220, 100));
         setBorder(blackLine);

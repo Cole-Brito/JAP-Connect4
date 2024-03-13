@@ -14,7 +14,6 @@ public class Controller implements ActionListener {
         String[] vars = input.split(",");
         System.out.println("Cols: "+vars[0]);
         System.out.println("Rows: "+vars[1]);
-		
 	}
 
 }

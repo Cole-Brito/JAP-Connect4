@@ -21,6 +21,14 @@ public class MainWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private final GameBoardPanel gameBoardPanel;
+	
+	private final GameInfoPanel gameInfoPanel;
+	
+	private final ChatHistoryTextPane chatHistoryTextPane;
+	
+	private final ChatTextInputField chatTextInputField;
+	
 	/**
 	 * 
 	 */
@@ -33,8 +41,9 @@ public class MainWindow extends JFrame {
 		setMinimumSize(new Dimension(690,430));
 		//Creating the menu bar
 		generateMenuBar();
+		//TODO: Move to GUI constants/styles class
 		//Used for content bg
-		Color baseBlue = new Color(159, 181, 218);
+		
 		
 		//Used for panels that display game info (chat box, game info box, turn signifier)
 		//Color infoBlue = new Color(190, 205, 230); 
@@ -51,28 +60,28 @@ public class MainWindow extends JFrame {
 		JPanel gridPanel = new JPanel(new GridBagLayout());
 		//gridPanel.setMaximumSize(new Dimension(472, 402));
 		GridBagConstraints c = new GridBagConstraints();
-		gridPanel.setBackground(baseBlue);
+		gridPanel.setBackground(GameWindowStyles.uiBackgroundBase);
 		mainBoardPanel.add(gridPanel, BorderLayout.CENTER);
-		Gameboard gameboard = new Gameboard();
+		gameBoardPanel = new GameBoardPanel();
 
-		gameboard.generateTileGrid(gridPanel, c);
+		gameBoardPanel.generateTileGrid(gridPanel, c);
 		
 		
 		//var boardLabelPanel = Box.createHorizontalBox();
 		var boardLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
-		boardLabelPanel.setBackground(baseBlue);
+		boardLabelPanel.setBackground(GameWindowStyles.uiBackgroundBase);
 		//boardLabelPanel.setMaximumSize(new Dimension(182*2, 60));
 		var leftLabelPanel = new JPanel();
 		leftLabelPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		leftLabelPanel.setPreferredSize(new Dimension(182, 46));
-		leftLabelPanel.setBackground(baseBlue);
+		leftLabelPanel.setBackground(GameWindowStyles.uiBackgroundBase);
 		var leftLabel = new JLabel("Connect 4!", JLabel.CENTER);
 		leftLabel.setFont(new Font("arial", Font.ITALIC, 24));
 		leftLabelPanel.add(leftLabel);
 		var rightLabelPanel = new JPanel();
 		rightLabelPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		rightLabelPanel.setPreferredSize(new Dimension(182, 46));
-		rightLabelPanel.setBackground(baseBlue);
+		rightLabelPanel.setBackground(GameWindowStyles.uiBackgroundBase);
 		var rightLabel = new JLabel("Player1's Turn", JLabel.CENTER);
 		rightLabel.setFont(new Font("arial", Font.ITALIC, 24));
 		rightLabelPanel.add(rightLabel);		
@@ -82,21 +91,45 @@ public class MainWindow extends JFrame {
 		
 		// Add GameInfo to right panel group
 		var rightPanelGroup = Box.createVerticalBox();
-		GameInfo gi = new GameInfo();
-		gi.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		gi.setPreferredSize(new Dimension(216, 98));
-		rightPanelGroup.add(gi);
+		gameInfoPanel = new GameInfoPanel();
+		gameInfoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		gameInfoPanel.setPreferredSize(new Dimension(216, 98));
+		rightPanelGroup.add(gameInfoPanel);
 		
-		// Add Chat panel to content panel
-		var chatPanel = new ChatBoxContentPane();
-		rightPanelGroup.add(chatPanel);
+		// Add ChatHistoryTextPane to right panel group
+		JPanel chatHistoryPanel = new JPanel();
+		chatHistoryPanel.setPreferredSize(new Dimension(216, 246));
+		chatHistoryPanel.setBackground(GameWindowStyles.uiBackgroundLight);
+		chatHistoryPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		
+		chatHistoryTextPane = new ChatHistoryTextPane();
+		JScrollPane scrollPane = new JScrollPane(chatHistoryTextPane);
+		scrollPane.setPreferredSize(new Dimension(190, 234));
+		scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		chatHistoryPanel.add(scrollPane);
+		//TODO: TextPane doesn't seem to use background color
+		chatHistoryPanel.setBackground(GameWindowStyles.uiBackgroundMed);
+		rightPanelGroup.add(chatHistoryPanel, BorderLayout.CENTER);
+		
+		// Add ChatTextInputField to right panel group
+		JPanel textInputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 15));
+		//textInputPanel.setMinimumSize(new Dimension(218, 55));
+		textInputPanel.setPreferredSize(new Dimension(216, 55));
+		textInputPanel.setBackground(GameWindowStyles.uiBackgroundLight);
+		textInputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		chatTextInputField = new ChatTextInputField();
+		chatTextInputField.setBackground(GameWindowStyles.uiBackgroundLight);
+		textInputPanel.add(chatTextInputField);
+		rightPanelGroup.add(textInputPanel);
+		
+		// Add the right panel group to MainWindow
 		content.add(rightPanelGroup);
 		
-		setVisible(true);
+		// pack to have elements adjust size to fit contents, then make sure window is visible
 		pack();
-		
-		
-		
+		setVisible(true);
+				
 	} //end of main window
 
 	

@@ -11,7 +11,7 @@ import javax.swing.border.Border;
  * @author Cole Brito, Paul Squires
  *
  */
-public class Gameboard {
+public class GameBoardPanel {
 	
 	/** Array of tile JButtons*/
 	JButton[][] tile = new JButton[6][7];
