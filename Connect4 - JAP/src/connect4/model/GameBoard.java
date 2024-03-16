@@ -3,6 +3,10 @@ package connect4.model;
 public class GameBoard {
 	private short[][] tiles;
 	
+	public GameBoard() {
+		
+	}
+	
 	public void setBoardState(short[][] tiles) {
 		
 	}
