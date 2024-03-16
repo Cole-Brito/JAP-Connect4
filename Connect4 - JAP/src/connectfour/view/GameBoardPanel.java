@@ -60,5 +60,13 @@ public class GameBoardPanel {
             }
         }
     };
+    
+    public void updateBoardState(int column, int row, int state) {
+    	
+    }
+    
+    public void updateFullBoard(short[][] tiles) {
+    	
+    }
 	
 }
