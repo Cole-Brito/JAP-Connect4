@@ -1,4 +1,4 @@
-package connect4.model;
+package connectfour.model;
 
 public enum GameState {
 	PLAYER_1_TURN,
