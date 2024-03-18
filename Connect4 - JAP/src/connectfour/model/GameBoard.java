@@ -4,18 +4,19 @@ public class GameBoard {
 	private short[][] tiles;
 	
 	public GameBoard() {
-		
+		tiles = new short[6][7];
 	}
 	
 	public void setBoardState(short[][] tiles) {
 		
 	}
 	
-	public void setTileState(short row, short column){
+	public void setTileState(short row, short column, short state){
 		
 	}
 	
-	public void checkWinStates(short row, short column) {
+	public boolean checkWinStates(short row, short column, short player) {
 		
+		return false;
 	}
 }

@@ -18,7 +18,7 @@ public class GameManager {
 		
 	}
 	
-	public boolean tryPlaceTile(int column, Player player) {
+	public boolean tryPlaceTile(int column, short player) {
 		
 		return false;
 	}

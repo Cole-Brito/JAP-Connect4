@@ -1,7 +1,7 @@
 package connectfour.view;
 
 public enum TileState {
-	DEFUALT,
+	DEFAULT,
 	PLAYER_1,
 	PLAYER_2;
 }

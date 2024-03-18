@@ -14,15 +14,8 @@ import javax.swing.border.Border;
 public class GameBoardPanel {
 	
 	/** Array of tile JButtons*/
-	JButton[][] tile = new JButton[6][7];
-	//declaring asset variables 
-	/** Default empty tile slot*/
-	ImageIcon emptyTile = new ImageIcon(getClass().getResource("/images/emptyTile.png"));
-	/** Default player 1 tile slot*/
-	ImageIcon redTile = new ImageIcon(getClass().getResource("/images/redTile.png"));
-	/** Default player 2 tile slot*/
-	ImageIcon blackTile = new ImageIcon(getClass().getResource("/images/blackTile.png"));
-	
+	GameBoardTile[][] tiles = new GameBoardTile[6][7];
+
 	/**
 	 * generates a grid of 52 x 52 pixel buttons holding an image of an empty tile space.
 	 * @param content - The panels this is being added to
@@ -31,14 +24,15 @@ public class GameBoardPanel {
 	protected void generateTileGrid(JPanel content, GridBagConstraints c) {
 		//Grid of buttons 	
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
-			for (int i = 0; i < tile.length; i++) {
-				for (int j = 0; j < tile[i].length; j++) {
-					tile[i][j] = new JButton(emptyTile);
-					tile[i][j].setBorder(blackLine);
-					tile[i][j].addActionListener(actionListener);
+			for (int i = 0; i < tiles.length; i++) {
+				for (int j = 0; j < tiles[i].length; j++) {
+					tiles[i][j] = new GameBoardTile(i, j);
+		            tiles[i][j].updateState(TileState.DEFAULT);
+					tiles[i][j].setBorder(blackLine);
+					tiles[i][j].addActionListener(actionListener);
 					c.gridx = j;
 					c.gridy = i;
-					content.add(tile[i][j], c);
+					content.add(tiles[i][j], c);
 				}
 			}
 	}
@@ -49,11 +43,11 @@ public class GameBoardPanel {
         public void actionPerformed(ActionEvent e) {
             JButton source = (JButton) e.getSource();
             // Find the source button in the tile 2D array
-            for (int i = 0; i < tile.length; i++) {
-                for (int j = 0; j < tile[i].length; j++) {
-                    if (tile[i][j] == source) {
+            for (int i = 0; i < tiles.length; i++) {
+                for (int j = 0; j < tiles[i].length; j++) {
+                    if (tiles[i][j] == source) {
                         System.out.println("Button at row " + i + ", column " + j + " was clicked.");
-                        tile[i][j].setIcon(blackTile); //Temp, testing the listener
+                        tiles[i][j].updateState(TileState.PLAYER_1); //Temp, testing the listener
                         return;
                     }
                 }
