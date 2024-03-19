@@ -35,4 +35,16 @@ public class ChatTextInputField extends JPanel {
 		inputFieldBox.add(sendButton);
 		this.add(inputFieldBox);
 	}
+	
+	public void registerSendButtonActionListener(ActionListener listener){
+		sendButton.addActionListener(listener);
+	}
+	
+	public String getInputText() {
+		return inputTextField.getText();
+	}
+	
+	public void clearInputText(){
+		inputTextField.setText("");
+	}
 }

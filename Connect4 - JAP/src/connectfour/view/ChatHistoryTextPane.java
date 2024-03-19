@@ -15,6 +15,8 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import connectfour.model.ChatManager;
+
 /**
  * A JTextPane designed to render text to a chat box, one message at a time.
  * Separate messages can be styled using unique TextStyles in this class.
@@ -30,6 +32,8 @@ public class ChatHistoryTextPane extends JTextPane {
 	 * A reference to the StyledDocument generated and used by this Text Pane
 	 */
 	private final StyledDocument styleDoc;
+	
+	private final ChatManager chatManager;
 	
 	/**
 	 * Text styles used to render text on this Text Pane
@@ -67,6 +71,8 @@ public class ChatHistoryTextPane extends JTextPane {
 	 * Also initializes Text Styles to use when adding messages.
 	 */
 	ChatHistoryTextPane(){
+		chatManager = ChatManager.getInstance();
+		
 		initStyles();
 		this.setEditable(false);
 		styleDoc = getStyledDocument();
