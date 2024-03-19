@@ -14,6 +14,8 @@ public class GameManager {
 	private Player player1 = new Player();
 	private Player player2 = new Player();
 	
+	
+	
 	public void GamerManger() {
 		
 	}
