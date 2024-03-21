@@ -20,7 +20,7 @@ public class GameBoard {
 		this.tiles[row][column] = state;
 	}
 	
-	public boolean checkWinStates(short row, short column, Player player) {
+	public boolean checkWinStates(short row, short column, short player) {
 		//Horizontal Checks
 		int tile = 1;
 		int c = column;
@@ -46,5 +46,9 @@ public class GameBoard {
 		
 		
 		return false;
+	}
+
+	public int getTileState(short row, short column) {
+		return tiles[row][column];
 	}
 }

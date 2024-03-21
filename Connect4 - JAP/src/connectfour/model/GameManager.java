@@ -21,6 +21,11 @@ public class GameManager {
 	}
 	
 	public boolean tryPlaceTile(short row, short column, Player activePlayer) {
+		if (gameBoard.getTileState(row, column) != 0) {
+	        // Cant place on an occupied tile
+	        return false;
+	    }
+		//Setting the state of the tile based on the active player
 		if (activePlayer == player1) {
 			for (short r = GameBoard.NUM_ROWS - 1; r >=0; r--) {
 				gameBoard.setTileState(row, column, (short) 1);
@@ -28,18 +33,19 @@ public class GameManager {
 		} else {
 			for (short r = GameBoard.NUM_ROWS - 1; r >=0; r--) {
 				gameBoard.setTileState(row, column, (short) 2);
+			}
 		}
 		
-		if (gameBoard.checkWinStates(row, column, activePlayer)) {
-			
+		if (activePlayer == player1) {
+			gameBoard.checkWinStates(row, column, (short) 1);
+		} else {
+			gameBoard.checkWinStates(row, column, (short) 2);
 		}
 		
 		switchPlayers();
 		return true;
-		}
-		
-		return false;
 	}
+		
 	
 	/**
 	 * Saves the state of the game as a txt file 
