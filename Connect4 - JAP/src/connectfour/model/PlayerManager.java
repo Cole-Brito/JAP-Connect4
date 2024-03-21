@@ -34,7 +34,7 @@ public class PlayerManager {
 		
 		return players.add(player);
 	}
-	
+
 	public List<Player> getPlayers() {
 		return Collections.unmodifiableList(players);
 	}

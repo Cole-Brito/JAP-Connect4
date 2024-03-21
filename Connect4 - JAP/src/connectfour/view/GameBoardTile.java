@@ -4,6 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameBoardTile extends JButton{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	//declaring asset variables 
 	/** Default empty tile slot*/
 	ImageIcon emptyTile = new ImageIcon(getClass().getResource("/images/emptyTile.png"));
@@ -39,6 +45,7 @@ public class GameBoardTile extends JButton{
 			break;
 		case DEFAULT:
 			setIcon(emptyIcon);;
+			break;
 		}
 	}
 	
@@ -53,4 +60,12 @@ public class GameBoardTile extends JButton{
 	public void setDefaultIcon(ImageIcon icon) {
 		setIcon(emptyIcon);
 	}
+	
+	public short getRow() {
+        return row;
+    }
+
+    public short getColumn() {
+        return column;
+    }
 }

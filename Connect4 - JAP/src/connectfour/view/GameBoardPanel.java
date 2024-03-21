@@ -21,7 +21,7 @@ public class GameBoardPanel {
 	 * @param content - The panels this is being added to
 	 * @param c - the constrains from the gridbagLayout
 	 */
-	protected void generateTileGrid(JPanel content, GridBagConstraints c) {
+	protected void generateTileGrid(JPanel content, GridBagConstraints c, ActionListener listener) {
 		//Grid of buttons 	
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
 			for (int i = 0; i < tiles.length; i++) {
@@ -29,7 +29,7 @@ public class GameBoardPanel {
 					tiles[i][j] = new GameBoardTile(i, j);
 		            tiles[i][j].updateState(TileState.DEFAULT);
 					tiles[i][j].setBorder(blackLine);
-					tiles[i][j].addActionListener(actionListener);
+					tiles[i][j].addActionListener(listener);
 					c.gridx = j;
 					c.gridy = i;
 					content.add(tiles[i][j], c);
@@ -37,26 +37,37 @@ public class GameBoardPanel {
 			}
 	}
 	
-	/** Action Listener for testing tile placements*/
-	ActionListener actionListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JButton source = (JButton) e.getSource();
-            // Find the source button in the tile 2D array
-            for (int i = 0; i < tiles.length; i++) {
-                for (int j = 0; j < tiles[i].length; j++) {
-                    if (tiles[i][j] == source) {
-                        System.out.println("Button at row " + i + ", column " + j + " was clicked.");
-                        tiles[i][j].updateState(TileState.PLAYER_1); //Temp, testing the listener
-                        return;
-                    }
-                }
+	/**
+     * Registers an ActionListener for all GameBoardTiles.
+     * @param listener The ActionListener to register.
+     */
+    public void registerTileActionListener(ActionListener listener) {
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                tiles[i][j].addActionListener(listener);
             }
         }
-    };
+    }
+//	/** Action Listener for testing tile placements*/
+//	ActionListener actionListener = new ActionListener() {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            JButton source = (JButton) e.getSource();
+//            // Find the source button in the tile 2D array
+//            for (int i = 0; i < tiles.length; i++) {
+//                for (int j = 0; j < tiles[i].length; j++) {
+//                    if (tiles[i][j] == source) {
+//                        System.out.println("Button at row " + i + ", column " + j + " was clicked.");
+//                        tiles[i][j].updateState(TileState.PLAYER_1); //Temp, testing the listener
+//                        return;
+//                    }
+//                }
+//            }
+//        }
+//    };
     
-    public void updateBoardState(int column, int row, int state) {
-    	
+    public void updateBoardState(int column, int row, GameBoardTile state) {
+    	this.tiles[row][column] = state;
     }
     
     public void updateFullBoard(short[][] tiles) {

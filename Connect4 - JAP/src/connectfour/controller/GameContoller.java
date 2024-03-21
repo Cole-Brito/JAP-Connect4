@@ -4,29 +4,32 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import connectfour.model.*;
+import connectfour.view.GameBoardTile;
 
+//make singleton
 public class GameContoller implements ActionListener {
 	
-	private GameBoard gameBoard;
+	private GameManager gameManager;
 
-	public void GameController(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
+	public void GameController(GameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     public void updateGameBoard(short column, short player) {
-    	for (short i = 0; i < 6; i++) {
-    		gameBoard.setTileState(i, column, player);	
-    	}
-    	gameBoard.checkWinStates(player, column, player);
+    	
     }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String input = e.getActionCommand();
-        String[] vars = input.split(",");
-        System.out.println("Cols: "+vars[0]);
-        System.out.println("Rows: "+vars[1]);
-        
-		
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof GameBoardTile) {
+            GameBoardTile clickedTile = (GameBoardTile) e.getSource();
+            short row = clickedTile.getRow();
+            short column = clickedTile.getColumn();
+            Player player = gameManager.activePlayer; //Placeholder
+            
+            System.out.println("Row clicked: " + row + ", Column clicked: " + column);
+            
+            gameManager.tryPlaceTile(row, column, player);
+        }
+    }
 }
