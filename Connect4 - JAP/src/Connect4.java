@@ -1,6 +1,7 @@
 import connectfour.controller.ChatController;
 import connectfour.controller.GameController;
 import connectfour.model.ChatManager;
+import connectfour.model.GameManager;
 import connectfour.view.MainWindow;
 
 /**
@@ -27,6 +28,7 @@ public class Connect4 {
 		
 		gameController = new GameController();
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
+		GameManager.getInstance().registerGameBoardPropertyChangeListener(mainWindow.gameBoardPanel);
 		
 		chatController = new ChatController(mainWindow.chatTextInputField);
 

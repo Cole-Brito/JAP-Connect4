@@ -42,11 +42,15 @@ public class GameBoard {
 		int minR = Math.max(row - 3, 0);
 		int maxR = Math.min(row + 3, NUM_ROWS);
 		
+		System.out.printf("minC: %d, maxC: %d, minR: %d, maxR: %d\n", minC, maxC, minR, maxR);
 		//Checking left and right of clicked tile
+		System.out.printf("c = %d, count = %d; c < %d; ++c", minC, 0, maxC);
 		for(int c = minC, count = 0; c < maxC; ++c) {
 			if (tiles[row][c] == player) {
 				++count;
+				System.out.println("Horizontal " + count);
 				if (count >= 4) {
+					System.out.println("Horizontal win");
 					return true;
 				}
 			} else {
@@ -56,8 +60,9 @@ public class GameBoard {
 		
 		//Checking verticals
 		for(int r = minR, count = 0; r < maxR; ++r) {
-			if (tiles[column][r] == player) {
+			if (tiles[r][column] == player) {
 				++count;
+				System.out.println("Vertical " + count);
 				if (count >= 4) {
 					return true;
 				}
@@ -69,6 +74,7 @@ public class GameBoard {
 		for(int c = minC, r = minR, count = 0; c < maxC && r < maxR; ++r, ++c) {
 			if (tiles[r][c] == player) {
 				++count;
+				System.out.println("Diag1 " + count);
 				if (count >= 4) {
 					return true;
 				} else {
@@ -81,6 +87,7 @@ public class GameBoard {
 		for(int c = minC, r = maxR - 1, count = 0; c < maxC && r >= 0; --r, ++c) {
 			if (tiles[r][c] == player) {
 				++count;
+				System.out.println("Diag2 " + count);
 				if (count >= 4) {
 					return true;
 				} else {
@@ -110,7 +117,7 @@ public class GameBoard {
 	 * @return The row index of the first empty row, or -1 if column was full.
 	 */
 	public short getFirstEmptyRow(short column) {
-		for (short i = NUM_ROWS -1; i > 0; --i) {
+		for (short i = NUM_ROWS -1; i >= 0; --i) {
 			if (tiles[i][column] == 0) {
 				return i;
 			}

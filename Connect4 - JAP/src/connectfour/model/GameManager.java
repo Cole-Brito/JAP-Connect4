@@ -44,31 +44,42 @@ public class GameManager {
 	        return false;
 	    }
 		
+		short currentPlayer = gameState == GameState.PLAYER_1_TURN ? (short)1 : (short)2;
+		
 		int placedRow = -1;
 		//Setting the state of the tile based on the active player
 		//Could probably condense most of this with ternary operators
 		if (gameState == GameState.PLAYER_1_TURN) {
-			placedRow = gameBoard.setTileInColumn(column, (short)1);
+			placedRow = gameBoard.setTileInColumn(column, currentPlayer);
 			if (placedRow < 0) {
 				return false;
 			}
 		} 
 		else if (gameState == GameState.PLAYER_2_TURN) {
-			placedRow = gameBoard.setTileInColumn(column, (short)2);
+			placedRow = gameBoard.setTileInColumn(column, currentPlayer);
 			if (placedRow < 0) {
 				return false;
 			}
 		}
+		else {
+			return false;
+		}
+		
+		onGameBoardChanged(placedRow, column, currentPlayer);
 		
 		if (gameState == GameState.PLAYER_1_TURN) {
-			if (gameBoard.checkWinStates((short)placedRow, column, (short)1)) {
+			System.out.println("Check player 1");
+			if (gameBoard.checkWinStates((short)placedRow, column, currentPlayer)) {
 				updateGameState(GameState.PLAYER_1_WIN);
+				System.out.println(gameState.toString());
 				return true;
 			}
 		} 
 		else if (gameState == GameState.PLAYER_2_TURN) {
-			if (gameBoard.checkWinStates((short)placedRow, column, (short)1)) {
+			System.out.println("Check player 2");
+			if (gameBoard.checkWinStates((short)placedRow, column, currentPlayer)) {
 				updateGameState(GameState.PLAYER_2_WIN);
+				System.out.println(gameState);
 				return true;
 			}
 		}
