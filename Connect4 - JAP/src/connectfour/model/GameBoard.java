@@ -21,30 +21,45 @@ public class GameBoard {
 	}
 	
 	public boolean checkWinStates(short row, short column, short player) {
-		//Horizontal Checks
-		int tile = 1;
-		int c = column;
+		int minC = Math.max(column - 3, 0);
+		int maxC = Math.min(column + 3, NUM_COLUMNS);
+		int minR = Math.max(row - 3, 0);
+		int maxR = Math.min(row + 3, NUM_ROWS);
 		
-		//the idea is checking every tile to the sides of the tile till it hits a different players tile
-		//Left check 
-		while (c > 0 && this.tiles[row][c - 1] == player) {
-			tile++;
-			c--;
-		}
-			c = column;
-		
-		//Right Check
-		while (c < NUM_COLUMNS - 1 && tiles[row][c + 1] == player) { //Need a get playerID or something idk
-			tile++;
-			c++;
-		}
-		
-		//If tile ever hits 4 then a win condition is met
-		if (tile >= 4) {
-			return true;
+		//Checking left and right of clicked tile
+		for(int c = minC, count = 0; c < maxC; ++c) {
+			if (tiles[row][c] == player) {
+				++count;
+				if (count >= 4) {
+					return true;
+				}
+			} else {
+				count = 0;
+			}
 		}
 		
-		//TODO - Implement Verticals and Diagonal checks
+		//Checking verticals
+		for(int r = minR, count = 0; r < maxR; ++r) {
+			if (tiles[column][r] == player) {
+				++count;
+				if (count >= 4) {
+					return true;
+				}
+			} else {
+				count = 0;
+			}
+		}
+		//Checking Diagonal
+		for(int c = minC, r = minR, count = 0; c < maxC && r < maxR; ++r, ++c) {
+			if (tiles[r][c] == player) {
+				++count;
+				if (count >= 4) {
+					return true;
+				} else {
+					count = 0;
+				}
+			}
+		}
 		
 		return false;
 	}
