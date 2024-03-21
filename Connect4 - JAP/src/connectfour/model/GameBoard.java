@@ -21,11 +21,12 @@ public class GameBoard {
 	}
 	
 	public boolean checkWinStates(short row, short column, Player player) {
-		//Horizontal Check
+		//Horizontal Checks
 		int tile = 1;
 		int c = column;
 		
-		//Left check
+		//the idea is checking every tile to the sides of the tile till it hits a different players tile
+		//Left check 
 		while (c > 0 && this.tiles[row][c - 1] == player) {
 			tile++;
 			c--;
@@ -38,6 +39,7 @@ public class GameBoard {
 			c++;
 		}
 		
+		//If tile ever hits 4 then a win condition is met
 		if (tile >= 4) {
 			return true;
 		}

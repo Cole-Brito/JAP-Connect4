@@ -36,6 +36,9 @@ public class GameManager {
 		
 		switchPlayers();
 		return true;
+		}
+		
+		return false;
 	}
 	
 	/**
