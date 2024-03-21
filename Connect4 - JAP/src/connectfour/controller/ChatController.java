@@ -11,8 +11,8 @@ public class ChatController implements ActionListener {
 	private final ChatManager chatManager;
 	private final ChatTextInputField textInputField;
 	
-	public ChatController(ChatManager manager, ChatTextInputField inputField) {
-		chatManager = manager;
+	public ChatController(ChatTextInputField inputField) {
+		chatManager = ChatManager.getInstance();
 		textInputField = inputField;
 		textInputField.registerTextInputActionListener(this);
 		textInputField.registerSendButtonActionListener(this);

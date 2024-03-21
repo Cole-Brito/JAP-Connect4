@@ -21,7 +21,7 @@ public class GameBoardPanel {
 	 * @param content - The panels this is being added to
 	 * @param c - the constrains from the gridbagLayout
 	 */
-	protected void generateTileGrid(JPanel content, GridBagConstraints c, ActionListener listener) {
+	protected void generateTileGrid(JPanel content, GridBagConstraints c) {
 		//Grid of buttons 	
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
 			for (int i = 0; i < tiles.length; i++) {
@@ -29,7 +29,6 @@ public class GameBoardPanel {
 					tiles[i][j] = new GameBoardTile(i, j);
 		            tiles[i][j].updateState(TileState.DEFAULT);
 					tiles[i][j].setBorder(blackLine);
-					tiles[i][j].addActionListener(listener);
 					c.gridx = j;
 					c.gridy = i;
 					content.add(tiles[i][j], c);

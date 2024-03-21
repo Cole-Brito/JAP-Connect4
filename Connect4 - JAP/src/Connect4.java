@@ -1,4 +1,5 @@
 import connectfour.controller.ChatController;
+import connectfour.controller.GameController;
 import connectfour.model.ChatManager;
 import connectfour.view.MainWindow;
 
@@ -10,17 +11,24 @@ import connectfour.view.MainWindow;
 
 public class Connect4 {
 
+	private static MainWindow mainWindow;
+	
+	private static GameController gameController;
+	private static ChatController chatController;
+	
 	/** 
 	 * Program entry point. WIP
 	 * @param args Command line arguments, currently unused
 	 * */
 	public static void main(String[] args) {
 		
-		MainWindow view = new MainWindow();
-		view.setVisible(true);
+		mainWindow = new MainWindow();
+		mainWindow.setVisible(true);
 		
-		//GameController gameController = new GameController();
-		ChatController chatController = new ChatController(ChatManager.getInstance(), view.chatTextInputField);
+		gameController = new GameController();
+		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
+		
+		chatController = new ChatController(mainWindow.chatTextInputField);
 
 	}
 

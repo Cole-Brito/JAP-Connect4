@@ -4,6 +4,14 @@ import java.util.Timer;
 
 public class GameManager {
 	
+	private static GameManager _instance;
+	public static GameManager getInstance() {
+		if (_instance == null) {
+			_instance = new GameManager();
+		}
+		return _instance;
+	}
+	
 	private GameBoard gameBoard = new GameBoard(); 
 	private GameState gameState; 
 	
@@ -15,7 +23,7 @@ public class GameManager {
 	public Player activePlayer;
 	
 	
-	public GameManager() {
+	private GameManager() {
 		var players = PlayerManager.getInstance().getPlayers();
 		assert(players.size() >= 2);
 		player1 = players.get(0);

@@ -7,12 +7,13 @@ import connectfour.model.*;
 import connectfour.view.GameBoardTile;
 
 //make singleton
-public class GameContoller implements ActionListener {
+public class GameController implements ActionListener {
 	
 	private GameManager gameManager;
 
-	public void GameController(GameManager gameManager) {
-        this.gameManager = gameManager;
+	public GameController() {
+        this.gameManager = GameManager.getInstance();
+        System.out.println(gameManager);
     }
 
     public void updateGameBoard(short column, short player) {
