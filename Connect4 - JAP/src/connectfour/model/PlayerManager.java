@@ -7,6 +7,9 @@ public class PlayerManager {
 	
 	 public PlayerManager() {
         this.players = new ArrayList<>();
+        //Temporary players for testing local play
+        addPlayer("Player1", PlayerType.LOCAL);
+        addPlayer("Player2", PlayerType.LOCAL);
 	 }
 	 
 	/**
@@ -21,4 +24,6 @@ public class PlayerManager {
 		
 		return players.add(player);
 	}
+	
+	
 }

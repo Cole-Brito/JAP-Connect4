@@ -8,6 +8,9 @@
  */
 package connectfour.view;
 import javax.swing.*;
+
+import connectfour.controller.GameContoller;
+
 import java.awt.*;
 /**
  * 
@@ -28,6 +31,8 @@ public class MainWindow extends JFrame {
 	private final ChatHistoryTextPane chatHistoryTextPane;
 	
 	private final ChatTextInputField chatTextInputField;
+	
+	private final GameContoller gameController;
 	
 	/**
 	 * 
@@ -63,8 +68,9 @@ public class MainWindow extends JFrame {
 		gridPanel.setBackground(GameWindowStyles.uiBackgroundBase);
 		mainBoardPanel.add(gridPanel, BorderLayout.CENTER);
 		gameBoardPanel = new GameBoardPanel();
+		gameController = new GameContoller();
 
-		gameBoardPanel.generateTileGrid(gridPanel, c);
+		gameBoardPanel.generateTileGrid(gridPanel, c, gameController);
 		
 		
 		//var boardLabelPanel = Box.createHorizontalBox();

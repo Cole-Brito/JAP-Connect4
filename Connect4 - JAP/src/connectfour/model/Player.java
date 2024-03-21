@@ -9,6 +9,10 @@ public class Player {
 	private String username;
 	private PlayerType playerType;
 	
+	public Player() {
+		
+	}
+	
 	public void setName(String name) {
 		this.username = name;
 	}
