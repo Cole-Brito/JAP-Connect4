@@ -26,6 +26,7 @@ public class GameManager {
 	        return false;
 	    }
 		//Setting the state of the tile based on the active player
+		//Could probably condense most of this with ternary operators
 		if (activePlayer == player1) {
 			for (short r = GameBoard.NUM_ROWS - 1; r >=0; r--) {
 				gameBoard.setTileState(row, column, (short) 1);
@@ -37,9 +38,15 @@ public class GameManager {
 		}
 		
 		if (activePlayer == player1) {
-			gameBoard.checkWinStates(row, column, (short) 1);
+			boolean win = gameBoard.checkWinStates(row, column, (short) 1);
+			if (win) {
+				this.gameState = GameState.PLAYER_1_WIN;
+			}
 		} else {
-			gameBoard.checkWinStates(row, column, (short) 2);
+			boolean win = gameBoard.checkWinStates(row, column, (short) 2);
+			if (win) {
+				this.gameState = GameState.PLAYER_2_WIN;
+			}
 		}
 		
 		switchPlayers();
