@@ -20,19 +20,6 @@ public class ChatManager {
 	private final List<String> messageHistory;
 	private final PropertyChangeSupport propertyChangedSupport;
 	
-	/**
-	 * The structure used in {@link PropertyChangeEvent}
-	 */
-	public class MessageEventValue{
-		public final String message;
-		public final int id;
-		
-		public MessageEventValue(String newMessage, int messageID) {
-			message = newMessage;
-			id = messageID;
-		}
-	}
-	
 	private ChatManager() {
 		messageHistory = new ArrayList<>();
 		propertyChangedSupport = new PropertyChangeSupport(this);
@@ -91,5 +78,19 @@ public class ChatManager {
 	 */
 	public void registerPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangedSupport.addPropertyChangeListener("messageHistory", listener);
+	}
+	
+	
+	/**
+	 * The structure used in {@link PropertyChangeEvent}
+	 */
+	public class MessageEventValue{
+		public final String message;
+		public final int id;
+		
+		public MessageEventValue(String newMessage, int messageID) {
+			message = newMessage;
+			id = messageID;
+		}
 	}
 }

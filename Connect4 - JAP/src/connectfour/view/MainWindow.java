@@ -31,6 +31,9 @@ public class MainWindow extends JFrame {
 	public final ChatHistoryTextPane chatHistoryTextPane;
 	
 	public final ChatTextInputField chatTextInputField;
+	
+	private final JLabel leftLabel;
+	private final JLabel rightLabel;
 		
 	/**
 	 * 
@@ -77,14 +80,16 @@ public class MainWindow extends JFrame {
 		leftLabelPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		leftLabelPanel.setPreferredSize(new Dimension(182, 46));
 		leftLabelPanel.setBackground(GameWindowStyles.uiBackgroundBase);
-		var leftLabel = new JLabel("Connect 4!", JLabel.CENTER);
+		// Setting leftLabel reference
+		leftLabel = new JLabel("Connect 4!", JLabel.CENTER);
 		leftLabel.setFont(new Font("arial", Font.ITALIC, 24));
 		leftLabelPanel.add(leftLabel);
 		var rightLabelPanel = new JPanel();
 		rightLabelPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		rightLabelPanel.setPreferredSize(new Dimension(182, 46));
 		rightLabelPanel.setBackground(GameWindowStyles.uiBackgroundBase);
-		var rightLabel = new JLabel("Player1's Turn", JLabel.CENTER);
+		// Setting rightLabel reference
+		rightLabel = new JLabel("Player1's Turn", JLabel.CENTER);
 		rightLabel.setFont(new Font("arial", Font.ITALIC, 24));
 		rightLabelPanel.add(rightLabel);		
 		boardLabelPanel.add(leftLabelPanel);
@@ -175,7 +180,7 @@ public class MainWindow extends JFrame {
 		menuBar.add(langMenu);
 		JMenuItem englishItem = new JMenuItem("English", null);
 		langMenu.add(englishItem);
-		JMenuItem frenchItem = new JMenuItem("French", null);
+		JMenuItem frenchItem = new JMenuItem("Français", null);
 		langMenu.add(frenchItem);
 		//Help menu and options
 		JMenu helpMenu = new JMenu("Help");
@@ -189,7 +194,7 @@ public class MainWindow extends JFrame {
 		menuBar.add(viewMenu);
 		JMenuItem themeItem = new JMenuItem("Theme", null);
 		viewMenu.add(themeItem);
-		JMenuItem accessItem = new JMenuItem("Accessablity", null);
+		JMenuItem accessItem = new JMenuItem("Accessiblity", null);
 		viewMenu.add(accessItem);
 		
 		//Setting Mnemonics

@@ -10,6 +10,12 @@ public class GameBoardTile extends JButton{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	public enum TileState {
+		DEFAULT,
+		PLAYER_1,
+		PLAYER_2;
+	}
+	
 	//declaring asset variables 
 	/** Default empty tile slot*/
 	ImageIcon emptyTile = new ImageIcon(getClass().getResource("/images/emptyTile.png"));
@@ -46,6 +52,12 @@ public class GameBoardTile extends JButton{
 		case DEFAULT:
 			setIcon(emptyIcon);;
 			break;
+		}
+	}
+	
+	public void updateState(int state) {
+		if (state >= 0 && state < TileState.values().length) {
+			updateState(TileState.values()[state]);
 		}
 	}
 	

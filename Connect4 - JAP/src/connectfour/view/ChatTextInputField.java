@@ -25,7 +25,8 @@ public class ChatTextInputField extends JPanel {
 		inputTextField = new JTextField();
 		inputTextField.setPreferredSize(new Dimension(155, 20));
 		inputTextField.setText("enter message...");
-		inputFieldBox.add(inputTextField);		
+		inputFieldBox.add(inputTextField);
+		//TODO: Add focus listener to inputTextField to set placeholder text when not focused
 		
 		sendButton = new JButton("Send");
 		sendButton.setPreferredSize(new Dimension(40,20));
