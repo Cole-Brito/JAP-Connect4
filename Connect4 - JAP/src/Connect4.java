@@ -1,3 +1,5 @@
+import connectfour.controller.ChatController;
+import connectfour.model.ChatManager;
 import connectfour.view.MainWindow;
 
 /**
@@ -17,7 +19,8 @@ public class Connect4 {
 		MainWindow view = new MainWindow();
 		view.setVisible(true);
 		
-		
+		//GameController gameController = new GameController();
+		ChatController chatController = new ChatController(ChatManager.getInstance(), view.chatTextInputField);
 
 	}
 

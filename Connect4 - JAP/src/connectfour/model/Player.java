@@ -9,6 +9,11 @@ public class Player {
 	private String username;
 	private PlayerType playerType;
 	
+	Player(String name, PlayerType type){
+		this.username = name;
+		this.playerType = type;
+	}
+	
 	public void setName(String name) {
 		this.username = name;
 	}

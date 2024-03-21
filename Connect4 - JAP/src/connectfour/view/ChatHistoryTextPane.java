@@ -8,6 +8,8 @@
 package connectfour.view;
 
 import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -21,7 +23,7 @@ import connectfour.model.ChatManager;
  * A JTextPane designed to render text to a chat box, one message at a time.
  * Separate messages can be styled using unique TextStyles in this class.
  */
-public class ChatHistoryTextPane extends JTextPane {
+public class ChatHistoryTextPane extends JTextPane implements PropertyChangeListener {
 
 	/**
 	 * Serial Version UID, used to compare class versions when deserializing
@@ -72,6 +74,7 @@ public class ChatHistoryTextPane extends JTextPane {
 	 */
 	ChatHistoryTextPane(){
 		chatManager = ChatManager.getInstance();
+		chatManager.registerPropertyChangeListener(this);
 		
 		initStyles();
 		this.setEditable(false);
@@ -84,14 +87,15 @@ public class ChatHistoryTextPane extends JTextPane {
 	
 	/**
 	 * Adds a string message  to the chat history text area, with the given style.
-	 * Does not implicitly add newline to messages.
+	 * Implicitly adds newline to messages.
 	 * Message is added to the end of the text area.
 	 * @param message The string to add to the chat text area
 	 * @param style The style to use
 	 */
 	public void addText(String message, TextStyle style) {
 		try {
-			styleDoc.insertString(styleDoc.getLength(), message, styleDoc.getStyle(style.name()));
+			styleDoc.insertString(styleDoc.getLength(), message + "\n", styleDoc.getStyle(style.name()));
+			this.setCaretPosition(styleDoc.getLength());
 		} catch (BadLocationException e) {
 			// TODO Output to log file
 			e.printStackTrace();
@@ -100,11 +104,23 @@ public class ChatHistoryTextPane extends JTextPane {
 	
 	/**
 	 * Adds a string message  to the chat history text area, with the default style.
-	 * Does not implicitly add newline to messages.
+	 * Implicitly adds newline to messages.
 	 * Message is added to the end of the text area.
 	 * @param message The string to add to the chat text area
 	 */
 	public void addText(String message) {
+		addText(message, TextStyle.DEFAULT);
+	}
+	
+	/**
+	 * Adds a string message  to the chat history text area, detecting the sender
+	 * based on the prefix on the string and applying the appropriate style.
+	 * Implicitly adds newline to messages.
+	 * Message is added to the end of the text area.
+	 * @param message The string to add to the chat text area
+	 */
+	public void addTextFromSender(String message) {
+		
 		addText(message, TextStyle.DEFAULT);
 	}
 	
@@ -123,5 +139,17 @@ public class ChatHistoryTextPane extends JTextPane {
 		style = this.addStyle(TextStyle.PLAYER2.name(), defaultStyle);
 		style = this.addStyle(TextStyle.SPECTATOR.name(), defaultStyle);
 		
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		if(evt.getPropertyName() == "messageHistory"){
+			ChatManager.MessageEventValue newValue = (ChatManager.MessageEventValue)evt.getNewValue();
+			if (newValue != null)
+			{
+				this.addText(newValue.message, TextStyle.DEFAULT);
+			}
+		}
 	}
 }

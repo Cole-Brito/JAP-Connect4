@@ -33,7 +33,12 @@ public class ChatTextInputField extends JPanel {
 		sendButton.setFont(new Font("arial", Font.PLAIN, 12));
 		
 		inputFieldBox.add(sendButton);
+		//sendButton.setAction();
 		this.add(inputFieldBox);
+	}
+	
+	public void registerTextInputActionListener(ActionListener listener){
+		inputTextField.addActionListener(listener);
 	}
 	
 	public void registerSendButtonActionListener(ActionListener listener){

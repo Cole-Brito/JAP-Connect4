@@ -10,14 +10,15 @@ public class GameManager {
 	private Timer gameTimer = new Timer();
 	private Timer turnTimer = new Timer();
 	
-	private PlayerManager playerManager = new PlayerManager();
-	private Player player1 = new Player();
-	private Player player2 = new Player();
+	private Player player1;
+	private Player player2;
 	
 	
-	
-	public void GamerManger() {
-		
+	public GameManager() {
+		var players = PlayerManager.getInstance().getPlayers();
+		assert(players.size() >= 2);
+		player1 = players.get(0);
+		player2 = players.get(1);
 	}
 	
 	public boolean tryPlaceTile(int column, short player) {

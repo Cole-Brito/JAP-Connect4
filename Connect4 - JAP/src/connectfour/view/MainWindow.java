@@ -21,13 +21,13 @@ public class MainWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private final GameBoardPanel gameBoardPanel;
+	public final GameBoardPanel gameBoardPanel;
 	
-	private final GameInfoPanel gameInfoPanel;
+	public final GameInfoPanel gameInfoPanel;
 	
-	private final ChatHistoryTextPane chatHistoryTextPane;
+	public final ChatHistoryTextPane chatHistoryTextPane;
 	
-	private final ChatTextInputField chatTextInputField;
+	public final ChatTextInputField chatTextInputField;
 	
 	/**
 	 * 
