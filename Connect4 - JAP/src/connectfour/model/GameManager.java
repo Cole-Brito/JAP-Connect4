@@ -77,6 +77,8 @@ public class GameManager {
 			return true;
 		}
 		
+		
+		
 		switchPlayers();
 		return true;
 	}
