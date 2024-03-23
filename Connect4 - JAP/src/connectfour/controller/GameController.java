@@ -16,7 +16,7 @@ public class GameController implements ActionListener {
         System.out.println(gameManager);
     }
 
-    public void updateGameBoard(short column, short player) {
+    public void updateGameBoard(int column, int player) {
     	
     }
 

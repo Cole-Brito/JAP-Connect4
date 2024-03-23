@@ -18,8 +18,8 @@ import connectfour.model.GameManager.GameBoardPropertyChangedEvent;
  */
 public class GameBoardPanel implements PropertyChangeListener {
 	
-	private final static short NUM_ROWS = 6;
-	private final static short NUM_COLUMNS = 7;
+	private final static int NUM_ROWS = 6;
+	private final static int NUM_COLUMNS = 7;
 	
 	/** Array of tile JButtons*/
 	GameBoardTile[][] tiles = new GameBoardTile[NUM_ROWS][NUM_COLUMNS];
@@ -78,7 +78,7 @@ public class GameBoardPanel implements PropertyChangeListener {
     	this.tiles[row][column].updateState(state);
     }
     
-    public void updateFullBoard(short[][] tiles) {
+    public void updateFullBoard(int[][] tiles) {
     	assert(tiles.length == NUM_ROWS && tiles[0].length == NUM_COLUMNS);
     	for(int row = 0; row < tiles.length; ++row) {
     		for(int column = 0; column < tiles.length; ++column) {
@@ -89,10 +89,15 @@ public class GameBoardPanel implements PropertyChangeListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName() == "gameBoard"){
+		if (evt.getPropertyName() == GameManager.GAME_BOARD_TILE_PROPERTY_NAME){
 			var gameBoardEvent = (GameManager.GameBoardPropertyChangedEvent)evt.getNewValue();
 			if (gameBoardEvent != null) {
 				updateBoardState(gameBoardEvent.row, gameBoardEvent.column, gameBoardEvent.state);
+			}
+			else {
+				System.err.println("[GameBoardPanel$propertyChange] Received PropertyChanged newValue was null or "
+						+ "not of type GameManager.GameBoardPropertyChangedEvent.\n"
+						+ "PropertyName: " + GameManager.GAME_BOARD_TILE_PROPERTY_NAME);
 			}
 		}
 	}

@@ -136,6 +136,9 @@ public class GameManager {
 	}
 	
 	
+	/********** PropertyChanged fields and methods **********/
+	
+	public static final String GAME_BOARD_TILE_PROPERTY_NAME = "GameBoardTile";
 	
 	/**
 	 * Registers a PropertyChangeListener to responds to changes to GameBoard.
@@ -145,11 +148,11 @@ public class GameManager {
 	 * @param listener The {@link PropertyChangeListener} that responds to GameBoard being changed
 	 */
 	public void registerGameBoardPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangedSupport.addPropertyChangeListener("gameBoard", listener);
+		propertyChangedSupport.addPropertyChangeListener(GAME_BOARD_TILE_PROPERTY_NAME, listener);
 	}
 	
 	public void onGameBoardChanged(int row, int column, int state) {
-		propertyChangedSupport.firePropertyChange("gameBoard", null, 
+		propertyChangedSupport.firePropertyChange(GAME_BOARD_TILE_PROPERTY_NAME, null, 
 			new GameBoardPropertyChangedEvent(row, column, state));
 	}
 	
