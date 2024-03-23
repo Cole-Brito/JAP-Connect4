@@ -2,6 +2,7 @@ import connectfour.controller.ChatController;
 import connectfour.controller.GameController;
 import connectfour.model.ChatManager;
 import connectfour.model.GameManager;
+import connectfour.model.locale.LocaleManager;
 import connectfour.view.MainWindow;
 import connectfour.view.SplashScreen;
 
@@ -23,6 +24,7 @@ public class Connect4 {
 	 * @param args Command line arguments, currently unused
 	 * */
 	public static void main(String[] args) {
+
 		//Running the splash screen for 5 seconds - code adjusted from Daniel Corimer
 		SplashScreen splashScreen = new SplashScreen();
 		int delay = 5000;
@@ -34,11 +36,18 @@ public class Connect4 {
 		splashScreen.setVisible(true);
 		
 		splashScreen.dispose();
+
+		//System.out.println(Connect4.class.getResource("/locales/locale_EN.txt").getFile());
+		//TODO: get locale filenames from config file
+		LocaleManager.getInstance().loadLanguageSet("/locales/locale_EN.txt");
+		LocaleManager.getInstance().loadLanguageSet("/locales/locale_FR.txt");
+
 		
 		mainWindow = new MainWindow();
 		mainWindow.setVisible(true);
 		
 		gameController = new GameController();
+		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow);
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
 		GameManager.getInstance().registerGameBoardPropertyChangeListener(mainWindow.gameBoardPanel);
 		

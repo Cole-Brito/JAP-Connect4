@@ -1,22 +1,22 @@
 package connectfour.model;
 
 public class GameBoard {
-	private short[][] tiles;
+	private int[][] tiles;
 	
 	//Board should never be bigger or smaller than this
-	final static short NUM_ROWS = 6;
-	final static short NUM_COLUMNS = 7;
+	final static int NUM_ROWS = 6;
+	final static int NUM_COLUMNS = 7;
 	
 	public GameBoard() {
-		this.tiles = new short[NUM_ROWS][NUM_COLUMNS];
+		this.tiles = new int[NUM_ROWS][NUM_COLUMNS];
 	}
 	
 	//set array of tiles to new tiles being passed in (i.e. restarting, loading games)
-	public void setBoardState(short[][] tiles) {
+	public void setBoardState(int[][] tiles) {
 		this.tiles = tiles;
 	}
 	
-	public void setTileState(short row, short column, short state){
+	public void setTileState(int row, int column, int state){
 		this.tiles[row][column] = state;
 	}
 	
@@ -26,21 +26,21 @@ public class GameBoard {
 	 * @param player The player to place for (ie. 1 or 2)
 	 * @return The row the tile was placed in, or -1 if the column was full
 	 */
-	public short setTileInColumn(short column, short player) {
-		short row = getFirstEmptyRow(column);
+	public int setTileInColumn(int column, int player) {
+		int row = getFirstEmptyRow(column);
 		if (row != -1) {
 			setTileState(row, column, player);
 		}
 		return row;
 	}
 	
-	//TODO: change return to enum or short to account for draws (ie. EMPTY, P1WIN, P2WIN, DRAW
+	//TODO: change return to enum or int to account for draws (ie. EMPTY, P1WIN, P2WIN, DRAW
 	// may have overlap with GameManager enums
-	public boolean checkWinStates(short row, short column, short player) {
+	public boolean checkWinStates(int row, int column, int player) {
 		int minC = Math.max(column - 3, 0);
-		int maxC = Math.min(column + 3, NUM_COLUMNS);
+		int maxC = Math.min(column + 4, NUM_COLUMNS);
 		int minR = Math.max(row - 3, 0);
-		int maxR = Math.min(row + 3, NUM_ROWS);
+		int maxR = Math.min(row + 4, NUM_ROWS);
 		
 		System.out.printf("minC: %d, maxC: %d, minR: %d, maxR: %d\n", minC, maxC, minR, maxR);
 		//Checking left and right of clicked tile
@@ -70,29 +70,41 @@ public class GameBoard {
 				count = 0;
 			}
 		}
-		//Checking Diagonal top-left to bottom-right
-		for(int c = minC, r = minR, count = 0; c < maxC && r < maxR; ++r, ++c) {
-			if (tiles[r][c] == player) {
+		//Checking Diagonal top-left to bottom-right		
+		for(int diff = -3, count = 0; diff < 4; ++diff) {
+			// Don't check if bounds are out of range
+			if (row+diff < 0 || row+diff >= NUM_ROWS || column+diff < 0 || column+diff >= NUM_COLUMNS){
+				continue;
+			}
+			
+			if (tiles[row+diff][column+diff] == player) {
 				++count;
 				System.out.println("Diag1 " + count);
 				if (count >= 4) {
 					return true;
-				} else {
-					count = 0;
 				}
+			}
+			else {
+				count = 0;
 			}
 		}
 		
 		// Checking diagonal bottom-left to top-right
-		for(int c = minC, r = maxR - 1, count = 0; c < maxC && r >= 0; --r, ++c) {
-			if (tiles[r][c] == player) {
+		for(int diff = -3, count = 0; diff < 4; ++diff) {
+			// Don't check if bounds are out of range
+			if (row-diff < 0 || row-diff >= NUM_ROWS || column+diff < 0 || column+diff >= NUM_COLUMNS){
+				continue;
+			}
+			
+			if (tiles[row-diff][column+diff] == player) {
 				++count;
 				System.out.println("Diag2 " + count);
 				if (count >= 4) {
 					return true;
-				} else {
-					count = 0;
-				}
+				} 
+			}
+			else {
+				count = 0;
 			}
 		}
 
@@ -105,7 +117,7 @@ public class GameBoard {
 	 * @param column The column index of the tile
 	 * @return The tile state (ie. 1 for player1, 2 for player2, 0 for empty)
 	 */
-	public short getTileState(short row, short column) {
+	public int getTileState(int row, int column) {
 		return tiles[row][column];
 	}
 	
@@ -116,8 +128,8 @@ public class GameBoard {
 	 * @param column The column to check
 	 * @return The row index of the first empty row, or -1 if column was full.
 	 */
-	public short getFirstEmptyRow(short column) {
-		for (short i = NUM_ROWS -1; i >= 0; --i) {
+	public int getFirstEmptyRow(int column) {
+		for (int i = NUM_ROWS -1; i >= 0; --i) {
 			if (tiles[i][column] == 0) {
 				return i;
 			}
@@ -131,7 +143,7 @@ public class GameBoard {
 	 * @return true if all columns are full, or false if any columns are empty.
 	 */
 	public boolean isBoardFull() {
-		for(short i = 0; i < NUM_COLUMNS; ++i) {
+		for(int i = 0; i < NUM_COLUMNS; ++i) {
 			if (tiles[0][i] == 0) {
 				return false;
 			}

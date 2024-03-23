@@ -4,8 +4,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Timer;
 
-import connectfour.model.ChatManager.MessageEventValue;
-
 public class GameManager {
 	
 	private static GameManager _instance;
@@ -38,13 +36,18 @@ public class GameManager {
 		propertyChangedSupport = new PropertyChangeSupport(this);
 	}
 	
-	public boolean tryPlaceTile(short row, short column, Player activePlayer) {
+	public boolean tryPlaceTile(int row, int column, Player activePlayer) {
+		
+		int currentPlayer = gameState.getPlayerID();
+		// If no player is active, don't allow tile placement
+		if (currentPlayer < 1) {
+			return false;
+		}
+		
 		if (gameBoard.getFirstEmptyRow(column) < 0) {
-	        // Cant place on an occupied tile
+	        // Can't place on an occupied tile
 	        return false;
 	    }
-		
-		short currentPlayer = gameState == GameState.PLAYER_1_TURN ? (short)1 : (short)2;
 		
 		int placedRow = -1;
 		//Setting the state of the tile based on the active player
@@ -133,6 +136,9 @@ public class GameManager {
 	}
 	
 	
+	/********** PropertyChanged fields and methods **********/
+	
+	public static final String GAME_BOARD_TILE_PROPERTY_NAME = "GameBoardTile";
 	
 	/**
 	 * Registers a PropertyChangeListener to responds to changes to GameBoard.
@@ -142,11 +148,11 @@ public class GameManager {
 	 * @param listener The {@link PropertyChangeListener} that responds to GameBoard being changed
 	 */
 	public void registerGameBoardPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangedSupport.addPropertyChangeListener("gameBoard", listener);
+		propertyChangedSupport.addPropertyChangeListener(GAME_BOARD_TILE_PROPERTY_NAME, listener);
 	}
 	
 	public void onGameBoardChanged(int row, int column, int state) {
-		propertyChangedSupport.firePropertyChange("gameBoard", null, 
+		propertyChangedSupport.firePropertyChange(GAME_BOARD_TILE_PROPERTY_NAME, null, 
 			new GameBoardPropertyChangedEvent(row, column, state));
 	}
 	
