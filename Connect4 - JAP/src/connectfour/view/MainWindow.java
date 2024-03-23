@@ -10,14 +10,21 @@ package connectfour.view;
 import javax.swing.*;
 
 import connectfour.controller.GameController;
+import connectfour.model.locale.LanguageSet;
+import connectfour.model.locale.LocaleChangeListener;
+import connectfour.model.locale.LocaleManager;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 /**
  * 
  * @author Cole Brito, Paul Squires
  *
  */
-public class MainWindow extends JFrame {
+import java.util.Set;
+public class MainWindow extends JFrame implements LocaleChangeListener {
 
 	/**
 	 * Serial Version UID, used to compare class versions when deserializing
@@ -34,6 +41,30 @@ public class MainWindow extends JFrame {
 	
 	private final JLabel leftLabel;
 	private final JLabel rightLabel;
+	
+	private Map<String, AbstractButton> localeResponsiveMenuItems = new HashMap();
+	
+	/**Menu Items**/
+	JMenu fileMenu;
+	JMenuItem saveItem;
+	JMenuItem loadItem;
+	JMenu gameMenu;
+	JMenuItem restartItem;
+	JMenuItem playerItem;
+	JMenuItem modeItem;
+	JMenu networkMenu;
+	JMenuItem hostItem;
+	JMenuItem connectItem;
+	JMenuItem disconnectItem;
+	JMenu langMenu;
+	JMenuItem englishItem;
+	JMenuItem frenchItem;
+	JMenu helpMenu;
+	JMenuItem controlsItem;
+	JMenuItem aboutItem;
+	JMenu viewMenu;
+	JMenuItem themeItem;
+	JMenuItem accessItem;
 		
 	/**
 	 * 
@@ -151,50 +182,50 @@ public class MainWindow extends JFrame {
 		//Creating MenuBar items
 		
 		//File menu and options
-		JMenu fileMenu = new JMenu("File");
+		fileMenu = addLocaleMenu("FileMenu.File");
 		menuBar.add(fileMenu);
-		JMenuItem saveItem = new JMenuItem("Save", null);
+		saveItem = addLocaleMenuItem("FileMenu.Save");
 		fileMenu.add(saveItem);
-		JMenuItem loadItem = new JMenuItem("Load", null);
+		loadItem = addLocaleMenuItem("FileMenu.Load");
 		fileMenu.add(loadItem);
 		//Game menu and options
-		JMenu gameMenu = new JMenu("Game");
+		gameMenu = addLocaleMenu("GameMenu.Game");
 		menuBar.add(gameMenu);
-		JMenuItem restartItem = new JMenuItem("Restart", null);
+		restartItem = addLocaleMenuItem("GameMenu.Restart");
 		gameMenu.add(restartItem);
-		JMenuItem playerItem = new JMenuItem("Player List", null);
+		playerItem = addLocaleMenuItem("GameMenu.PlayerList");
 		gameMenu.add(playerItem);
-		JMenuItem modeItem = new JMenuItem("Gamemode", null);
+		modeItem = new JMenuItem("GameMenu.Gamemode");
 		gameMenu.add(modeItem);
 		//Network menu and options
-		JMenu networkMenu = new JMenu("Network");
+		networkMenu = addLocaleMenu("NetworkMenu.Network");
 		menuBar.add(networkMenu);
-		JMenuItem hostItem = new JMenuItem("Host", null);
+		hostItem = addLocaleMenuItem("NetworkMenu.Host");
 		networkMenu.add(hostItem);
-		JMenuItem connectItem = new JMenuItem("Connect", null);
+		connectItem = addLocaleMenuItem("NetworkMenu.Connect");
 		networkMenu.add(connectItem);
-		JMenuItem disconnectItem = new JMenuItem("Disconnect", null);
+		disconnectItem = addLocaleMenuItem("NetworkMenu.Disconnect");
 		networkMenu.add(disconnectItem);
 		//Language menu and options
-		JMenu langMenu = new JMenu("Language");
+		langMenu = addLocaleMenu("LanguageMenu.Language");
 		menuBar.add(langMenu);
-		JMenuItem englishItem = new JMenuItem("English", null);
+		englishItem = addLocaleMenuItem("LanguageMenu.English");
 		langMenu.add(englishItem);
-		JMenuItem frenchItem = new JMenuItem("Français", null);
+		frenchItem = addLocaleMenuItem("LanguageMenu.French");
 		langMenu.add(frenchItem);
 		//Help menu and options
-		JMenu helpMenu = new JMenu("Help");
+		helpMenu = addLocaleMenu("HelpMenu.Help");
 		menuBar.add(helpMenu);
-		JMenuItem controlsItem = new JMenuItem("How to Play", null);
+		controlsItem = addLocaleMenuItem("HelpMenu.HowToPlay");
 		helpMenu.add(controlsItem);
-		JMenuItem aboutItem = new JMenuItem("About", null);
+		JMenuItem aboutItem = addLocaleMenuItem("HelpMenu.About");
 		helpMenu.add(aboutItem);
 		//View menu and options
-		JMenu viewMenu = new JMenu("View");
+		JMenu viewMenu = addLocaleMenu("ViewMenu.View");
 		menuBar.add(viewMenu);
-		JMenuItem themeItem = new JMenuItem("Theme", null);
+		JMenuItem themeItem = addLocaleMenuItem("ViewMenu.Theme");
 		viewMenu.add(themeItem);
-		JMenuItem accessItem = new JMenuItem("Accessiblity", null);
+		JMenuItem accessItem = addLocaleMenuItem("ViewMenu.Accessibility");
 		viewMenu.add(accessItem);
 		
 		//Setting Mnemonics
@@ -208,5 +239,27 @@ public class MainWindow extends JFrame {
 //		loadItem.addActionListener();
 		
 	}
+	
+	private JMenu addLocaleMenu(String localeKey) {
+		JMenu menu = new JMenu(LocaleManager.getInstance().getKeywordFromActiveLanguage(localeKey));
+		localeResponsiveMenuItems.put(localeKey, menu);
+		return menu;
+	}
+	
+	private JMenuItem addLocaleMenuItem(String localeKey) {
+		JMenuItem menuItem = new JMenuItem(LocaleManager.getInstance().getKeywordFromActiveLanguage(localeKey));
+		localeResponsiveMenuItems.put(localeKey, menuItem);
+		return menuItem;
+	}
+
+
+	@Override
+	public void onLocaleChanged(LanguageSet newLanguage) {
+		// This is kinda gross lol
+		for(var item: localeResponsiveMenuItems.entrySet()) {
+			item.getValue().setText(newLanguage.getKeyword(item.getKey()));
+		}
+	}
+	
 	
 }

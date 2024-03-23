@@ -5,9 +5,11 @@ import java.io.FileReader;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 //Name Pending
@@ -25,9 +27,36 @@ public class LocaleManager {
 		
 	private Map<String, LanguageSet> languageSets;
 	
+	private LanguageSet activeLanguageSet;
+	
+	private Set<LocaleChangeListener> localeChangeListeners;
 	
 	private LocaleManager() {
 		languageSets = new HashMap<String, LanguageSet>();
+		localeChangeListeners = new HashSet<>();
+	}
+	
+	public LanguageSet getActiveLanguageSet() {
+		return activeLanguageSet;
+	}
+	
+	public LanguageSet setActiveLanguageSet(String languageName) {
+		LanguageSet set = languageSets.get(languageName);
+		if (set != null && set != activeLanguageSet) {
+			activeLanguageSet = set;
+		}
+		
+		return activeLanguageSet;
+	}
+	
+	public String getKeywordFromActiveLanguage(String key) {
+		if (activeLanguageSet != null) {
+			String keyword = activeLanguageSet.getKeyword(key);
+			if (keyword != null) {
+				return keyword;
+			}
+		}
+		return "[Error: Key Missing]";
 	}
 	
 	public boolean loadLanguageSet(String fileName) {
@@ -54,6 +83,10 @@ public class LocaleManager {
 
 				languageSets.put(languageName, language);
 			}
+			
+			if (activeLanguageSet == null) {
+				activeLanguageSet = language;
+			}
 
 			return true;
 		}
@@ -65,5 +98,19 @@ public class LocaleManager {
 		}
 		
 		return false;
+	}
+	
+	public void registerLocaleChangeListener(LocaleChangeListener listener) {
+		localeChangeListeners.add(listener);
+	}
+	
+	public void unRegisterLocaleChangeListener(LocaleChangeListener listener) {
+		localeChangeListeners.remove(listener);
+	}
+	
+	public void notifyLocaleChangeListeners(LanguageSet newLanguage) {
+		for(var listener: localeChangeListeners) {
+			listener.onLocaleChanged(newLanguage);
+		}
 	}
 }

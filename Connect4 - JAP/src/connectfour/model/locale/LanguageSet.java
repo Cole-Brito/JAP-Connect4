@@ -20,4 +20,8 @@ public class LanguageSet{
 	public void addKeyword(String key, String value) {
 		keywords.put(key, value);
 	}
+	
+	public String getKeyword(String key) {
+		return keywords.get(key);
+	}
 }

@@ -16,6 +16,7 @@
 "HelpMenu.Help"="Aide"
 "HelpMenu.About"="À propos"
 "HelpMenu.HowToPlay"="Comment jouer"
+"ViewMenu.View"="Vue"
 "ViewMenu.Theme"="Thème"
 "ViewMenu.Accessibility"="Accessibilité"
 "GameInfoPanel.Player"="Joueur"

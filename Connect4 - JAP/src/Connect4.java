@@ -33,6 +33,7 @@ public class Connect4 {
 		mainWindow.setVisible(true);
 		
 		gameController = new GameController();
+		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow);
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
 		GameManager.getInstance().registerGameBoardPropertyChangeListener(mainWindow.gameBoardPanel);
 		
