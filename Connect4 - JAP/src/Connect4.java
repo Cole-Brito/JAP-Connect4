@@ -3,6 +3,7 @@ import connectfour.controller.GameController;
 import connectfour.model.ChatManager;
 import connectfour.model.GameManager;
 import connectfour.view.MainWindow;
+import connectfour.view.SplashScreen;
 
 /**
  * 
@@ -22,6 +23,17 @@ public class Connect4 {
 	 * @param args Command line arguments, currently unused
 	 * */
 	public static void main(String[] args) {
+		//Running the splash screen for 5 seconds - code adjusted from Daniel Corimer
+		SplashScreen splashScreen = new SplashScreen();
+		int delay = 5000;
+		try {
+			Thread.sleep(delay);
+		} catch (InterruptedException e){
+			e.printStackTrace();
+		}
+		splashScreen.setVisible(true);
+		
+		splashScreen.dispose();
 		
 		mainWindow = new MainWindow();
 		mainWindow.setVisible(true);

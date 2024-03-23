@@ -207,6 +207,8 @@ public class MainWindow extends JFrame {
 		
 //		loadItem.addActionListener();
 		
+		//Centering the window
+		setLocationRelativeTo(null);
 	}
 	
 }

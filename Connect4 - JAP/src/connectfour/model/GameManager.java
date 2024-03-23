@@ -84,7 +84,7 @@ public class GameManager {
 			}
 		}
 		else if (gameBoard.isBoardFull()) {
-			updateGameState(gameState.DRAW);
+			updateGameState(GameState.DRAW);
 			return true;
 		}
 		
