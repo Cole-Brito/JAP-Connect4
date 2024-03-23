@@ -33,7 +33,7 @@ public class SplashScreen extends JFrame {
 		
 		setUndecorated(true);//Turning off OS controls
 		pack();
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(null); //Centering Frame
 		setVisible(true);
 	}
 }

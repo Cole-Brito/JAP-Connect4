@@ -179,6 +179,8 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
+		GameController controller = new GameController();
+		
 		//Creating MenuBar items
 		
 		//File menu and options
@@ -218,14 +220,14 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		menuBar.add(helpMenu);
 		controlsItem = addLocaleMenuItem("HelpMenu.HowToPlay");
 		helpMenu.add(controlsItem);
-		JMenuItem aboutItem = addLocaleMenuItem("HelpMenu.About");
+		aboutItem = addLocaleMenuItem("HelpMenu.About");
 		helpMenu.add(aboutItem);
 		//View menu and options
-		JMenu viewMenu = addLocaleMenu("ViewMenu.View");
+		viewMenu = addLocaleMenu("ViewMenu.View");
 		menuBar.add(viewMenu);
-		JMenuItem themeItem = addLocaleMenuItem("ViewMenu.Theme");
+		themeItem = addLocaleMenuItem("ViewMenu.Theme");
 		viewMenu.add(themeItem);
-		JMenuItem accessItem = addLocaleMenuItem("ViewMenu.Accessibility");
+		accessItem = addLocaleMenuItem("ViewMenu.Accessibility");
 		viewMenu.add(accessItem);
 		
 		//Setting Mnemonics
@@ -236,7 +238,37 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		helpMenu.setMnemonic('H');
 		networkMenu.setMnemonic('N');
 		
-//		loadItem.addActionListener();
+		//adding listeners 
+		loadItem.addActionListener(controller);
+		saveItem.addActionListener(controller);
+		restartItem.addActionListener(controller);
+		playerItem.addActionListener(controller);
+		modeItem.addActionListener(controller);
+		hostItem.addActionListener(controller);
+		connectItem.addActionListener(controller);
+		disconnectItem.addActionListener(controller);
+		englishItem.addActionListener(controller);
+		frenchItem.addActionListener(controller);
+		controlsItem.addActionListener(controller);
+		aboutItem.addActionListener(controller);
+		themeItem.addActionListener(controller);
+		accessItem.addActionListener(controller);
+		
+		loadItem.setActionCommand("load");
+		saveItem.setActionCommand("save");
+		restartItem.setActionCommand("restart");
+		playerItem.setActionCommand("playerlist");
+		modeItem.setActionCommand("mode");
+		hostItem.setActionCommand("host");
+		connectItem.setActionCommand("connect");
+		disconnectItem.setActionCommand("disconnect");
+		englishItem.setActionCommand("english");
+		frenchItem.setActionCommand("french");
+		controlsItem.setActionCommand("controls");
+		aboutItem.setActionCommand("about");
+		themeItem.setActionCommand("theme");
+		accessItem.setActionCommand("access");
+		
 		
 		//Centering the window
 		setLocationRelativeTo(null);
