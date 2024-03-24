@@ -134,11 +134,9 @@ public class GameManager {
 	 * and setting player 1 as the active player
 	 */
 	public void restartGame() {
-		int r;
-		int c = 0;
-		for(r = 0; r < 6; r++) {
+		for(int r = 0; r < 6; r++) {
 			System.out.println("row changed");
-			for(c = 0; c < 7; c++) {
+			for(int c = 0; c < 7; c++) {
 				System.out.println("column changed");
 				gameBoard.setTileState(r, c, 0);
 				onGameBoardChanged(r,c,0);
