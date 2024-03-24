@@ -44,6 +44,7 @@ public class LocaleManager {
 		LanguageSet set = languageSets.get(languageName);
 		if (set != null && set != activeLanguageSet) {
 			activeLanguageSet = set;
+			notifyLocaleChangeListeners(activeLanguageSet);
 		}
 		
 		return activeLanguageSet;
@@ -68,7 +69,7 @@ public class LocaleManager {
 			String languageName = file.nextLine();
 			if (!languageName.isBlank()) {
 				// Remove quotes from language name
-				languageName = languageName.replace("\s", "");
+				languageName = languageName.replace("\"", "");
 				
 				while(file.hasNextLine()) {
 					String nextLine = file.nextLine();

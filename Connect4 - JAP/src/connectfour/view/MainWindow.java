@@ -15,6 +15,7 @@ import connectfour.model.locale.LocaleChangeListener;
 import connectfour.model.locale.LocaleManager;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -177,10 +178,7 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 	private void generateMenuBar() {
 		//Adding the menu bar to the window
 		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		GameController controller = new GameController();
-		
+		setJMenuBar(menuBar);		
 		//Creating MenuBar items
 		
 		//File menu and options
@@ -197,7 +195,7 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		gameMenu.add(restartItem);
 		playerItem = addLocaleMenuItem("GameMenu.PlayerList");
 		gameMenu.add(playerItem);
-		modeItem = new JMenuItem("GameMenu.Gamemode");
+		modeItem = addLocaleMenuItem("GameMenu.Gamemode");
 		gameMenu.add(modeItem);
 		//Network menu and options
 		networkMenu = addLocaleMenu("NetworkMenu.Network");
@@ -238,22 +236,6 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		helpMenu.setMnemonic('H');
 		networkMenu.setMnemonic('N');
 		
-		//adding listeners 
-		loadItem.addActionListener(controller);
-		saveItem.addActionListener(controller);
-		restartItem.addActionListener(controller);
-		playerItem.addActionListener(controller);
-		modeItem.addActionListener(controller);
-		hostItem.addActionListener(controller);
-		connectItem.addActionListener(controller);
-		disconnectItem.addActionListener(controller);
-		englishItem.addActionListener(controller);
-		frenchItem.addActionListener(controller);
-		controlsItem.addActionListener(controller);
-		aboutItem.addActionListener(controller);
-		themeItem.addActionListener(controller);
-		accessItem.addActionListener(controller);
-		
 		loadItem.setActionCommand("load");
 		saveItem.setActionCommand("save");
 		restartItem.setActionCommand("restart");
@@ -286,6 +268,22 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		return menuItem;
 	}
 
+	public void registerMenuListeners(ActionListener listener) {
+		loadItem.addActionListener(listener);
+		saveItem.addActionListener(listener);
+		restartItem.addActionListener(listener);
+		playerItem.addActionListener(listener);
+		modeItem.addActionListener(listener);
+		hostItem.addActionListener(listener);
+		connectItem.addActionListener(listener);
+		disconnectItem.addActionListener(listener);
+		englishItem.addActionListener(listener);
+		frenchItem.addActionListener(listener);
+		controlsItem.addActionListener(listener);
+		aboutItem.addActionListener(listener);
+		themeItem.addActionListener(listener);
+		accessItem.addActionListener(listener);
+	}
 
 	@Override
 	public void onLocaleChanged(LanguageSet newLanguage) {

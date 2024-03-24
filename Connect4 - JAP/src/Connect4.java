@@ -1,5 +1,6 @@
 import connectfour.controller.ChatController;
 import connectfour.controller.GameController;
+import connectfour.controller.MenuController;
 import connectfour.model.ChatManager;
 import connectfour.model.GameManager;
 import connectfour.model.locale.LocaleManager;
@@ -18,6 +19,7 @@ public class Connect4 {
 	
 	private static GameController gameController;
 	private static ChatController chatController;
+	private static MenuController menuController;
 	
 	/** 
 	 * Program entry point. WIP
@@ -47,8 +49,10 @@ public class Connect4 {
 		mainWindow.setVisible(true);
 		
 		gameController = new GameController();
+		menuController = new MenuController();
 		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow);
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
+		mainWindow.registerMenuListeners(menuController);
 		GameManager.getInstance().registerGameBoardPropertyChangeListener(mainWindow.gameBoardPanel);
 		
 		chatController = new ChatController(mainWindow.chatTextInputField);
