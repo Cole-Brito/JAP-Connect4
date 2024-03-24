@@ -30,6 +30,9 @@ public class GameManager {
 	private Player player2;
 	public Player activePlayer;
 	
+	private int player1WinCount;
+	private int player2WinCount;
+	
 	/** PropertyChangeSupport for notifying PropertyChangeListeners of updated model */
 	private final PropertyChangeSupport propertyChangedSupport;
 	
@@ -91,18 +94,18 @@ public class GameManager {
 		onGameBoardChanged(placedRow, column, currentPlayer);
 		
 		if (gameState == GameState.PLAYER_1_TURN) {
-			System.out.println("Check player 1");
 			if (gameBoard.checkWinStates((short)placedRow, column, currentPlayer)) {
 				updateGameState(GameState.PLAYER_1_WIN);
-				System.out.println(gameState.toString());
+				++player1WinCount;
+				onGameWinCountChanged();
 				return true;
 			}
 		} 
 		else if (gameState == GameState.PLAYER_2_TURN) {
-			System.out.println("Check player 2");
 			if (gameBoard.checkWinStates((short)placedRow, column, currentPlayer)) {
 				updateGameState(GameState.PLAYER_2_WIN);
-				System.out.println(gameState);
+				++player2WinCount;
+				onGameWinCountChanged();
 				return true;
 			}
 		}
@@ -154,10 +157,11 @@ public class GameManager {
 	 * Updates GameState.
 	 */
 	private void switchPlayers() {
-		if (activePlayer == player1) {
+		if (gameState == GameState.PLAYER_1_TURN) {
 			activePlayer = player2;
 			updateGameState(GameState.PLAYER_2_TURN);
-		} else {
+		} 
+		else if (gameState == GameState.PLAYER_2_TURN) {
 			activePlayer = player1;
 			updateGameState(GameState.PLAYER_1_TURN);
 		}
@@ -180,6 +184,14 @@ public class GameManager {
 		
 	}
 	
+	public int getPlayer1WinCount() {
+		return player1WinCount;
+	}
+	
+	public int getPlayer2WinCount() {
+		return player2WinCount;
+	}
+	
 	
 	/********** PropertyChanged fields and methods **********/
 	
@@ -189,6 +201,8 @@ public class GameManager {
 	public static final String GAME_BOARD_FULL_PROPERTY_NAME = "GameBoardFull";
 	/** Property Name used to notify PropertyChange events when the game state changes */
 	public static final String GAME_STATE_PROPERTY_NAME = "GameState";
+	/** Property Name used to notify PropertyChange events when the players' win counts change */
+	public static final String GAME_WIN_COUNT_PROPERTY_NAME = "GameWinCount";
 	
 	/**
 	 * Registers a PropertyChangeListener to responds to changes to this model.
@@ -220,6 +234,11 @@ public class GameManager {
 		propertyChangedSupport.firePropertyChange(GAME_STATE_PROPERTY_NAME, oldState, newState);
 	}
 	
+	public void onGameWinCountChanged() {
+		propertyChangedSupport.firePropertyChange(GAME_WIN_COUNT_PROPERTY_NAME, null,
+			new GameWinCountChangedEvent(player1WinCount, player2WinCount));
+	}
+	
 	/**
 	 * Inner class used as oldValue and newValue in PropertyChange events for
 	 * the {@value GameManager#GAME_BOARD_TILE_PROPERTY_NAME} property name.
@@ -239,6 +258,25 @@ public class GameManager {
 			this.row = row;
 			this.column = column;
 			this.state = state;
+		}
+	}
+	
+	/**
+	 * Inner class used as oldValue and newValue in PropertyChange events for
+	 * the {@value GameManager#GAME_WIN_COUNT_PROPERTY_NAME} property name.
+	 */
+	public class GameWinCountChangedEvent{
+		public final int player1WinCount;
+		public final int player2WinCount;
+		
+		/**
+		 * Construct a new GameWinCountChangedEvent
+		 * @param p1Wins The player 1 win count
+		 * @param p2Wins The player 2 win count
+		 */
+		public GameWinCountChangedEvent(int p1Wins, int p2Wins) {
+			player1WinCount = p1Wins;
+			player2WinCount = p2Wins;
 		}
 	}
 }

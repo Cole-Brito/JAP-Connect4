@@ -53,9 +53,10 @@ public class Connect4 {
 		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow);
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
 		mainWindow.registerMenuListeners(menuController);
-		GameManager.getInstance().registerPropertyChangeListener(GameManager.GAME_BOARD_TILE_PROPERTY_NAME,
-				mainWindow.gameBoardPanel);
-		GameManager.getInstance().registerPropertyChangeListener(GameManager.GAME_STATE_PROPERTY_NAME, mainWindow);
+		var gameManager = GameManager.getInstance();		
+		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_TILE_PROPERTY_NAME, mainWindow.gameBoardPanel);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_STATE_PROPERTY_NAME, mainWindow);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_WIN_COUNT_PROPERTY_NAME, mainWindow.gameInfoPanel);		
 		
 		chatController = new ChatController(mainWindow.chatTextInputField);
 

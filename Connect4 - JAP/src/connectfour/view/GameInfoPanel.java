@@ -12,6 +12,9 @@ import java.beans.PropertyChangeListener;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import connectfour.model.GameManager;
+import connectfour.model.GameState;
+
 /**
  * 
  * @author Cole Brito, Paul Squires
@@ -161,8 +164,17 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener{
 	 */
     @Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO Auto-generated method stub
-		
+		if (evt.getPropertyName() == GameManager.GAME_WIN_COUNT_PROPERTY_NAME) {
+			var newValue = (GameManager.GameWinCountChangedEvent)evt.getNewValue();
+			if (newValue != null) {
+				setPlayer1Wins(newValue.player1WinCount);
+				setPlayer2Wins(newValue.player2WinCount);
+			}
+			else {
+				System.err.println("evt.getNewValue() was null or unexpected type in GameInfoPale#propertyChange"
+						+ " for property name: " + evt.getPropertyName());
+			}
+		}
 	}
 }
 	
