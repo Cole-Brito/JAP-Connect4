@@ -285,6 +285,7 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 	@Override
 	public void onLocaleChanged(LanguageSet newLanguage) {
 		// This is kinda gross lol
+		// ^ a little bit lmao
 		for(var item: localeResponsiveMenuItems.entrySet()) {
 			item.getValue().setText(newLanguage.getKeyword(item.getKey()));
 		}

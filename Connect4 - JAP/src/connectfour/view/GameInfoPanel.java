@@ -18,9 +18,9 @@ import javax.swing.border.Border;
 public class GameInfoPanel extends JPanel{
 
 	/** Player 1 name*/
-	String player1 = "";
+	String player1 = "Player 1";
 	/** Player 2 name*/
-	String player2 = "";
+	String player2 = "Player 2";
 	/** Current P1 wins*/
 	int player1Wins = 0;
 	/** Current P2 wins*/
@@ -86,6 +86,7 @@ public class GameInfoPanel extends JPanel{
         add(player1WinsLabel);
         add(turnTimerLabel);
         add(player2WinsLabel);
+    
 	}
 	
 	/**
