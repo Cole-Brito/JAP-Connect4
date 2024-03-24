@@ -34,8 +34,13 @@ public class GameBoard {
 		return row;
 	}
 	
-	//TODO: change return to enum or int to account for draws (ie. EMPTY, P1WIN, P2WIN, DRAW
-	// may have overlap with GameManager enums
+	/**
+	 * TODO:
+	 * @param row
+	 * @param column
+	 * @param player
+	 * @return
+	 */
 	public boolean checkWinStates(int row, int column, int player) {
 		int minC = Math.max(column - 3, 0);
 		int maxC = Math.min(column + 4, NUM_COLUMNS);

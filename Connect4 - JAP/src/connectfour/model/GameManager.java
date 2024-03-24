@@ -191,25 +191,13 @@ public class GameManager {
 	public static final String GAME_STATE_PROPERTY_NAME = "GameState";
 	
 	/**
-	 * Registers a PropertyChangeListener to responds to changes to GameBoard.
-	 * Event will be fired when a new message is added.<br>
-	 * Note that the PropertyChangeEvent will use {@link GameBoardPropertyChangedEvent} as old and new values.
+	 * Registers a PropertyChangeListener to responds to changes to this model.
+	 * Event will be fired upon changes to GameBoard, Players, GameState, etc.<br>
 	 * 
 	 * @param listener The {@link PropertyChangeListener} that responds to GameBoard being changed
 	 */
-	public void registerGameBoardTilePropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangedSupport.addPropertyChangeListener(GAME_BOARD_TILE_PROPERTY_NAME, listener);
-	}
-	
-	/**
-	 * Registers a PropertyChangeListener to responds to changes to GameState.
-	 * Event will be fired when a Game State changes.<br>
-	 * Note that the PropertyChangeEvent will use {@link GameState} enum as old and new values.
-	 * 
-	 * @param listener The {@link PropertyChangeListener} that responds to GameBoard being changed
-	 */
-	public void registerGameStatePropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangedSupport.addPropertyChangeListener(GAME_STATE_PROPERTY_NAME, listener);
+	public void registerPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChangedSupport.addPropertyChangeListener(propertyName, listener);
 	}
 	
 	/**

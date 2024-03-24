@@ -286,6 +286,10 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 		accessItem.addActionListener(listener);
 	}
 	
+	/**
+	 * Updates the game label (rightLabel) with text based on the current GameState
+	 * @param state
+	 */
 	private void updateGameStateLabel(GameState state) {
 		switch(state) {
 		case DEFAULT:
@@ -314,6 +318,9 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 		
 	}
 
+	/**
+	 * Updates the MainWindow menus to use the new language keywords
+	 */
 	@Override
 	public void onLocaleChanged(LanguageSet newLanguage) {
 		// This is kinda gross lol
