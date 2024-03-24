@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,7 +17,7 @@ import javax.swing.border.Border;
  * @author Cole Brito, Paul Squires
  *
  */
-public class GameInfoPanel extends JPanel{
+public class GameInfoPanel extends JPanel implements PropertyChangeListener{
 
 	/** Player 1 name*/
 	String player1 = "Player 1";
@@ -154,5 +156,14 @@ public class GameInfoPanel extends JPanel{
     public void setTurnTimer(String time) {
         turnTimerLabel.setText("Turn time: " + time);
     }
+
+	/**
+	 * TODO:
+	 */
+    @Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 	

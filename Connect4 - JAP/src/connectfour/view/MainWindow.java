@@ -10,12 +10,16 @@ package connectfour.view;
 import javax.swing.*;
 
 import connectfour.controller.GameController;
+import connectfour.model.GameManager;
+import connectfour.model.GameState;
 import connectfour.model.locale.LanguageSet;
 import connectfour.model.locale.LocaleChangeListener;
 import connectfour.model.locale.LocaleManager;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -25,7 +29,7 @@ import java.util.Map;
  *
  */
 import java.util.Set;
-public class MainWindow extends JFrame implements LocaleChangeListener {
+public class MainWindow extends JFrame implements PropertyChangeListener, LocaleChangeListener {
 
 	/**
 	 * Serial Version UID, used to compare class versions when deserializing
@@ -43,7 +47,7 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 	private final JLabel leftLabel;
 	private final JLabel rightLabel;
 	
-	private Map<String, AbstractButton> localeResponsiveMenuItems = new HashMap();
+	private Map<String, AbstractButton> localeResponsiveMenuItems = new HashMap<>();
 	
 	/**Menu Items**/
 	JMenu fileMenu;
@@ -281,13 +285,57 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		themeItem.addActionListener(listener);
 		accessItem.addActionListener(listener);
 	}
+	
+	/**
+	 * Updates the game label (rightLabel) with text based on the current GameState
+	 * @param state
+	 */
+	private void updateGameStateLabel(GameState state) {
+		switch(state) {
+		case DEFAULT:
+			rightLabel.setText("Waiting...");
+			break;
+		case DRAW:
+			rightLabel.setText("DRAW");
+			break;
+		case PLAYER_1_TURN:
+			//TODO: Replace text with player's names
+			rightLabel.setText("Player 1's Turn");
+			break;
+		case PLAYER_1_WIN:
+			rightLabel.setText("PLAYER 1 WINS!");
+			break;
+		case PLAYER_2_TURN:
+			rightLabel.setText("Player 2's Turn");
+			break;
+		case PLAYER_2_WIN:
+			rightLabel.setText("PLAYER 2 WINS!");
+			break;
+		default:
+			break;
+		}
+		
+		
+	}
 
+	/**
+	 * Updates the MainWindow menus to use the new language keywords
+	 */
 	@Override
 	public void onLocaleChanged(LanguageSet newLanguage) {
 		// This is kinda gross lol
 		// ^ a little bit lmao
 		for(var item: localeResponsiveMenuItems.entrySet()) {
 			item.getValue().setText(newLanguage.getKeyword(item.getKey()));
+		}
+	}
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		if (evt.getPropertyName() == GameManager.GAME_STATE_PROPERTY_NAME) {
+			updateGameStateLabel((GameState)evt.getNewValue());
 		}
 	}
 	
