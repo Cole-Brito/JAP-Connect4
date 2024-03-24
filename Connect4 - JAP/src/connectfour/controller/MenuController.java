@@ -4,14 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import connectfour.model.locale.LocaleManager;
+import connectfour.model.GameManager;
 
 public class MenuController implements ActionListener {
 	
 	//private static final String MENU_LANGUAGE_EN = "english";
 	//private static final String MENU_LANGUAGE_FR = "french";
 
+	private GameManager gameManager;
+	
 	public MenuController() {
-		
+		this.gameManager = GameManager.getInstance();
+        System.out.println(gameManager);	
 	}
 
 	@Override
@@ -24,6 +28,8 @@ public class MenuController implements ActionListener {
     	case "save":
     		break;
     	case "restart":	
+    		System.out.println("Restarting...");
+    		gameManager.restartGame();
     		break;
     	case "playerlist":
     		break;

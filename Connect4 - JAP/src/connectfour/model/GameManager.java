@@ -91,8 +91,6 @@ public class GameManager {
 			return true;
 		}
 		
-		
-		
 		switchPlayers();
 		return true;
 	}
@@ -121,10 +119,6 @@ public class GameManager {
 		this.gameState = state;
 	}
 	
-//	public void propertyChanged() {
-//		
-//	}
-	
 	private void switchPlayers() {
 		if (activePlayer == player1) {
 			activePlayer = player2;
@@ -133,6 +127,25 @@ public class GameManager {
 			activePlayer = player1;
 			updateGameState(GameState.PLAYER_1_TURN);
 		}
+	}
+	
+	/**
+	 * Method to restart the game, setting all tiles to default state
+	 * and setting player 1 as the active player
+	 */
+	public void restartGame() {
+		int r;
+		int c = 0;
+		for(r = 0; r < 6; r++) {
+			System.out.println("row changed");
+			for(c = 0; c < 7; c++) {
+				System.out.println("column changed");
+				gameBoard.setTileState(r, c, 0);
+				onGameBoardChanged(r,c,0);
+			}
+		}
+		updateGameState(GameState.PLAYER_1_TURN);
+		
 	}
 	
 	

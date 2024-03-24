@@ -164,7 +164,8 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		
 		// Add the right panel group to MainWindow
 		content.add(rightPanelGroup);
-		
+		//Centering the window
+		setLocationRelativeTo(null);
 		// pack to have elements adjust size to fit contents, then make sure window is visible
 		pack();
 		setVisible(true);
@@ -250,10 +251,6 @@ public class MainWindow extends JFrame implements LocaleChangeListener {
 		aboutItem.setActionCommand("about");
 		themeItem.setActionCommand("theme");
 		accessItem.setActionCommand("access");
-		
-		
-		//Centering the window
-		setLocationRelativeTo(null);
 	}
 	
 	private JMenu addLocaleMenu(String localeKey) {
