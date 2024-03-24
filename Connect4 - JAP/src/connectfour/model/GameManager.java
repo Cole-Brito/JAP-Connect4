@@ -86,7 +86,8 @@ public class GameManager {
 				return true;
 			}
 		}
-		else if (gameBoard.isBoardFull()) {
+		
+		if (gameBoard.isBoardFull()) {
 			updateGameState(GameState.DRAW);
 			return true;
 		}
@@ -116,7 +117,11 @@ public class GameManager {
 	}
 	
 	private void updateGameState(GameState state) {
-		this.gameState = state;
+		var oldState = gameState;
+		if (state != gameState) {
+			gameState = state;
+			onGameStateChanged(gameState, oldState);
+		}
 	}
 	
 	private void switchPlayers() {
@@ -150,21 +155,38 @@ public class GameManager {
 	/********** PropertyChanged fields and methods **********/
 	
 	public static final String GAME_BOARD_TILE_PROPERTY_NAME = "GameBoardTile";
+	public static final String GAME_BOARD_FULL_PROPERTY_NAME = "GameBoardFull";
+	public static final String GAME_STATE_PROPERTY_NAME = "GameState";
 	
 	/**
 	 * Registers a PropertyChangeListener to responds to changes to GameBoard.
+	 * Event will be fired when a new message is added.<br>
+	 * Note that the PropertyChangeEvent will use {@link GameBoardPropertyChangedEvent} as old and new values.
+	 * 
+	 * @param listener The {@link PropertyChangeListener} that responds to GameBoard being changed
+	 */
+	public void registerGameBoardTilePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangedSupport.addPropertyChangeListener(GAME_BOARD_TILE_PROPERTY_NAME, listener);
+	}
+	
+	/**
+	 * Registers a PropertyChangeListener to responds to changes to GameState.
 	 * Event will be fired when a new message is added.<br>
 	 * Note that the PropertyChangeEvent will use {@link } as old and new values.
 	 * 
 	 * @param listener The {@link PropertyChangeListener} that responds to GameBoard being changed
 	 */
-	public void registerGameBoardPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangedSupport.addPropertyChangeListener(GAME_BOARD_TILE_PROPERTY_NAME, listener);
+	public void registerGameStatePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangedSupport.addPropertyChangeListener(GAME_STATE_PROPERTY_NAME, listener);
 	}
 	
 	public void onGameBoardChanged(int row, int column, int state) {
 		propertyChangedSupport.firePropertyChange(GAME_BOARD_TILE_PROPERTY_NAME, null, 
 			new GameBoardPropertyChangedEvent(row, column, state));
+	}
+	
+	public void onGameStateChanged(GameState newState, GameState oldState) {
+		propertyChangedSupport.firePropertyChange(GAME_STATE_PROPERTY_NAME, oldState, newState);
 	}
 	
 	public class GameBoardPropertyChangedEvent{

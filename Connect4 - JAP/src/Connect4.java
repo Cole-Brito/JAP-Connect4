@@ -53,7 +53,8 @@ public class Connect4 {
 		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow);
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
 		mainWindow.registerMenuListeners(menuController);
-		GameManager.getInstance().registerGameBoardPropertyChangeListener(mainWindow.gameBoardPanel);
+		GameManager.getInstance().registerGameBoardTilePropertyChangeListener(mainWindow.gameBoardPanel);
+		GameManager.getInstance().registerGameStatePropertyChangeListener(mainWindow);
 		
 		chatController = new ChatController(mainWindow.chatTextInputField);
 
