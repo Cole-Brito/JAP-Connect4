@@ -1,3 +1,13 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
+ */
+
 package connectfour.view;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -18,7 +28,9 @@ import connectfour.model.GameManager.GameBoardPropertyChangedEvent;
  */
 public class GameBoardPanel implements PropertyChangeListener {
 	
+	/** Number of rows to use in GameBoardTile array */
 	private final static int NUM_ROWS = 6;
+	/** Number of columns to use in GameBoardTile array */
 	private final static int NUM_COLUMNS = 7;
 	
 	/** Array of tile JButtons*/
@@ -73,11 +85,21 @@ public class GameBoardPanel implements PropertyChangeListener {
 //        }
 //    };
     
+    /**
+     * Updates the state of a single tile
+     * @param row The row index of the tile
+     * @param column The column index of the tile
+     * @param state The new state for the tile
+     */
     public void updateBoardState(int row, int column, int state) {
     	assert(row >= 0 && row < NUM_ROWS && column >= 0 && column < NUM_COLUMNS);
     	this.tiles[row][column].updateState(state);
     }
     
+    /**
+     * Update the entire game board with new tile states
+     * @param tiles The 2d array of tile states
+     */
     public void updateFullBoard(int[][] tiles) {
     	assert(tiles.length == NUM_ROWS && tiles[0].length == NUM_COLUMNS);
     	for(int row = 0; row < tiles.length; ++row) {
@@ -87,6 +109,9 @@ public class GameBoardPanel implements PropertyChangeListener {
     	}
     }
 
+    /**
+     * PropertyChange event that responds to changes in the GameBoard model
+     */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName() == GameManager.GAME_BOARD_TILE_PROPERTY_NAME){

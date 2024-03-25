@@ -1,8 +1,11 @@
 /**
- * Java Application Program - Connect Four
- * Authors:	Paul Squires
- * 			Cole Brito
- * Modified: Feb. 10, 2024
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
  */
 
 package connectfour.view;
@@ -35,6 +38,7 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 	 */
 	private final StyledDocument styleDoc;
 	
+	/** Reference to the ChatManager that this text pane uses to populate chat messages */
 	private final ChatManager chatManager;
 	
 	/**
@@ -141,6 +145,9 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 		
 	}
 
+	/**
+	 * PropertyChange event that is called when ChatManager updates model
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub

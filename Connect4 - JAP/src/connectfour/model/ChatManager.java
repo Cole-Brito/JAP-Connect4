@@ -1,3 +1,13 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
+ */
+
 package connectfour.model;
 
 import java.beans.PropertyChangeEvent;
@@ -7,9 +17,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Tracks history of chat messages and senders
+ */
 public class ChatManager {
 	
+	/** The singleton instance of ChatManager */
 	private static ChatManager _instance;
+	
+	/**
+	 * Gets the singleton instance of ChatManager.
+	 * Constructs a new ChatManager only the first time it is called.
+	 * @return The instance of ChatManager
+	 */
 	public static ChatManager getInstance() {
 		if (_instance == null) {
 			_instance = new ChatManager();
@@ -17,9 +37,14 @@ public class ChatManager {
 		return _instance;
 	}
 	
+	/** The list of chat messages */
 	private final List<String> messageHistory;
+	/** PropertyChangeSupport for notifying listeners when messageHistory changes */
 	private final PropertyChangeSupport propertyChangedSupport;
 	
+	/**
+	 * Private constructor for ChatManager singleton.
+	 */
 	private ChatManager() {
 		messageHistory = new ArrayList<>();
 		propertyChangedSupport = new PropertyChangeSupport(this);
@@ -63,7 +88,7 @@ public class ChatManager {
 	
 	/**
 	 * Gets the list of all messages as a readonly list
-	 * @return
+	 * @return readonly list of chat messages
 	 */
 	public List<String> getMessageHistory(){
 		return Collections.unmodifiableList(messageHistory);
@@ -85,9 +110,16 @@ public class ChatManager {
 	 * The structure used in {@link PropertyChangeEvent}
 	 */
 	public class MessageEventValue{
+		/** The chat message */
 		public final String message;
+		/** The ID of the message, used to validate that previous message was received. */
 		public final int id;
 		
+		/**
+		 * Construct a new MessageEventValue
+		 * @param newMessage The chat message
+		 * @param messageID The ID of this message
+		 */
 		public MessageEventValue(String newMessage, int messageID) {
 			message = newMessage;
 			id = messageID;

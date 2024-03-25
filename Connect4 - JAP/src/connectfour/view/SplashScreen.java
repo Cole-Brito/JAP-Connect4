@@ -1,3 +1,13 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
+ */
+
 package connectfour.view;
 
 import java.awt.BorderLayout;
@@ -21,6 +31,9 @@ public class SplashScreen extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Create a new SplashScreen with the proper appearance.
+	 */
 	public SplashScreen() {
 		JPanel content = (JPanel) getContentPane();
 		

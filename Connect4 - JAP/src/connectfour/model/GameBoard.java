@@ -1,21 +1,50 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
+ */
+
 package connectfour.model;
 
+/**
+ * Represents the Game Board using a 2d array of tile states.
+ * Contains methods for updating the board and checking win states.
+ */
 public class GameBoard {
+	
+	/** 2d array of tile states representing the game board */
 	private int[][] tiles;
 	
-	//Board should never be bigger or smaller than this
+	/** The number of rows on the game board */
 	final static int NUM_ROWS = 6;
+	/** The number of columns on the game board */
 	final static int NUM_COLUMNS = 7;
 	
+	/**
+	 * Instantiate the board with a new array of tiles
+	 */
 	public GameBoard() {
 		this.tiles = new int[NUM_ROWS][NUM_COLUMNS];
 	}
 	
-	//set array of tiles to new tiles being passed in (i.e. restarting, loading games)
+	/**
+	 * Set array of tiles to new tiles being passed in (i.e. restarting, loading games)
+	 * @param tiles The array of tile states
+	 */
 	public void setBoardState(int[][] tiles) {
 		this.tiles = tiles;
 	}
 	
+	/**
+	 * Update the tile state for a specific row or column
+	 * @param row The row index of the tile to update
+	 * @param column The column index of the tile to update
+	 * @param state The new state of the tile
+	 */
 	public void setTileState(int row, int column, int state){
 		this.tiles[row][column] = state;
 	}
@@ -35,11 +64,12 @@ public class GameBoard {
 	}
 	
 	/**
-	 * TODO:
-	 * @param row
-	 * @param column
-	 * @param player
-	 * @return
+	 * Check if a player has won (ie. 4 tiles in a row).
+	 * Does not check for draws.
+	 * @param row The row that the new tile was placed at.
+	 * @param column The column that the new tile was placed at.
+	 * @param player The player that placed the tile (ie. 1 or 2)
+	 * @return true if the player won, false otherwise
 	 */
 	public boolean checkWinStates(int row, int column, int player) {
 		int minC = Math.max(column - 3, 0);

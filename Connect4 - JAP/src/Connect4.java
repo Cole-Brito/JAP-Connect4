@@ -1,3 +1,13 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
+ */
+
 import connectfour.controller.ChatController;
 import connectfour.controller.GameController;
 import connectfour.controller.MenuController;
@@ -8,17 +18,19 @@ import connectfour.view.MainWindow;
 import connectfour.view.SplashScreen;
 
 /**
- * 
- * @author Cole Brito
- *
+ * Main application class. Contains main function.
+ * Stores references and handles initialization of necessary models, views and controllers
  */
-
 public class Connect4 {
 
+	/** Reference to the MainWindow */
 	private static MainWindow mainWindow;
 	
+	/** Reference to the GameController, keeps controller loaded. */
 	private static GameController gameController;
+	/** Reference to the ChatController, keeps controller loaded. */
 	private static ChatController chatController;
+	/** Reference to the MenuController, keeps controller loaded. */
 	private static MenuController menuController;
 	
 	/** 

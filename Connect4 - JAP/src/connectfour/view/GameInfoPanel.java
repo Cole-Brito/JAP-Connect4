@@ -1,3 +1,13 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
+ */
+
 package connectfour.view;
 
 import java.awt.Color;
@@ -13,12 +23,10 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import connectfour.model.GameManager;
-import connectfour.model.GameState;
+
 
 /**
- * 
- * @author Cole Brito, Paul Squires
- *
+ * JPanel that contains game information, including player names, win counts, and timer displays.
  */
 public class GameInfoPanel extends JPanel implements PropertyChangeListener{
 
@@ -160,7 +168,7 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener{
     }
 
 	/**
-	 * TODO:
+	 * PropertyChange event for when GameManager updates player win counts.
 	 */
     @Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -171,7 +179,7 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener{
 				setPlayer2Wins(newValue.player2WinCount);
 			}
 			else {
-				System.err.println("evt.getNewValue() was null or unexpected type in GameInfoPale#propertyChange"
+				System.err.println("evt.getNewValue() was null or unexpected type in GameInfoPanel#propertyChange"
 						+ " for property name: " + evt.getPropertyName());
 			}
 		}

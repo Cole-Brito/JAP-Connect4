@@ -1,11 +1,13 @@
 /**
- * The purpose of this class is to hold the JFrame that will hold all subsequent
- * containers and menu options
+ * Connect4
  * Authors: Cole Brito, Paul Squires 
- * Professor: 
- * Last Modified:
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
  * Algonquin College CET-CS
+ * JAP - Assignment 2-2
  */
+
 package connectfour.view;
 import javax.swing.*;
 
@@ -23,12 +25,11 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-/**
- * 
- * @author Cole Brito, Paul Squires
- *
- */
 import java.util.Set;
+
+/**
+ * The main UI window, containing all other UI elements for the game.
+ */
 public class MainWindow extends JFrame implements PropertyChangeListener, LocaleChangeListener {
 
 	/**
@@ -36,43 +37,69 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/** Stored reference of the GameBoardPanel */
 	public final GameBoardPanel gameBoardPanel;
 	
+	/** Stored reference of the GameInfoPanel */
 	public final GameInfoPanel gameInfoPanel;
 	
+	/** Stored reference of the ChatHistoryTextPane */
 	public final ChatHistoryTextPane chatHistoryTextPane;
 	
+	/** Stored reference of the ChatTextInputField */
 	public final ChatTextInputField chatTextInputField;
 	
+	/** The left game panel showing the game name */
 	private final JLabel leftLabel;
+	/** The right game panel showing the game state */
 	private final JLabel rightLabel;
 	
+	/** A map of menu items to respond to locale changes, key is LanguageSet key */
 	private Map<String, AbstractButton> localeResponsiveMenuItems = new HashMap<>();
 	
-	/**Menu Items**/
+	/**File Menu*/
 	JMenu fileMenu;
+	/**Save Menu Item*/
 	JMenuItem saveItem;
+	/**Load Menu Item*/
 	JMenuItem loadItem;
+	/**Game Menu*/
 	JMenu gameMenu;
+	/**Restart Menu Item*/
 	JMenuItem restartItem;
+	/**Player List Menu Item*/
 	JMenuItem playerItem;
+	/**Game Mode Menu Item*/
 	JMenuItem modeItem;
+	/**Network Menu*/
 	JMenu networkMenu;
+	/**Host Menu Item*/
 	JMenuItem hostItem;
+	/**Connect Menu Item*/
 	JMenuItem connectItem;
+	/**Disconnect Menu Item*/
 	JMenuItem disconnectItem;
+	/**Language Menu*/
 	JMenu langMenu;
+	/**English Menu Item*/
 	JMenuItem englishItem;
+	/**French Menu Item*/
 	JMenuItem frenchItem;
+	/**Help Menu*/
 	JMenu helpMenu;
+	/**How to Play Menu Item*/
 	JMenuItem controlsItem;
+	/**About Menu Item*/
 	JMenuItem aboutItem;
+	/**View Menu*/
 	JMenu viewMenu;
+	/**Theme Menu Item*/
 	JMenuItem themeItem;
+	/**Accessibility Menu Item*/
 	JMenuItem accessItem;
 		
 	/**
-	 * 
+	 * Constructs the MainWindow and all child UI elements
 	 */
 	public MainWindow() {
 		super("Connect 4");
@@ -257,18 +284,32 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 		accessItem.setActionCommand("access");
 	}
 	
+	/**
+	 * Creates a JMenu and adds to the list of elements that respond to locale changes
+	 * @param localeKey The key to the language keyword to use for this element
+	 * @return The newly created JMenu
+	 */
 	private JMenu addLocaleMenu(String localeKey) {
 		JMenu menu = new JMenu(LocaleManager.getInstance().getKeywordFromActiveLanguage(localeKey));
 		localeResponsiveMenuItems.put(localeKey, menu);
 		return menu;
 	}
 	
+	/**
+	 * Creates a JMenuItem and adds to the list of elements that respond to locale changes
+	 * @param localeKey The key to the language keyword to use for this element
+	 * @return The newly created JMenuItem
+	 */
 	private JMenuItem addLocaleMenuItem(String localeKey) {
 		JMenuItem menuItem = new JMenuItem(LocaleManager.getInstance().getKeywordFromActiveLanguage(localeKey));
 		localeResponsiveMenuItems.put(localeKey, menuItem);
 		return menuItem;
 	}
 
+	/**
+	 * Registers an ActionListener to respond to all Menu items
+	 * @param listener The ActionListener to respond to menu items
+	 */
 	public void registerMenuListeners(ActionListener listener) {
 		loadItem.addActionListener(listener);
 		saveItem.addActionListener(listener);
@@ -288,7 +329,7 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 	
 	/**
 	 * Updates the game label (rightLabel) with text based on the current GameState
-	 * @param state
+	 * @param state The GameState to update the label for
 	 */
 	private void updateGameStateLabel(GameState state) {
 		switch(state) {
@@ -329,7 +370,9 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 		}
 	}
 
-
+	/**
+	 * PropertyChange event that responds to Game State changes
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub

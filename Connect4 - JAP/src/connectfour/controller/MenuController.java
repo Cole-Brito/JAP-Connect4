@@ -1,3 +1,13 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
+ */
+
 package connectfour.controller;
 
 import java.awt.event.ActionEvent;
@@ -6,18 +16,29 @@ import java.awt.event.ActionListener;
 import connectfour.model.locale.LocaleManager;
 import connectfour.model.GameManager;
 
+/**
+ * Controller that responds to Menu UI elements and relays
+ * actions to appropriate models.
+ */
 public class MenuController implements ActionListener {
 	
 	//private static final String MENU_LANGUAGE_EN = "english";
 	//private static final String MENU_LANGUAGE_FR = "french";
 
+	/** Reference to the GameManager */
 	private GameManager gameManager;
 	
+	/**
+	 * Instantiate the MenuController and set the GameManager reference
+	 */
 	public MenuController() {
 		this.gameManager = GameManager.getInstance();
-        System.out.println(gameManager);	
 	}
 
+	/**
+	 * Respond to ActionEvents from the menu.
+	 * Perform a different task based on action command.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

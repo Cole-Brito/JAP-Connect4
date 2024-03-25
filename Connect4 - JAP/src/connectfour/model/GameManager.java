@@ -1,9 +1,23 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: March 24, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 2-2
+ */
+
 package connectfour.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Timer;
 
+/**
+ * Handles the current GameBoard and win states.
+ * Validates tile placements and active players.
+ */
 public class GameManager {
 	
 	/** The singleton instance of GameManager */
@@ -20,17 +34,24 @@ public class GameManager {
 		return _instance;
 	}
 	
-	private GameBoard gameBoard = new GameBoard(); 
+	/** The GameBoard that this class manages */
+	private GameBoard gameBoard = new GameBoard();
+	/** The current GameState, such as player turns or win states */
 	private GameState gameState; 
 	
 	private Timer gameTimer = new Timer();
 	private Timer turnTimer = new Timer();
 	
+	/** The current player 1 for this game */
 	private Player player1;
+	/** The current player 2 for this game */
 	private Player player2;
-	public Player activePlayer;
+	/** The currently acting player */
+	public Player activePlayer; //TODO: change to method derived from gameState
 	
+	/** The total player 1 wins this session */
 	private int player1WinCount;
+	/** The total player 2 wins this session */
 	private int player2WinCount;
 	
 	/** PropertyChangeSupport for notifying PropertyChangeListeners of updated model */
@@ -122,8 +143,8 @@ public class GameManager {
 	
 	/**
 	 * Saves the state of the game as a txt file 
-	 * @param file
-	 * @return
+	 * @param file The filename to read
+	 * @return false TODO:
 	 */
 	public boolean saveGame(String file) {
 		//TODO: implement this method
@@ -131,8 +152,8 @@ public class GameManager {
 	}
 	/**
 	 * loads the state of the game from a txt file 
-	 * @param file
-	 * @return
+	 * @param file The filename to read
+	 * @return false TODO:
 	 */
 	public boolean loadGame(String file) {
 		//TODO: implement this method
@@ -169,7 +190,10 @@ public class GameManager {
 	
 	/**
 	 * Method to restart the game, setting all tiles to default state
-	 * and setting player 1 as the active player
+	 * and setting player 1 as the active player.
+	 * <br><br>TODO: change to update whole board state at once, and add property change
+	 * for entire board state. May cause problems with passing to Network otherwise 
+	 * -- Paul S.
 	 */
 	public void restartGame() {
 		for(int r = 0; r < 6; r++) {
@@ -181,13 +205,20 @@ public class GameManager {
 			}
 		}
 		updateGameState(GameState.PLAYER_1_TURN);
-		
 	}
 	
+	/**
+	 * Getter for the player1WinCount
+	 * @return player1WinCount
+	 */
 	public int getPlayer1WinCount() {
 		return player1WinCount;
 	}
 	
+	/**
+	 * Getter for the player2WinCount
+	 * @return player2WinCount
+	 */
 	public int getPlayer2WinCount() {
 		return player2WinCount;
 	}
@@ -208,7 +239,8 @@ public class GameManager {
 	 * Registers a PropertyChangeListener to responds to changes to this model.
 	 * Event will be fired upon changes to GameBoard, Players, GameState, etc.<br>
 	 * 
-	 * @param listener The {@link PropertyChangeListener} that responds to GameBoard being changed
+	 * @param propertyName The name of the property for the listener to respond to.
+	 * @param listener The {@link PropertyChangeListener} that responds to GameBoard being changed.
 	 */
 	public void registerPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChangedSupport.addPropertyChangeListener(propertyName, listener);
@@ -234,6 +266,9 @@ public class GameManager {
 		propertyChangedSupport.firePropertyChange(GAME_STATE_PROPERTY_NAME, oldState, newState);
 	}
 	
+	/**
+	 * Notify PropertyChangeListeners when the player win counts change
+	 */
 	public void onGameWinCountChanged() {
 		propertyChangedSupport.firePropertyChange(GAME_WIN_COUNT_PROPERTY_NAME, null,
 			new GameWinCountChangedEvent(player1WinCount, player2WinCount));
@@ -244,8 +279,11 @@ public class GameManager {
 	 * the {@value GameManager#GAME_BOARD_TILE_PROPERTY_NAME} property name.
 	 */
 	public class GameBoardPropertyChangedEvent{
+		/** The row index of the tile update */
 		public final int row;
+		/** The column index of the tile update */
 		public final int column;
+		/** The state of the tile */
 		public final int state;
 		
 		/**
@@ -266,7 +304,9 @@ public class GameManager {
 	 * the {@value GameManager#GAME_WIN_COUNT_PROPERTY_NAME} property name.
 	 */
 	public class GameWinCountChangedEvent{
+		/** The Player 1 win count */
 		public final int player1WinCount;
+		/** The Player 2 win count */
 		public final int player2WinCount;
 		
 		/**
