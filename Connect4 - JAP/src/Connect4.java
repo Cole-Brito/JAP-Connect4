@@ -63,6 +63,7 @@ public class Connect4 {
 		gameController = new GameController();
 		menuController = new MenuController(mainWindow);
 		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow);
+		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow.gameInfoPanel);
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
 		mainWindow.registerMenuListeners(menuController);
 		var gameManager = GameManager.getInstance();		
