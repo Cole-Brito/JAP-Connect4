@@ -49,7 +49,7 @@ public class Connect4 {
 		mainWindow.setVisible(true);
 		
 		gameController = new GameController();
-		menuController = new MenuController();
+		menuController = new MenuController(mainWindow);
 		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow);
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
 		mainWindow.registerMenuListeners(menuController);

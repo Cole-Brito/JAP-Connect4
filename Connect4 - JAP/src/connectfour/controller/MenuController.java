@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import connectfour.model.locale.LocaleManager;
+import connectfour.view.MainWindow;
 import connectfour.model.GameManager;
 
 public class MenuController implements ActionListener {
@@ -12,8 +13,10 @@ public class MenuController implements ActionListener {
 	//private static final String MENU_LANGUAGE_FR = "french";
 
 	private GameManager gameManager;
+	private MainWindow mainWindow;
 	
-	public MenuController() {
+	public MenuController(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
 		this.gameManager = GameManager.getInstance();
         System.out.println(gameManager);	
 	}
@@ -48,10 +51,12 @@ public class MenuController implements ActionListener {
     		LocaleManager.getInstance().setActiveLanguageSet("FR");
     		break;
     	case "controls":
+    		mainWindow.displayControls();
     		break;
     	case "theme":
     		break;
     	case "about":
+    		mainWindow.displayAbout();
     		break;
     	case "access":
     		break;
