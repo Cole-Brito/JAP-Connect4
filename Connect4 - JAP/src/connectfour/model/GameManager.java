@@ -2,7 +2,6 @@ package connectfour.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Timer;
 
 public class GameManager {
 	
@@ -23,8 +22,8 @@ public class GameManager {
 	private GameBoard gameBoard = new GameBoard(); 
 	private GameState gameState; 
 	
-	private Timer gameTimer = new Timer();
-	private Timer turnTimer = new Timer();
+	private ControllableTimer gameTimer = new ControllableTimer(null);
+	private ControllableTimer turnTimer = new ControllableTimer(null);
 	
 	private Player player1;
 	private Player player2;
@@ -157,9 +156,11 @@ public class GameManager {
 		if (activePlayer == player1) {
 			activePlayer = player2;
 			updateGameState(GameState.PLAYER_2_TURN);
+			turnTimer.setStatus(ControllableTimer.RESET);
 		} else {
 			activePlayer = player1;
 			updateGameState(GameState.PLAYER_1_TURN);
+			turnTimer.setStatus(ControllableTimer.RESET);
 		}
 	}
 	
@@ -176,6 +177,8 @@ public class GameManager {
 				onGameBoardChanged(r,c,0);
 			}
 		}
+		gameTimer.setStatus(ControllableTimer.RESET);
+		turnTimer.setStatus(ControllableTimer.RESET);
 		updateGameState(GameState.PLAYER_1_TURN);
 		
 	}
