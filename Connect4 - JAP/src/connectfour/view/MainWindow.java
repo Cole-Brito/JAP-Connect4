@@ -357,6 +357,23 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 		
 		
 	}
+	
+	/**
+	 * Displays the about dialog box
+	 */
+	public void displayAbout() {
+		JOptionPane.showMessageDialog(null, 
+				"This game is made by Paul Squires and Cole Brito, "
+				+ "It was created for the Algonquin College Computer Engineering Technology Course (CET-CS)");
+	}
+	
+	/**
+	 * Displays the help dialog box
+	 */
+	public void displayControls() {
+		JOptionPane.showMessageDialog(null, 
+				"To play click on the column you wish to drop a piece!");
+	}
 
 	/**
 	 * Updates the MainWindow menus to use the new language keywords
@@ -380,6 +397,4 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 			updateGameStateLabel((GameState)evt.getNewValue());
 		}
 	}
-	
-	
 }
