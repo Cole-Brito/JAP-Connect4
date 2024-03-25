@@ -35,6 +35,14 @@ public class TimerDisplayLabel extends JLabel implements ControllableTimerChange
 		super(text);
 		baseText = text;
 	}
+	
+	/**
+	 * Changes the base text that this label displays
+	 * @param text The new base text
+	 */
+	public void setBaseText(String text) {
+		baseText = text;
+	}
 
 	/**
 	 * Updates the current time display

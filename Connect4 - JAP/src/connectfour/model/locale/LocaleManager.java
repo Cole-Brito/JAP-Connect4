@@ -12,6 +12,7 @@ package connectfour.model.locale;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -106,7 +107,7 @@ public class LocaleManager {
 	 * @return true if the LanguageSet was read successfully, false otherwise
 	 */
 	public boolean loadLanguageSet(String fileName) {
-		try (Scanner file = new Scanner(LocaleManager.class.getResourceAsStream(fileName))) {
+		try (Scanner file = new Scanner(LocaleManager.class.getResourceAsStream(fileName), StandardCharsets.UTF_8)) {
 			LanguageSet language = new LanguageSet();
 			//file.useDelimiter(";");
 			
