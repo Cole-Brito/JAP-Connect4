@@ -11,7 +11,6 @@
 package connectfour.view;
 import javax.swing.*;
 
-import connectfour.controller.GameController;
 import connectfour.model.GameManager;
 import connectfour.model.GameState;
 import connectfour.model.locale.LanguageSet;
@@ -365,6 +364,7 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 	@Override
 	public void onLocaleChanged(LanguageSet newLanguage) {
 		// This is kinda gross lol
+		// ^ a little bit lmao
 		for(var item: localeResponsiveMenuItems.entrySet()) {
 			item.getValue().setText(newLanguage.getKeyword(item.getKey()));
 		}

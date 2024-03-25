@@ -18,6 +18,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import connectfour.model.timer.ControllableTimer;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -31,9 +32,9 @@ import connectfour.model.GameManager;
 public class GameInfoPanel extends JPanel implements PropertyChangeListener{
 
 	/** Player 1 name*/
-	String player1 = "";
+	String player1 = "Player 1";
 	/** Player 2 name*/
-	String player2 = "";
+	String player2 = "Player 2";
 	/** Current P1 wins*/
 	int player1Wins = 0;
 	/** Current P2 wins*/
@@ -51,10 +52,10 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener{
     JLabel player2Label;
 
     /** Total game time label*/
-    JLabel gameTimerLabel;
+    TimerDisplayLabel gameTimerLabel;
 
     /** Current turn time label*/
-    JLabel turnTimerLabel;
+    TimerDisplayLabel turnTimerLabel;
 
     /** Player 1 Win Label*/
     JLabel player1WinsLabel;
@@ -76,7 +77,7 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener{
 	 * Creates the JPanel that displays information about the game and players
 	 * 
 	 */
-	protected GameInfoPanel() {
+	public GameInfoPanel() {
 		super(new GridLayout(4, 2));
         setPreferredSize(new Dimension(220, 100));
         setBorder(blackLine);
@@ -84,8 +85,8 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener{
 		
 		player1Label = new JLabel("Player 1: " + player1);
         player2Label = new JLabel("Player 2: " + player2);
-        gameTimerLabel = new JLabel("Game time: ");
-        turnTimerLabel = new JLabel("Turn time: ");
+        gameTimerLabel = new TimerDisplayLabel("Game time: ");
+        turnTimerLabel = new TimerDisplayLabel("Turn time: ");
         player1WinsLabel = new JLabel("Player 1 Wins: " + player1Wins);
         player2WinsLabel = new JLabel("Player 2 Wins: " + player2Wins);
         player1Icon = new JLabel(new ImageIcon(createTeamIcon(Color.RED)));
@@ -153,18 +154,34 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener{
 
     /**
      * updates the turnTimer label with the current turn time
-     * @param time - time taken during the current turn
+     * @param elapsed - time taken during the current turn
      */
-    public void setGameTimer(String time) {
-        gameTimerLabel.setText("Game time: " + time);
+    public void setGameTimer(int elapsed) {
+        gameTimerLabel.setText("Game time: " + elapsed);
     }
 
     /**
      * updates the gameTimer label with the current game time
      * @param time - time taken during the current game
      */
-    public void setTurnTimer(String time) {
+    public void setTurnTimer(int time) {
         turnTimerLabel.setText("Turn time: " + time);
+    }
+    
+    /**
+     * Gets the game timer label
+     * @return gameTimerLabel
+     */
+    public TimerDisplayLabel getGameTimer() {
+    	return gameTimerLabel;
+    }
+    
+    /**
+     * Gets the turn timer label
+     * @return turnTimerLabel
+     */
+    public TimerDisplayLabel getTurnTimer() {
+    	return turnTimerLabel;
     }
 
 	/**

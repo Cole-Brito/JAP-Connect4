@@ -12,7 +12,8 @@ package connectfour.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Timer;
+import connectfour.model.timer.ControllableTimer;
+import connectfour.model.timer.ControllableTimerChangeListener;
 
 /**
  * Handles the current GameBoard and win states.
@@ -39,8 +40,10 @@ public class GameManager {
 	/** The current GameState, such as player turns or win states */
 	private GameState gameState; 
 	
-	private Timer gameTimer = new Timer();
-	private Timer turnTimer = new Timer();
+	/** ControllableTimer to track game time */
+	private ControllableTimer gameTimer = new ControllableTimer(null);
+	/** ControllableTimer to track turn time */
+	private ControllableTimer turnTimer = new ControllableTimer(null);
 	
 	/** The current player 1 for this game */
 	private Player player1;
@@ -70,6 +73,8 @@ public class GameManager {
 		activePlayer = player1;
 		gameState = GameState.PLAYER_1_TURN;
 		propertyChangedSupport = new PropertyChangeSupport(this);
+		//gameTimer.setStatus(ControllableTimer.START);
+		//turnTimer.setStatus(ControllableTimer.START);
 	}
 	
 	/**
@@ -181,10 +186,12 @@ public class GameManager {
 		if (gameState == GameState.PLAYER_1_TURN) {
 			activePlayer = player2;
 			updateGameState(GameState.PLAYER_2_TURN);
+			turnTimer.setStatus(ControllableTimer.RESET);
 		} 
 		else if (gameState == GameState.PLAYER_2_TURN) {
 			activePlayer = player1;
 			updateGameState(GameState.PLAYER_1_TURN);
+			turnTimer.setStatus(ControllableTimer.RESET);
 		}
 	}
 	
@@ -204,6 +211,8 @@ public class GameManager {
 				onGameBoardChanged(r,c,0);
 			}
 		}
+		gameTimer.setStatus(ControllableTimer.RESET);
+		turnTimer.setStatus(ControllableTimer.RESET);
 		updateGameState(GameState.PLAYER_1_TURN);
 	}
 	
@@ -223,6 +232,26 @@ public class GameManager {
 		return player2WinCount;
 	}
 	
+	/**
+	 * Sets a new listener for the game timer
+	 * @param listener The new listener
+	 */
+	public void registerGameTimeListener(ControllableTimerChangeListener listener) {
+		//gameTimer = new ControllableTimer(listener);
+		gameTimer.setListener(listener);
+		gameTimer.start();
+	}
+	
+	/**
+	 * Sets a new listener for the turn timer
+	 * @param listener The new listener
+	 */
+	public void registerTurnTimeListener(ControllableTimerChangeListener listener) {
+		turnTimer.setListener(listener);
+		turnTimer.start();
+		
+
+	}
 	
 	/********** PropertyChanged fields and methods **********/
 	

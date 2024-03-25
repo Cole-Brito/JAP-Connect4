@@ -68,9 +68,11 @@ public class Connect4 {
 		var gameManager = GameManager.getInstance();		
 		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_TILE_PROPERTY_NAME, mainWindow.gameBoardPanel);
 		gameManager.registerPropertyChangeListener(GameManager.GAME_STATE_PROPERTY_NAME, mainWindow);
-		gameManager.registerPropertyChangeListener(GameManager.GAME_WIN_COUNT_PROPERTY_NAME, mainWindow.gameInfoPanel);		
-		
+		gameManager.registerPropertyChangeListener(GameManager.GAME_WIN_COUNT_PROPERTY_NAME, mainWindow.gameInfoPanel);	
 		chatController = new ChatController(mainWindow.chatTextInputField);
+		
+		gameManager.registerGameTimeListener(mainWindow.gameInfoPanel.getGameTimer());
+		gameManager.registerTurnTimeListener(mainWindow.gameInfoPanel.getTurnTimer());
 
 	}
 
