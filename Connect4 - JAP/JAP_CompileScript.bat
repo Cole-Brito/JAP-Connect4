@@ -19,6 +19,7 @@ SET LIBDIR=lib
 SET SRCDIR=src
 SET RESDIR=resources
 SET IMAGEDIR=images
+SET LOCALEDIR=locales
 SET BINDIR=bin
 SET BINERR=labs-javac.err
 SET JARNAME=JAPConnect4.jar
@@ -61,6 +62,7 @@ ECHO "0. Prepare Images and Resources"
 mkdir "%BINDIR%"
 mkdir "%BINDIR%/%RESDIR%/"
 xcopy "%RESDIR%/%IMAGEDIR%" "%BINDIR%/%IMAGEDIR%\\" /y
+xcopy "%RESDIR%/%LOCALEDIR%" "%BINDIR%/%LOCALEDIR%\\" /y
 
 ECHO "1. Compiling ......................"
 javac -Xlint -cp ".;%SRCDIR%;%LIBDIR%" %MAINCLASSSRC% -d %BINDIR% 2> %BINERR%

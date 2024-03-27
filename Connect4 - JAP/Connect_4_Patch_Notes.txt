@@ -1,7 +1,12 @@
 -----------------[Connect 4 Patch Notes]-----------------
 
-Version 0.1		18/02/2024
-[GUI]
+Assignment 2-2		24/04/2024
+- Added MenuContoller to handle menu events
+- Added method to restart game
+- Added supporting methods in GameBoard to help with win condition logic
+	- getFirstEmptyRow, isBoardFull, getTileState, setTileInColumn
+- added PropertyChangeListener to GameManager
+Assignment 1-2		18/02/2024
 - Changed the look of the GameInfo panel
 - Got rid of the borders around the chat area and game info area 
 - Changed the colour of the chat box area from blue to white 
