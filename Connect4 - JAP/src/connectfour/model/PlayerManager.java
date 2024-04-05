@@ -3,9 +3,9 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: March 24, 2024
+ * Last Modified: April 5, 2024
  * Algonquin College CET-CS
- * JAP - Assignment 2-2
+ * JAP - Assignment 3-2
  */
 
 package connectfour.model;
@@ -18,8 +18,6 @@ import java.util.UUID;
 
 /**
  * Tracks a list of Players and their Player Types
- * @author Paul
- *
  */
 public class PlayerManager {
 	
@@ -53,21 +51,6 @@ public class PlayerManager {
 		this.players = new ArrayList<>();
 		addDefaultPlayers();
 	}
-
-	/**
-	 * Adds a remote player with the given socket
-	 * @param userName - name of the user being created 
-	 * @param id - the GUID of the player
-	 * @return true if the player was added successfully
-	 */
-	public boolean addNetworkPlayer(String userName, String id, Socket socket) {
-		if (playerExists(id)) {
-			return false;
-		}
-		Player player = new Player(userName, id, PlayerType.NETWORK, socket);
-		//TODO: Add logic for validating network players
-		return players.add(player);
-	}
 	
 	/**
 	 * This method takes the name and the type of player
@@ -77,7 +60,21 @@ public class PlayerManager {
 	 */
 	public boolean addPlayer(String userName, PlayerType type) {
 		Player player = new Player(userName, type);
-		//TODO: Add logic for validating network players
+		return players.add(player);
+	}
+	
+	/**
+	 * Adds a remote player with the given socket
+	 * @param userName - name of the user being created 
+	 * @param id - the GUID of the player
+	 * @return true if the player was added successfully
+	 */
+	public boolean addNetworkPlayer(String username, String id, Socket socket) {
+		if (playerExists(id)) {
+			System.err.println("Attempt to add player with conflicting UUID: " + username + ", " + id);
+			return false;
+		}
+		Player player = new Player(username, id, PlayerType.NETWORK, socket);
 		return players.add(player);
 	}
 	
@@ -91,6 +88,20 @@ public class PlayerManager {
 			return false;
 		}
 		return players.removeIf(p -> p.getPlayerID().equals(UUID.fromString(id)));
+	}
+	
+	/**
+	 * Gets a player from their UUID
+	 * @param uID The UUID of the player
+	 * @return The player if found, or null otherwise
+	 */
+	public Player getPlayer(String uID) {
+		for (var player: players) {
+			if (player.getPlayerID().equals(UUID.fromString(uID))) {
+				return player;
+			}
+		}
+		return null;
 	}
 
 	/**

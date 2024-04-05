@@ -8,11 +8,14 @@
  * JAP - Assignment 2-2
  */
 
+import java.util.UUID;
+
 import connectfour.controller.ChatController;
 import connectfour.controller.GameController;
 import connectfour.controller.MenuController;
 import connectfour.model.ChatManager;
 import connectfour.model.GameManager;
+import connectfour.model.PlayerManager;
 import connectfour.model.locale.LocaleManager;
 import connectfour.view.MainWindow;
 import connectfour.view.SplashScreen;
@@ -39,6 +42,9 @@ public class Connect4 {
 	 * */
 	public static void main(String[] args) {
 
+		UUID uid = UUID.randomUUID();
+		System.out.println(uid.toString());
+		
 		//Running the splash screen for 5 seconds - code adjusted from Daniel Corimer
 		SplashScreen splashScreen = new SplashScreen();
 		int delay = 5000;
@@ -75,6 +81,9 @@ public class Connect4 {
 		gameManager.registerGameTimeListener(mainWindow.gameInfoPanel.getGameTimer());
 		gameManager.registerTurnTimeListener(mainWindow.gameInfoPanel.getTurnTimer());
 
+		ChatManager.getInstance().addSystemMessage("Welcome to Connect4!");
+		ChatManager.getInstance().addMessage("Hello", gameManager.getPlayer1());
+		ChatManager.getInstance().addMessage("Hi", gameManager.getPlayer2());
 	}
 
 }

@@ -44,7 +44,7 @@ public class LocaleManager {
 	}
 	
 	/** The pattern to use for individual keyword lines in the locale file */
-	private final Pattern languageFilePattern = Pattern.compile("\"(?<key>[\\w.]+)\"=\"(?<value>[\\p{IsLatin}.\\s]+)\"");
+	private final Pattern languageFilePattern = Pattern.compile("\"(?<key>[\\w.]+)\"=\"(?<value>[^\"]+)\"");
 		
 	/** The map of language keys and LanguageSet values */
 	private Map<String, LanguageSet> languageSets;

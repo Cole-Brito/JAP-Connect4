@@ -13,6 +13,7 @@ package connectfour.view;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.regex.Pattern;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -21,6 +22,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import connectfour.model.ChatManager;
+import connectfour.model.GameManager;
+import connectfour.model.PlayerManager;
 
 /**
  * A JTextPane designed to render text to a chat box, one message at a time.
@@ -40,6 +43,8 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 	
 	/** Reference to the ChatManager that this text pane uses to populate chat messages */
 	private final ChatManager chatManager;
+	
+	private final Pattern chatIdentifierRegex = Pattern.compile("\\[(?<type>\\w):(?<uID>[\\w\\-]+):(?<name>[\\w]+)\\]:(?<message>.*)");
 	
 	/**
 	 * Text styles used to render text on this Text Pane
@@ -85,8 +90,8 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 		styleDoc = getStyledDocument();
 		
 		//TEMP - for testing chat box
-		this.addText("[System]: Chat History\n", TextStyle.SYSTEM);
-		this.addText("[Player]: Test Message\nTest\n", TextStyle.PLAYER1);
+		//this.addText("[System]: Chat History\n", TextStyle.SYSTEM);
+		//this.addText("[Player]: Test Message\nTest\n", TextStyle.PLAYER1);
 	}
 	
 	/**
@@ -123,9 +128,37 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 	 * Message is added to the end of the text area.
 	 * @param message The string to add to the chat text area
 	 */
-	public void addTextFromSender(String message) {
-		
-		addText(message, TextStyle.DEFAULT);
+	public void addTextFromSender(String message) throws IllegalArgumentException, IllegalStateException {
+		var matcher = chatIdentifierRegex.matcher(message);
+		if(matcher.matches()) {
+			switch(matcher.group("type")) {
+			case "p":
+				var uid = matcher.group("uID");
+				var player = PlayerManager.getInstance().getPlayer(uid);
+				if (GameManager.getInstance().getPlayer1().equals(player)) {
+					addText(matcher.group("name") + ": " + matcher.group("message"), TextStyle.PLAYER1);
+				}
+				else if (GameManager.getInstance().getPlayer2().equals(player)) {
+					addText(matcher.group("name") + ": " + matcher.group("message"), TextStyle.PLAYER2);
+				}
+				else {
+					addText(matcher.group("name") + ": " + matcher.group("message"), TextStyle.SPECTATOR);
+				}
+				break;
+			case "s":
+				addText(matcher.group("name") + ": " + matcher.group("message"), TextStyle.SYSTEM);
+				break;
+			default:
+				addText(message, TextStyle.DEFAULT);
+				System.out.println("Message didn't contain sender type: " + message);
+				break;
+			}
+		}
+		else {
+			
+			addText(message, TextStyle.DEFAULT);
+			System.out.println("Message didn't match chat pattern: " + message);
+		}
 	}
 	
 	/**
@@ -155,7 +188,13 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 			ChatManager.MessageEventValue newValue = (ChatManager.MessageEventValue)evt.getNewValue();
 			if (newValue != null)
 			{
-				this.addText(newValue.message, TextStyle.DEFAULT);
+				try {
+					this.addTextFromSender(newValue.message);					
+				}
+				catch (Exception e) {
+					System.err.println("Failed to add text to ChatHistory: " + e.getMessage());
+				}
+				//this.addText(newValue.message, TextStyle.DEFAULT);
 			}
 		}
 	}

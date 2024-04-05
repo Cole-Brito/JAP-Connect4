@@ -217,6 +217,22 @@ public class GameManager {
 	}
 	
 	/**
+	 * Gets the current player 1
+	 * @return player1
+	 */
+	public Player getPlayer1() {
+		return player1;
+	}
+	
+	/**
+	 * Gets the current player 2
+	 * @return player2
+	 */
+	public Player getPlayer2() {
+		return player2;
+	}
+	
+	/**
 	 * Getter for the player1WinCount
 	 * @return player1WinCount
 	 */

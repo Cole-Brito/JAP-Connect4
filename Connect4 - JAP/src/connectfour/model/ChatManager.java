@@ -58,7 +58,7 @@ public class ChatManager {
 	 * @param sender The name of the sender
 	 */
 	public void addMessage(String message, String sender) {
-		String formattedMessage = String.format("[p:%s]:%s", sender, message);
+		String formattedMessage = String.format("[p:0:%s]:%s", sender, message);
 		MessageEventValue oldValue = null;
 		if (messageHistory.size() > 0) {
 			oldValue = new MessageEventValue(messageHistory.get(messageHistory.size() - 1), messageHistory.size() - 1);
@@ -69,7 +69,14 @@ public class ChatManager {
 	}
 	
 	public void addMessage(String message, Player sender) {
-		addMessage(message, sender.getName());
+		String formattedMessage = String.format("[p:%s:%s]:%s", sender.getPlayerID().toString(), sender.getName(), message);
+		MessageEventValue oldValue = null;
+		if (messageHistory.size() > 0) {
+			oldValue = new MessageEventValue(messageHistory.get(messageHistory.size() - 1), messageHistory.size() - 1);
+		}
+		messageHistory.add(formattedMessage);
+		propertyChangedSupport.firePropertyChange("messageHistory", oldValue,
+				new MessageEventValue(formattedMessage, messageHistory.size() - 1));
 	}
 	
 	/**
@@ -79,7 +86,7 @@ public class ChatManager {
 	 * @param message The message to add
 	 */
 	public void addSystemMessage(String message) {
-		String formattedMessage = String.format("[s:System]:%s", message);
+		String formattedMessage = String.format("[s:0:System]:%s", message);
 		messageHistory.add(formattedMessage);
 		MessageEventValue oldValue = null;
 		if (messageHistory.size() > 0) {
