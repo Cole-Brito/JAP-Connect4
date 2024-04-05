@@ -170,7 +170,7 @@ public class GameManager {
 	 * is different than the old state.
 	 * @param state The new game state
 	 */
-	private void updateGameState(GameState state) {
+	public void updateGameState(GameState state) {
 		var oldState = gameState;
 		if (state != gameState) {
 			gameState = state;

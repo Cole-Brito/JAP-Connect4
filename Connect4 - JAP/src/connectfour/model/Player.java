@@ -10,6 +10,10 @@
 
 package connectfour.model;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.util.UUID;
+
 /**
  * This class is used for creating player objects 
  */
@@ -19,6 +23,12 @@ public class Player {
 	/** The type of player (local or network) */
 	private PlayerType playerType;
 	
+	/** The ID of the player, used to uniquely identify outside of username */
+	private final UUID uID;
+	
+	/** The client's socket connection to the server. */
+	private Socket clientSocket;
+	
 	/**
 	 * Instantiate a new player
 	 * @param name The username of the player
@@ -27,6 +37,20 @@ public class Player {
 	Player(String name, PlayerType type){
 		this.username = name;
 		this.playerType = type;
+		this.uID = UUID.randomUUID();
+	}
+	
+	/**
+	 * Instantiate a new player with a client socket connection
+	 * @param name The username of the player
+	 * @param type The PlayerType of the player
+	 * @param socket The client's socket connection to the server
+	 */
+	Player(String name, String id, PlayerType type, Socket socket){
+		this.username = name;
+		this.playerType = type;
+		this.clientSocket = socket;
+		this.uID = UUID.fromString(id);
 	}
 	
 	/**
@@ -59,5 +83,22 @@ public class Player {
 	 */
 	public void setPlayerType(PlayerType type) {
 		this.playerType = type;
+	}
+	
+	public UUID getPlayerID() {
+		return uID;
+	}
+	
+	/**
+	 * Attempt to close this player's client socket connection
+	 */
+	public void closeClientSocket() {
+		if (clientSocket != null) {
+			try {
+				clientSocket.close();
+			} catch (IOException e) {
+				System.err.println("Failed to close client socket for: " + username);
+			}
+		}
 	}
 }

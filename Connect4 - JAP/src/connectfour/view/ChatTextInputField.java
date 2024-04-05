@@ -30,6 +30,11 @@ import javax.swing.JTextField;
  */
 public class ChatTextInputField extends JPanel {
 	
+	/**
+	 * Serial Version UID, used to compare class versions when deserializing
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/** The input field for entering chat messages */
 	private final JTextField inputTextField;
 	/** The button used to send chat messages */

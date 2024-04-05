@@ -68,6 +68,10 @@ public class ChatManager {
 				new MessageEventValue(formattedMessage, messageHistory.size() - 1));
 	}
 	
+	public void addMessage(String message, Player sender) {
+		addMessage(message, sender.getName());
+	}
+	
 	/**
 	 * <p>Adds a message to messageHistory using "System" as the sender.
 	 * System messages are prefixed with [s:System]</p>

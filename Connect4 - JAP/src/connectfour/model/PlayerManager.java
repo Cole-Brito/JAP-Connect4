@@ -10,9 +10,11 @@
 
 package connectfour.model;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Tracks a list of Players and their Player Types
@@ -53,6 +55,21 @@ public class PlayerManager {
 	}
 
 	/**
+	 * Adds a remote player with the given socket
+	 * @param userName - name of the user being created 
+	 * @param id - the GUID of the player
+	 * @return true if the player was added successfully
+	 */
+	public boolean addNetworkPlayer(String userName, String id, Socket socket) {
+		if (playerExists(id)) {
+			return false;
+		}
+		Player player = new Player(userName, id, PlayerType.NETWORK, socket);
+		//TODO: Add logic for validating network players
+		return players.add(player);
+	}
+	
+	/**
 	 * This method takes the name and the type of player
 	 * @param userName - name of the user being created 
 	 * @param type - the type of player being created 
@@ -62,6 +79,18 @@ public class PlayerManager {
 		Player player = new Player(userName, type);
 		//TODO: Add logic for validating network players
 		return players.add(player);
+	}
+	
+	/**
+	 * Removes a player with the given UUID
+	 * @param id The String representation of the UUID of the player
+	 * @return true if the player was removed successfully
+	 */
+	public boolean removePlayer(String id) {
+		if (id == null) {
+			return false;
+		}
+		return players.removeIf(p -> p.getPlayerID().equals(UUID.fromString(id)));
 	}
 
 	/**
@@ -78,5 +107,14 @@ public class PlayerManager {
 	private void addDefaultPlayers(){
 		players.add(new Player(PLAYER1_DEFAULT_NAME, PlayerType.LOCAL));
 		players.add(new Player(PLAYER2_DEFAULT_NAME, PlayerType.LOCAL));
+	}
+	
+	private boolean playerExists(String uID) {
+		for (var player: players) {
+			if (player.getPlayerID().equals(UUID.fromString(uID))) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
