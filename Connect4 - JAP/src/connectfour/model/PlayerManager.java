@@ -162,6 +162,8 @@ public class PlayerManager {
 	private void addDefaultPlayers(){
 		localPlayer1 = (new Player(PLAYER1_DEFAULT_NAME, PlayerType.LOCAL));
 		localPlayer2 = (new Player(PLAYER2_DEFAULT_NAME, PlayerType.LOCAL));
+		players.add(localPlayer1);
+		players.add(localPlayer2);
 	}
 	
 	/**

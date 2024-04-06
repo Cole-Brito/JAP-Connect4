@@ -172,8 +172,9 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 		StyleConstants.setBackground(style, Color.LIGHT_GRAY);
 		
 		style = this.addStyle(TextStyle.PLAYER1.name(), defaultStyle);
-		StyleConstants.setBackground(style, new Color(200, 200, 225));
+		StyleConstants.setBackground(style, new Color(225, 200, 200));
 		style = this.addStyle(TextStyle.PLAYER2.name(), defaultStyle);
+		StyleConstants.setBackground(style, new Color(225, 225, 225));
 		style = this.addStyle(TextStyle.SPECTATOR.name(), defaultStyle);
 		
 	}

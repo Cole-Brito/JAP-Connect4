@@ -122,7 +122,18 @@ public class GameBoardPanel implements PropertyChangeListener {
 			else {
 				System.err.println("[GameBoardPanel$propertyChange] Received PropertyChanged newValue was null or "
 						+ "not of type GameManager.GameBoardPropertyChangedEvent.\n"
-						+ "PropertyName: " + GameManager.GAME_BOARD_TILE_PROPERTY_NAME);
+						+ "PropertyName: " + evt.getPropertyName());
+			}
+		}
+		else if (evt.getPropertyName() == GameManager.GAME_BOARD_FULL_PROPERTY_NAME){
+			var gameBoard = (int[][])evt.getNewValue();
+			if (gameBoard != null || gameBoard.length < NUM_ROWS || gameBoard[0].length < NUM_COLUMNS) {
+				updateFullBoard(gameBoard);
+			}
+			else {
+				System.err.println("[GameBoardPanel$propertyChange] Received PropertyChanged newValue was null or "
+						+ "not of type int[][].\n"
+						+ "PropertyName: " + evt.getPropertyName());
 			}
 		}
 	}

@@ -42,9 +42,6 @@ public class Connect4 {
 	 * */
 	public static void main(String[] args) {
 
-		UUID uid = UUID.randomUUID();
-		System.out.println(uid.toString());
-		
 		//Running the splash screen for 5 seconds - code adjusted from Daniel Corimer
 		SplashScreen splashScreen = new SplashScreen();
 		int delay = 5000;
@@ -74,6 +71,7 @@ public class Connect4 {
 		mainWindow.registerMenuListeners(menuController);
 		var gameManager = GameManager.getInstance();		
 		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_TILE_PROPERTY_NAME, mainWindow.gameBoardPanel);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_FULL_PROPERTY_NAME, mainWindow.gameBoardPanel);
 		gameManager.registerPropertyChangeListener(GameManager.GAME_STATE_PROPERTY_NAME, mainWindow);
 		gameManager.registerPropertyChangeListener(GameManager.GAME_WIN_COUNT_PROPERTY_NAME, mainWindow.gameInfoPanel);
 		gameManager.registerPropertyChangeListener(GameManager.GAME_PLAYER1_CHANGE_PROPERTY_NAME, mainWindow.gameInfoPanel);
@@ -81,7 +79,10 @@ public class Connect4 {
 		
 		var playerManager = PlayerManager.getInstance();
 		playerManager.registerPropertyChangeListener(PlayerManager.PLAYER_UPDATE_PROPERTY_NAME, mainWindow.gameInfoPanel);
-		mainWindow.gameInfoPanel.setPlayer1(null);
+		//mainWindow.gameInfoPanel.setPlayer1(playerManager.getLocalPlayer1());
+		//mainWindow.gameInfoPanel.setPlayer2(playerManager.getLocalPlayer2());
+		mainWindow.gameInfoPanel.setPlayer1(gameManager.getPlayer1());
+		mainWindow.gameInfoPanel.setPlayer2(gameManager.getPlayer2());
 		
 		chatController = new ChatController(mainWindow.chatTextInputField);
 		

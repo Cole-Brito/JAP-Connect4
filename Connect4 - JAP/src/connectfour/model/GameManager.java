@@ -49,8 +49,6 @@ public class GameManager {
 	private Player player1;
 	/** The current player 2 for this game */
 	private Player player2;
-	/** The currently acting player */
-	public Player activePlayer; //TODO: change to method derived from gameState
 	
 	/** The total player 1 wins this session */
 	private int player1WinCount;
@@ -69,7 +67,6 @@ public class GameManager {
 		var playerManager = PlayerManager.getInstance();
 		player1 = playerManager.getLocalPlayer1();
 		player2 = playerManager.getLocalPlayer2();
-		activePlayer = player1;
 		gameState = GameState.PLAYER_1_TURN;
 		propertyChangedSupport = new PropertyChangeSupport(this);
 		//gameTimer.setStatus(ControllableTimer.START);
@@ -78,17 +75,16 @@ public class GameManager {
 	
 	/**
 	 * Attempts to place a tile in the given column.
-	 * @param row Is ignored, as tiles will attempt to place in the first open row
 	 * @param column The column to place the tile in
 	 * @param activePlayer Which player is attempting to place a tile. Will only allow placement
 	 * 		if the player is the same as the game's current activePlayer
 	 * @return true if a tile was placed, false if denied for any reason (board full, wrong player, etc.)
 	 */
-	public boolean tryPlaceTile(int row, int column, Player activePlayer) {
+	public boolean tryPlaceTile(int column, Player activePlayer) {
 		
 		int currentPlayer = gameState.getPlayerID();
-		// If no player is active, don't allow tile placement
-		if (currentPlayer < 1) {
+		// If no player is active or wrong player is placing, don't allow tile placement
+		if (currentPlayer < 1 || activePlayer != getActivePlayer()) {
 			return false;
 		}
 		
@@ -183,12 +179,10 @@ public class GameManager {
 	 */
 	private void switchPlayers() {
 		if (gameState == GameState.PLAYER_1_TURN) {
-			activePlayer = player2;
 			updateGameState(GameState.PLAYER_2_TURN);
 			turnTimer.setStatus(ControllableTimer.RESET);
 		} 
 		else if (gameState == GameState.PLAYER_2_TURN) {
-			activePlayer = player1;
 			updateGameState(GameState.PLAYER_1_TURN);
 			turnTimer.setStatus(ControllableTimer.RESET);
 		}
@@ -197,19 +191,10 @@ public class GameManager {
 	/**
 	 * Method to restart the game, setting all tiles to default state
 	 * and setting player 1 as the active player.
-	 * <br><br>TODO: change to update whole board state at once, and add property change
-	 * for entire board state. May cause problems with passing to Network otherwise 
-	 * -- Paul S.
 	 */
 	public void restartGame() {
-		for(int r = 0; r < 6; r++) {
-			System.out.println("row changed");
-			for(int c = 0; c < 7; c++) {
-				System.out.println("column changed");
-				gameBoard.setTileState(r, c, 0);
-				onGameBoardChanged(r,c,0);
-			}
-		}
+		gameBoard.resetBoardState();
+		onGameBoardReset();
 		gameTimer.setStatus(ControllableTimer.RESET);
 		turnTimer.setStatus(ControllableTimer.RESET);
 		updateGameState(GameState.PLAYER_1_TURN);
@@ -230,6 +215,22 @@ public class GameManager {
 	public Player getPlayer2() {
 		return player2;
 	}
+	
+	/**
+	 * Gets the active player based on Game State
+	 * @return the currently acting player, may be null for some game states.
+	 */
+	public Player getActivePlayer() {
+		if (gameState == GameState.PLAYER_1_TURN) {
+			return player1;
+		}
+		else if (gameState == GameState.PLAYER_2_TURN) {
+			return player2;
+		}
+		return null;
+	}
+	
+	
 	
 	/**
 	 * Getter for the player1WinCount
@@ -303,6 +304,13 @@ public class GameManager {
 	public void onGameBoardChanged(int row, int column, int state) {
 		propertyChangedSupport.firePropertyChange(GAME_BOARD_TILE_PROPERTY_NAME, null, 
 			new GameBoardPropertyChangedEvent(row, column, state));
+	}
+	
+	/**
+	 * Notify PropertyChangeListeners when the full GameBoard changes
+	 */
+	public void onGameBoardReset() {
+		propertyChangedSupport.firePropertyChange(GAME_BOARD_FULL_PROPERTY_NAME, null, gameBoard.getBoardState());
 	}
 	
 	/**

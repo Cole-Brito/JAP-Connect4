@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import connectfour.model.*;
+import connectfour.model.network.NetworkManager;
+import connectfour.model.network.NetworkManager.SessionType;
 import connectfour.view.GameBoardTile;
 import connectfour.view.MainWindow;
 
@@ -37,12 +39,17 @@ public class GameController implements ActionListener {
 	/**
 	 * Attempts to place a tile on the GameBoard
 	 * @param column The column of the tile placement
-	 * @param player The player that is placing the tile
 	 */
-    public void updateGameBoard(int column, int player) {
+    public void updateGameBoard(int column) {
     	//TODO: move logic to this method to get active player
     	// and update game board.
     	//TODO: handle Network games as well
+    	if (NetworkManager.getInstance().getSessionType() == SessionType.OFFLINE) {
+    		Player player = gameManager.getActivePlayer(); //Placeholder
+                        
+            gameManager.tryPlaceTile(column, player);
+    	}
+    	
     }
 
     /**
@@ -55,11 +62,10 @@ public class GameController implements ActionListener {
             short row = clickedTile.getRow();
             short column = clickedTile.getColumn();
             //TODO: Move logic to updateGameBoard method
-            Player player = gameManager.activePlayer; //Placeholder
             
             System.out.println("Row clicked: " + row + ", Column clicked: " + column);
             
-            gameManager.tryPlaceTile(row, column, player);
+            updateGameBoard(column);
         }
     }
 }

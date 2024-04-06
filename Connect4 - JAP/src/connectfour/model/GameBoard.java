@@ -40,6 +40,21 @@ public class GameBoard {
 	}
 	
 	/**
+	 * Gets the entire board state
+	 * @return A 2D array of tile states
+	 */
+	public int[][] getBoardState(){
+		return tiles;
+	}
+	
+	/**
+	 * Resets all tiles back to the default state
+	 */
+	public void resetBoardState() {
+		this.tiles = new int[NUM_ROWS][NUM_COLUMNS];
+	}
+	
+	/**
 	 * Update the tile state for a specific row or column
 	 * @param row The row index of the tile to update
 	 * @param column The column index of the tile to update
