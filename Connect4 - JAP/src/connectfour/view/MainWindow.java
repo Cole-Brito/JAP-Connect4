@@ -102,7 +102,7 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 	 */
 	public MainWindow() {
 		super("Connect 4");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(false);
 		
 		//690 x 430 was what was on our draft but seems small now

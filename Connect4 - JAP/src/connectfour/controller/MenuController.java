@@ -12,8 +12,10 @@ package connectfour.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
 
 import connectfour.model.locale.LocaleManager;
+import connectfour.model.network.NetworkManager;
 import connectfour.view.MainWindow;
 import connectfour.model.GameManager;
 
@@ -62,8 +64,10 @@ public class MenuController implements ActionListener {
     	case "mode":
     		break;
     	case "host":
+    		NetworkManager.getInstance().openServerSocket(35535);
     		break;
     	case "connect":
+    		NetworkManager.getInstance().openClientSocket(null, 35535);
     		break;
     	case "disconnect":
     		break;

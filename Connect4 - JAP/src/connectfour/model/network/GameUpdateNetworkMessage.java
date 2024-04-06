@@ -30,6 +30,11 @@ public class GameUpdateNetworkMessage extends NetworkMessage {
 	public Integer[] gameBoard;
 	
 	/**
+	 * The column of a single tile update
+	 */
+	public Integer column;
+	
+	/**
 	 * Create a new GameUpdateNetworkMessage
 	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
 	 * @param gameState the new gameState. Leave null if unchanged.
@@ -39,5 +44,16 @@ public class GameUpdateNetworkMessage extends NetworkMessage {
 		super(opcode);
 		this.gameState = gameState;
 		this.gameBoard = gameBoard;
+	}
+	
+	/**
+	 * Create a new GameUpdateNetworkMessage
+	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param gameState the new gameState. Leave null if unchanged.
+	 * @param gameBoard the updated array of tile states. Leave null if unchanged.
+	 */
+	public GameUpdateNetworkMessage(Opcode opcode, Integer column) {
+		super(opcode);
+		this.column = column;
 	}
 }

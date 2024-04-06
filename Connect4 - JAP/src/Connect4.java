@@ -8,6 +8,8 @@
  * JAP - Assignment 2-2
  */
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.UUID;
 
 import connectfour.controller.ChatController;
@@ -17,6 +19,7 @@ import connectfour.model.ChatManager;
 import connectfour.model.GameManager;
 import connectfour.model.PlayerManager;
 import connectfour.model.locale.LocaleManager;
+import connectfour.model.network.NetworkManager;
 import connectfour.view.MainWindow;
 import connectfour.view.SplashScreen;
 
@@ -92,6 +95,55 @@ public class Connect4 {
 		ChatManager.getInstance().addSystemMessage("Welcome to Connect4!");
 		ChatManager.getInstance().addMessage("Hello", gameManager.getPlayer1());
 		ChatManager.getInstance().addMessage("Hi", gameManager.getPlayer2());
+				
+		//TEMP: run cleanup functions when mainWindow is closed
+		mainWindow.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				NetworkManager.getInstance().closeServerSocket();
+				NetworkManager.getInstance().closeClientSocket();
+				mainWindow.dispose();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("Closed");
+				System.exit(0);
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 }

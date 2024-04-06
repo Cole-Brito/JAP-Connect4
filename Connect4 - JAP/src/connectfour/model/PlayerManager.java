@@ -69,53 +69,67 @@ public class PlayerManager {
 	 * This method takes the name and the type of player
 	 * @param userName - name of the user being created 
 	 * @param type - the type of player being created 
-	 * @return true if the player was added successfully
+	 * @return the player that was added, or null if no player was added
 	 */
-	public boolean addPlayer(String userName, PlayerType type) {
+	public Player addPlayer(String userName, PlayerType type) {
 		Player player = new Player(userName, type);
 		if(players.add(player)) {
 			onPlayerListChanged(null, player);
-			return true;
+			return player;
 		}
-		return false;
+		return null;
 	}
 	
 	/**
 	 * Adds a remote player with the given socket
 	 * @param userName - name of the user being created 
 	 * @param id - the GUID of the player
-	 * @return true if the player was added successfully
+	 * @return the player that was added, or null if no player was added
 	 */
-	public boolean addNetworkPlayer(String username, String id, Socket socket) {
+	public Player addNetworkPlayer(String username, String id, Socket socket) {
 		if (playerExists(id)) {
 			System.err.println("Attempt to add player with conflicting UUID: " + username + ", " + id);
-			return false;
+			return null;
 		}
 		Player player = new Player(username, id, PlayerType.NETWORK, socket);
 		if(players.add(player)) {
 			onPlayerListChanged(null, player);
-			return true;
+			return player;
 		}
-		return false;
+		return null;
 	}
 	
 	/**
 	 * Removes a player with the given UUID
 	 * @param id The String representation of the UUID of the player
-	 * @return true if the player was removed successfully
+	 * @return the player if they were removed, or null
 	 */
-	public boolean removePlayer(String id) {
+	public Player removePlayer(String id) {
 		if (id == null) {
-			return false;
+			return null;
 		}
 		var player = getPlayer(id);
 		if (player != null)
 		{
 			players.remove(player);
 			onPlayerListChanged(player, null);
-			return true;
+			return player;
 		}
-		return false;
+		return null;
+	}
+	
+	/**
+	 * Updates the username of a player with the given ID, and also notifies
+	 * PropertyChangeListeners
+	 * @param uID The UUID of the player
+	 * @param newUsername the new username for the player
+	 */
+	public void updatePlayerName(String uID, String newUsername) {
+		var player = getPlayer(uID);
+		if (player != null && !player.getName().equals(newUsername)) {
+			player.setName(newUsername);
+			onPlayerUpdated(player);
+		}
 	}
 	
 	/**

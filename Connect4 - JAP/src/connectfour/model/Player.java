@@ -42,6 +42,7 @@ public class Player {
 	
 	/**
 	 * Instantiate a new player with a client socket connection
+	 * TODO: Remove socket from Player, moved to ClientSocketHandler
 	 * @param name The username of the player
 	 * @param type The PlayerType of the player
 	 * @param socket The client's socket connection to the server
