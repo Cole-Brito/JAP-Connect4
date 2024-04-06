@@ -85,6 +85,10 @@ public class Player {
 		this.playerType = type;
 	}
 	
+	/**
+	 * Get the player's UUID
+	 * @return player UUID
+	 */
 	public UUID getPlayerID() {
 		return uID;
 	}
@@ -100,5 +104,17 @@ public class Player {
 				System.err.println("Failed to close client socket for: " + username);
 			}
 		}
+	}
+	
+	/**
+	 * Player objects are considered equal if their UUIDs are the same
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		Player other = (Player)obj;
+		if (other != null) {
+			return this.uID.equals(other.uID);
+		}
+		return super.equals(obj);
 	}
 }

@@ -10,11 +10,15 @@
 
 package connectfour.model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
+import connectfour.model.GameManager.GameBoardPropertyChangedEvent;
 
 /**
  * Tracks a list of Players and their Player Types
@@ -38,10 +42,18 @@ public class PlayerManager {
 	/** The list of players */
 	private ArrayList<Player> players;
 	
+	/** Default local player 1, should never be null */
+	private Player localPlayer1;
+	/** Default local player 2, should never be null */
+	private Player localPlayer2;
+	
 	/** The default name to use for local player 1 */
 	private static final String PLAYER1_DEFAULT_NAME = "Player1";
 	/** The default name to use for local player 2 */
 	private static final String PLAYER2_DEFAULT_NAME = "Player2";
+	
+	/** PropertyChangeSupport for notifying listeners when player list changes */
+	private final PropertyChangeSupport propertyChangedSupport;
 
 	/**
 	 * Private constructor for PlayerManager singleton.
@@ -49,6 +61,7 @@ public class PlayerManager {
 	 */
 	private PlayerManager() {
 		this.players = new ArrayList<>();
+		this.propertyChangedSupport = new PropertyChangeSupport(this);
 		addDefaultPlayers();
 	}
 	
@@ -60,7 +73,11 @@ public class PlayerManager {
 	 */
 	public boolean addPlayer(String userName, PlayerType type) {
 		Player player = new Player(userName, type);
-		return players.add(player);
+		if(players.add(player)) {
+			onPlayerListChanged(null, player);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -75,7 +92,11 @@ public class PlayerManager {
 			return false;
 		}
 		Player player = new Player(username, id, PlayerType.NETWORK, socket);
-		return players.add(player);
+		if(players.add(player)) {
+			onPlayerListChanged(null, player);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -87,7 +108,14 @@ public class PlayerManager {
 		if (id == null) {
 			return false;
 		}
-		return players.removeIf(p -> p.getPlayerID().equals(UUID.fromString(id)));
+		var player = getPlayer(id);
+		if (player != null)
+		{
+			players.remove(player);
+			onPlayerListChanged(player, null);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -111,15 +139,36 @@ public class PlayerManager {
 	public List<Player> getPlayers() {
 		return Collections.unmodifiableList(players);
 	}
+	
+	/**
+	 * Gets the default local player for player slot 1
+	 * @return localPlayer1
+	 */
+	public Player getLocalPlayer1() {
+		return localPlayer1;
+	}
+	
+	/**
+	 * Gets the default local player for player slot 2
+	 * @return localPlayer2
+	 */
+	public Player getLocalPlayer2() {
+		return localPlayer2;
+	}
 
 	/**
 	 * Adds default local players for player 1 and 2.
 	 */
 	private void addDefaultPlayers(){
-		players.add(new Player(PLAYER1_DEFAULT_NAME, PlayerType.LOCAL));
-		players.add(new Player(PLAYER2_DEFAULT_NAME, PlayerType.LOCAL));
+		localPlayer1 = (new Player(PLAYER1_DEFAULT_NAME, PlayerType.LOCAL));
+		localPlayer2 = (new Player(PLAYER2_DEFAULT_NAME, PlayerType.LOCAL));
 	}
 	
+	/**
+	 * Check if a player exists in the player list
+	 * @param uID The UUID of the player
+	 * @return true if a player with uID was found, false otherwise
+	 */
 	private boolean playerExists(String uID) {
 		for (var player: players) {
 			if (player.getPlayerID().equals(UUID.fromString(uID))) {
@@ -127,5 +176,41 @@ public class PlayerManager {
 			}
 		}
 		return false;
+	}
+	
+	
+/********** PropertyChanged fields and methods **********/
+	
+	/** Property Name used to notify PropertyChange events when a player is added or removed */
+	public static final String PLAYER_LIST_PROPERTY_NAME = "PlayerList";
+	/** Property Name used to notify PropertyChange events when a player state changes */
+	public static final String PLAYER_UPDATE_PROPERTY_NAME = "PlayerUpdate";
+	
+	/**
+	 * Registers a PropertyChangeListener to responds to changes to this model.
+	 * Event will be fired upon changes to Player List, Players' usernames, etc.<br>
+	 * 
+	 * @param propertyName The name of the property for the listener to respond to.
+	 * @param listener The {@link PropertyChangeListener} that responds to Player List being changed.
+	 */
+	public void registerPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChangedSupport.addPropertyChangeListener(propertyName, listener);
+	}
+	
+	/**
+	 * Notify PropertyChangeListeners when the player list changes
+	 * @param oldPlayer The original player if they are being removed
+	 * @param newPlayer The new player if they are being added
+	 */
+	public void onPlayerListChanged(Player oldPlayer, Player newPlayer) {
+		propertyChangedSupport.firePropertyChange(PLAYER_LIST_PROPERTY_NAME, oldPlayer, newPlayer);
+	}
+	
+	/**
+	 * Notify PropertyChangeListeners when the player list changes
+	 * @param player The player being updated
+	 */
+	public void onPlayerUpdated(Player player) {
+		propertyChangedSupport.firePropertyChange(PLAYER_UPDATE_PROPERTY_NAME, null, player);
 	}
 }

@@ -75,7 +75,14 @@ public class Connect4 {
 		var gameManager = GameManager.getInstance();		
 		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_TILE_PROPERTY_NAME, mainWindow.gameBoardPanel);
 		gameManager.registerPropertyChangeListener(GameManager.GAME_STATE_PROPERTY_NAME, mainWindow);
-		gameManager.registerPropertyChangeListener(GameManager.GAME_WIN_COUNT_PROPERTY_NAME, mainWindow.gameInfoPanel);	
+		gameManager.registerPropertyChangeListener(GameManager.GAME_WIN_COUNT_PROPERTY_NAME, mainWindow.gameInfoPanel);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_PLAYER1_CHANGE_PROPERTY_NAME, mainWindow.gameInfoPanel);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_PLAYER2_CHANGE_PROPERTY_NAME, mainWindow.gameInfoPanel);
+		
+		var playerManager = PlayerManager.getInstance();
+		playerManager.registerPropertyChangeListener(PlayerManager.PLAYER_UPDATE_PROPERTY_NAME, mainWindow.gameInfoPanel);
+		mainWindow.gameInfoPanel.setPlayer1(null);
+		
 		chatController = new ChatController(mainWindow.chatTextInputField);
 		
 		gameManager.registerGameTimeListener(mainWindow.gameInfoPanel.getGameTimer());

@@ -66,10 +66,9 @@ public class GameManager {
 	 * Depends on PlayerManager being initialized.
 	 */
 	private GameManager() {
-		var players = PlayerManager.getInstance().getPlayers();
-		assert(players.size() >= 2);
-		player1 = players.get(0);
-		player2 = players.get(1);
+		var playerManager = PlayerManager.getInstance();
+		player1 = playerManager.getLocalPlayer1();
+		player2 = playerManager.getLocalPlayer2();
 		activePlayer = player1;
 		gameState = GameState.PLAYER_1_TURN;
 		propertyChangedSupport = new PropertyChangeSupport(this);
@@ -279,6 +278,10 @@ public class GameManager {
 	public static final String GAME_STATE_PROPERTY_NAME = "GameState";
 	/** Property Name used to notify PropertyChange events when the players' win counts change */
 	public static final String GAME_WIN_COUNT_PROPERTY_NAME = "GameWinCount";
+	/** Property Name used to notify PropertyChange events when player 1 changes */
+	public static final String GAME_PLAYER1_CHANGE_PROPERTY_NAME = "Player1Change";
+	/** Property Name used to notify PropertyChange events when player 2 changes */
+	public static final String GAME_PLAYER2_CHANGE_PROPERTY_NAME = "Player2Change";
 	
 	/**
 	 * Registers a PropertyChangeListener to responds to changes to this model.
@@ -317,6 +320,20 @@ public class GameManager {
 	public void onGameWinCountChanged() {
 		propertyChangedSupport.firePropertyChange(GAME_WIN_COUNT_PROPERTY_NAME, null,
 			new GameWinCountChangedEvent(player1WinCount, player2WinCount));
+	}
+	
+	/**
+	 * Notify PropertyChangeListeners when player1 changes
+	 */
+	public void onPlayer1Changed(Player oldPlayer1) {
+		propertyChangedSupport.firePropertyChange(GAME_PLAYER1_CHANGE_PROPERTY_NAME, oldPlayer1, player1);
+	}
+	
+	/**
+	 * Notify PropertyChangeListeners when player2 changes
+	 */
+	public void onPlayer2Changed(Player oldPlayer2) {
+		propertyChangedSupport.firePropertyChange(GAME_PLAYER2_CHANGE_PROPERTY_NAME, oldPlayer2, player2);
 	}
 	
 	/**

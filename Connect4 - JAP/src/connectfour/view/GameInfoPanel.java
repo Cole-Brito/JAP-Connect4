@@ -24,6 +24,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import connectfour.model.GameManager;
+import connectfour.model.Player;
+import connectfour.model.PlayerManager;
 import connectfour.model.locale.LanguageSet;
 import connectfour.model.locale.LocaleChangeListener;
 
@@ -34,9 +36,9 @@ import connectfour.model.locale.LocaleChangeListener;
 public class GameInfoPanel extends JPanel implements PropertyChangeListener, LocaleChangeListener{
 
 	/** Player 1 name*/
-	String player1 = "Player 1";
+	Player player1;
 	/** Player 2 name*/
-	String player2 = "Player 2";
+	Player player2;
 	/** Current P1 wins*/
 	int player1Wins = 0;
 	/** Current P2 wins*/
@@ -90,8 +92,8 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener, Loc
         setBorder(blackLine);
         setBackground(infoBlue);
 		
-		player1Label = new JLabel(localizedPlayerText + " 1: " + player1);
-        player2Label = new JLabel(localizedPlayerText + " 2: " + player2);
+		player1Label = new JLabel(localizedPlayerText + " 1: " + "Player 1");
+        player2Label = new JLabel(localizedPlayerText + " 2: " + "Player 2");
         gameTimerLabel = new TimerDisplayLabel("Game time: ");
         turnTimerLabel = new TimerDisplayLabel("Turn time: ");
         player1WinsLabel = new JLabel("Player 1 Wins: " + player1Wins);
@@ -127,18 +129,18 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener, Loc
 	 * sets the players chosen name
 	 * @param name - Name that player 1 has entered
 	 */
-	public void setPlayer1(String name) {
-        this.player1 = name;
-        player1Label.setText(localizedPlayerText + " 1: " + name);
+	public void setPlayer1(Player p1) {
+        this.player1 = p1;
+        player1Label.setText(localizedPlayerText + " 1: " + p1.getName());
     }
 
 	/**
 	 * sets the players chosen name
 	 * @param name - Name that player 2 has entered
 	 */
-    public void setPlayer2(String name) {
-        this.player2 = name;
-        player2Label.setText(localizedPlayerText + " 2: " + name);
+    public void setPlayer2(Player p2) {
+        this.player2 = p2;
+        player2Label.setText(localizedPlayerText + " 2: " + p2.getName());
     }
 
     /**
@@ -196,17 +198,49 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener, Loc
 	 */
     @Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName() == GameManager.GAME_WIN_COUNT_PROPERTY_NAME) {
+    	
+		switch(evt.getPropertyName()) {
+		case GameManager.GAME_WIN_COUNT_PROPERTY_NAME:
+		{
 			var newValue = (GameManager.GameWinCountChangedEvent)evt.getNewValue();
 			if (newValue != null) {
 				setPlayer1Wins(newValue.player1WinCount);
 				setPlayer2Wins(newValue.player2WinCount);
-			}
-			else {
-				System.err.println("evt.getNewValue() was null or unexpected type in GameInfoPanel#propertyChange"
-						+ " for property name: " + evt.getPropertyName());
+				return;
 			}
 		}
+		break;
+		case GameManager.GAME_PLAYER1_CHANGE_PROPERTY_NAME:
+		{
+			var player = (Player)evt.getNewValue();
+			if (player != null) {
+				setPlayer1(player);
+				return;
+			}
+		}
+		break;
+		case GameManager.GAME_PLAYER2_CHANGE_PROPERTY_NAME:
+		{
+			var player = (Player)evt.getNewValue();
+			if (player != null) {
+				setPlayer2(player);
+				return;
+			}
+		}
+		break;
+		case PlayerManager.PLAYER_UPDATE_PROPERTY_NAME:
+		{
+			var player = (Player)evt.getNewValue();
+			if (player != null) {
+				setPlayer2(player);
+				return;
+			}
+		}
+		break;
+		}
+		
+		System.err.println("evt.getNewValue() was null or unexpected type in GameInfoPanel#propertyChange"
+				+ " for property name: " + evt.getPropertyName());
 	}
 
     /**
