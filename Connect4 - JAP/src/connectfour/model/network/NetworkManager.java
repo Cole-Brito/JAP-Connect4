@@ -1,5 +1,7 @@
 package connectfour.model.network;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,11 +13,12 @@ import connectfour.model.GameManager;
 import connectfour.model.GameState;
 import connectfour.model.Player;
 import connectfour.model.PlayerManager;
+import connectfour.model.PlayerType;
 import connectfour.model.network.ClientSocketHandler.ClientState;
 import connectfour.model.network.HelloNetworkMessage.PlayerPayload;
 import connectfour.model.network.NetworkMessage.Opcode;
 
-public class NetworkManager {
+public class NetworkManager implements PropertyChangeListener {
 	/** The singleton instance of NetworkManager */
 	private static NetworkManager _instance;
 	/**
@@ -72,14 +75,7 @@ public class NetworkManager {
 	 */
 	public int openServerSocket(int port) {
 		if (sessionType == SessionType.CLIENT) {
-			if (clientSocket != null && clientSocket.getClientState() != ClientState.STOPPED) {
-				//TODO: Leave previous server connection
-				try {
-					clientSocket.closeClientSocket();
-				} catch (Exception e) {
-					System.err.println("Failed to close client socket");
-				}
-			}
+			closeClientSocket();
 		}
 		
 		if (serverSocket == null) {
@@ -87,16 +83,14 @@ public class NetworkManager {
 				serverSocket = new ServerSocketHandler(port);
 				serverSocket.start();
 				this.sessionType = SessionType.HOST;
+				PlayerManager.getInstance().setDefaultNetworkPlayers();
 			} catch (Exception e) {
 				System.err.println("Failed to open server socket on port: " + port);
 				return -1;
 			}
 		}
-		else if (serverSocket.getPort() == port) {
-			System.out.println("Attempt to reopen server on same socket");
-		}
 		else {
-			
+			System.out.println("Server is already running");
 		}
 				
 		return -1;
@@ -113,6 +107,8 @@ public class NetworkManager {
 				}
 			}
 			this.sessionType = SessionType.OFFLINE;
+			PlayerManager.getInstance().setDefaultLocalPlayers();
+			GameManager.getInstance().resetToLocalGameState();
 		}
 	}
 	
@@ -125,8 +121,9 @@ public class NetworkManager {
 				this.sessionType = SessionType.CLIENT;
 				System.out.println("Client socket opened on: " + socket.getInetAddress().getHostAddress() + ", " + port);
 				var player = PlayerManager.getInstance().getLocalPlayer1();
-				clientSocket.sendMessage(new PlayerUpdateNetworkMessage(Opcode.PLAYER_JOIN, 
-						player.getPlayerID().toString(), player.getName(), null));
+				sendPlayerJoinMessage(player);
+				//clientSocket.sendMessage(new PlayerUpdateNetworkMessage(Opcode.PLAYER_JOIN, 
+				//		player.getPlayerID().toString(), player.getName(), null));
 				return true;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -150,6 +147,8 @@ public class NetworkManager {
 				}
 			}
 			this.sessionType = SessionType.OFFLINE;
+			PlayerManager.getInstance().setDefaultLocalPlayers();
+			GameManager.getInstance().resetToLocalGameState();
 		}
 	}
 	
@@ -318,7 +317,8 @@ public class NetworkManager {
 			{
 				var messageUpdate = (ChatNetworkMessage)message;
 				if (messageUpdate != null && messageUpdate.message != null) {
-					ChatManager.getInstance().addMessage(messageUpdate.message, sender.getPlayer());
+					System.out.println("Message Create: " + sender.getPlayer());
+					ChatManager.getInstance().addFormattedMessage(messageUpdate.message);
 				}
 				else {
 					System.err.println("MESSAGE_CREATE message received with invalid payload");
@@ -365,6 +365,47 @@ public class NetworkManager {
 	public void sendGameBoardUpdateMessage(Integer row, Integer column, Integer state) {
 		var message = new GameUpdateNetworkMessage(Opcode.GAMEBOARD_UPDATE_ONE, row, column, state);
 		sendNetworkMessage(message);
+	}
+	
+	/**
+	 * Send a PlayerUpdateNetworkMessage to notify clients that a new player joined
+	 * @param player The player that is joining
+	 */
+	public void sendPlayerJoinMessage(Player player) {
+		if (player != null) {
+			Integer playerState = 0;
+			// We assume host is always player 1 for now
+			if (sessionType == SessionType.HOST && GameManager.getInstance().getPlayer2().equals(player)) {
+				playerState = 2;
+			}
+			var message = new PlayerUpdateNetworkMessage(Opcode.PLAYER_JOIN, 
+					player.getPlayerID().toString(), player.getName(), playerState);
+			sendNetworkMessage(message);
+		}
+	}
+	
+	/**
+	 * Send a PlayerUpdateNetworkMessage to notify clients that a player disconnected
+	 * @param player The player that is leaving
+	 */
+	public void sendPlayerLeaveMessage(Player player) {
+		if (player != null) {
+			var message = new PlayerUpdateNetworkMessage(Opcode.PLAYER_LEAVE, 
+					player.getPlayerID().toString(), player.getName(), null);
+			sendNetworkMessage(message);
+		}
+	}
+	
+	/**
+	 * Send a PlayerUpdateNetworkMessage to notify clients that a player updated
+	 * @param player The player being updated
+	 * @param playerState The new state of the player, if applicable
+	 */
+	public void sendPlayerUpdateMessage(Player player, Integer playerState) {
+		if (player != null) {
+			var message = new PlayerUpdateNetworkMessage(Opcode.PLAYER_UPDATE, 
+					player.getPlayerID().toString(), player.getName(), playerState);
+		}
 	}
 	
 	/**
@@ -419,5 +460,58 @@ public class NetworkManager {
 		}
 		
 		return message;
+	}
+
+	/**
+	 * PropertyChange event that responds to Game State changes
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// Only respond to model property changes if we are the Host.
+		// This way we only send updates from the host.
+		if (sessionType == SessionType.HOST) {
+			switch(evt.getPropertyName()) {
+			case GameManager.GAME_BOARD_TILE_PROPERTY_NAME:
+				break;
+			case GameManager.GAME_BOARD_FULL_PROPERTY_NAME:
+				break;
+			case GameManager.GAME_STATE_PROPERTY_NAME:
+				break;
+			case GameManager.GAME_WIN_COUNT_PROPERTY_NAME:
+				break;
+			case GameManager.GAME_PLAYER1_CHANGE_PROPERTY_NAME:
+				break;
+			case GameManager.GAME_PLAYER2_CHANGE_PROPERTY_NAME:
+				break;
+			case PlayerManager.PLAYER_LIST_PROPERTY_NAME:
+			{
+				Player oldPlayer = (Player)evt.getOldValue();
+				Player newPlayer = (Player)evt.getNewValue();
+				if (oldPlayer == null && newPlayer != null) {
+					sendPlayerJoinMessage(newPlayer);
+				}
+				else if (oldPlayer != null && newPlayer == null) {
+					sendPlayerLeaveMessage(oldPlayer);
+				}
+			}
+				break;
+			case PlayerManager.PLAYER_UPDATE_PROPERTY_NAME:
+			{
+				Player newPlayer = (Player)evt.getNewValue();
+				if (newPlayer != null) {
+					sendPlayerUpdateMessage(newPlayer, null);
+				}
+			}				
+				break;
+			case ChatManager.CHAT_HISTORY_PROPERTY_NAME:
+			{
+				var chatEvent = (ChatManager.MessageEventValue)evt.getNewValue();
+				if (chatEvent != null) {
+					sendChatMessage(chatEvent.message);					
+				}
+			}
+				break;
+			}
+		}
 	}
 }

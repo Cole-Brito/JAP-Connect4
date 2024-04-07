@@ -83,7 +83,6 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 	 */
 	ChatHistoryTextPane(){
 		chatManager = ChatManager.getInstance();
-		chatManager.registerPropertyChangeListener(this);
 		
 		initStyles();
 		this.setEditable(false);
@@ -131,11 +130,14 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 	public void addTextFromSender(String message) throws IllegalArgumentException, IllegalStateException {
 		var matcher = chatIdentifierRegex.matcher(message);
 		if(matcher.matches()) {
+			var uid = matcher.group("uID");
 			switch(matcher.group("type")) {
 			case "p":
-				var uid = matcher.group("uID");
 				var player = PlayerManager.getInstance().getPlayer(uid);
-				if (GameManager.getInstance().getPlayer1().equals(player)) {
+				if (player == null) {
+					System.out.println("Did not find player: " + matcher.group("name") + ", UID: " + uid);
+				}
+				else if (GameManager.getInstance().getPlayer1().equals(player)) {
 					addText(matcher.group("name") + ": " + matcher.group("message"), TextStyle.PLAYER1);
 				}
 				else if (GameManager.getInstance().getPlayer2().equals(player)) {
@@ -155,7 +157,6 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 			}
 		}
 		else {
-			
 			addText(message, TextStyle.DEFAULT);
 			System.out.println("Message didn't match chat pattern: " + message);
 		}
@@ -185,7 +186,8 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
-		if(evt.getPropertyName() == "messageHistory"){
+		System.out.println(evt.getPropertyName());
+		if(evt.getPropertyName() == ChatManager.CHAT_HISTORY_PROPERTY_NAME){
 			ChatManager.MessageEventValue newValue = (ChatManager.MessageEventValue)evt.getNewValue();
 			if (newValue != null)
 			{
@@ -194,6 +196,7 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 				}
 				catch (Exception e) {
 					System.err.println("Failed to add text to ChatHistory: " + e.getMessage());
+					e.printStackTrace();
 				}
 				//this.addText(newValue.message, TextStyle.DEFAULT);
 			}

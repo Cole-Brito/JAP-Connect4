@@ -61,6 +61,7 @@ public class ClientSocketHandler extends Thread{
 	
 	public synchronized void setPlayer(Player player) {
 		this.player = player;
+		System.out.println("Set clientSocket player: " + player.toString());
 	}
 	
 	public synchronized void sendMessage(Object data) {

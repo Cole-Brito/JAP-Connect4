@@ -72,6 +72,8 @@ public class Connect4 {
 		LocaleManager.getInstance().registerLocaleChangeListener(mainWindow.gameInfoPanel);
 		mainWindow.gameBoardPanel.registerTileActionListener(gameController);
 		mainWindow.registerMenuListeners(menuController);
+		
+		// Register GameManager PropertyListeners for MainWindow and components
 		var gameManager = GameManager.getInstance();		
 		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_TILE_PROPERTY_NAME, mainWindow.gameBoardPanel);
 		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_FULL_PROPERTY_NAME, mainWindow.gameBoardPanel);
@@ -92,9 +94,23 @@ public class Connect4 {
 		gameManager.registerGameTimeListener(mainWindow.gameInfoPanel.getGameTimer());
 		gameManager.registerTurnTimeListener(mainWindow.gameInfoPanel.getTurnTimer());
 
-		ChatManager.getInstance().addSystemMessage("Welcome to Connect4!");
-		ChatManager.getInstance().addMessage("Hello", gameManager.getPlayer1());
-		ChatManager.getInstance().addMessage("Hi", gameManager.getPlayer2());
+		var chatManager = ChatManager.getInstance();
+		chatManager.addSystemMessage("Welcome to Connect4!");
+		chatManager.registerPropertyChangeListener(ChatManager.CHAT_HISTORY_PROPERTY_NAME, mainWindow.chatHistoryTextPane);
+		chatManager.addMessage("Hello", gameManager.getPlayer1());
+		chatManager.addMessage("Hi", gameManager.getPlayer2());
+
+		//Register NetworkManager as PropertyChangeListener for all models
+		var networkManager = NetworkManager.getInstance();
+		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_TILE_PROPERTY_NAME, networkManager);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_BOARD_FULL_PROPERTY_NAME, networkManager);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_STATE_PROPERTY_NAME, networkManager);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_WIN_COUNT_PROPERTY_NAME, networkManager);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_PLAYER1_CHANGE_PROPERTY_NAME, networkManager);
+		gameManager.registerPropertyChangeListener(GameManager.GAME_PLAYER2_CHANGE_PROPERTY_NAME, networkManager);
+		playerManager.registerPropertyChangeListener(PlayerManager.PLAYER_LIST_PROPERTY_NAME, networkManager);
+		playerManager.registerPropertyChangeListener(PlayerManager.PLAYER_UPDATE_PROPERTY_NAME, networkManager);
+		chatManager.registerPropertyChangeListener(ChatManager.CHAT_HISTORY_PROPERTY_NAME, networkManager);
 				
 		//TEMP: run cleanup functions when mainWindow is closed
 		mainWindow.addWindowListener(new WindowListener() {

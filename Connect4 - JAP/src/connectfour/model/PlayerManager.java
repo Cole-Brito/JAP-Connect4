@@ -93,6 +93,9 @@ public class PlayerManager {
 		if (playerExists(id)) {
 			System.out.println("Player already exsist with given UUID: " + username + ", " + id);
 			System.out.println("Expected behaviour during Hello Network Message");
+			for(var p: players) {
+				System.out.println(p.getName() + ": " + p.getPlayerID() + ", " + p.getPlayerType());
+			}
 			return null;
 		}
 		Player player = new Player(username, id, PlayerType.NETWORK);
@@ -143,8 +146,13 @@ public class PlayerManager {
 	 */
 	public Player getPlayer(String uID) {
 		for (var player: players) {
-			if (player.getPlayerID().equals(UUID.fromString(uID))) {
-				return player;
+			try {
+				if (player.getPlayerID().equals(UUID.fromString(uID))) {
+					return player;
+				}				
+			}
+			catch (Exception ex) {
+				System.err.println("Exception caught when getting player from UUID: " + ex.getMessage());
 			}
 		}
 		return null;

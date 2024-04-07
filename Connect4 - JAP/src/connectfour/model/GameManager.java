@@ -210,6 +210,14 @@ public class GameManager {
 		if (state != gameState) {
 			gameState = state;
 			onGameStateChanged(gameState, oldState);
+			if (gameState == GameState.PLAYER_1_TURN || gameState == GameState.PLAYER_2_TURN) {
+				gameTimer.setStatus(ControllableTimer.START);
+				turnTimer.setStatus(ControllableTimer.START);
+			}
+			else {
+				gameTimer.setStatus(ControllableTimer.STOP);
+				turnTimer.setStatus(ControllableTimer.STOP);
+			}
 		}
 	}
 	
@@ -246,6 +254,16 @@ public class GameManager {
 	}
 	
 	/**
+	 * Tries to start the game if game is not active.
+	 * Does not reset board state
+	 */
+	public void startGame() {
+		if (player2 != null && gameState != GameState.PLAYER_1_TURN && gameState != GameState.PLAYER_2_TURN) {
+			updateGameState(GameState.PLAYER_1_TURN);
+		}
+	}
+	
+	/**
 	 * Method to restart the game, setting all tiles to default state
 	 * and setting player 1 as the active player.
 	 */
@@ -254,7 +272,33 @@ public class GameManager {
 		onGameBoardReset();
 		gameTimer.setStatus(ControllableTimer.RESET);
 		turnTimer.setStatus(ControllableTimer.RESET);
-		updateGameState(GameState.PLAYER_1_TURN);
+		if (player2 != null) {
+			updateGameState(GameState.PLAYER_1_TURN);
+		}
+		else {
+			updateGameState(GameState.DEFAULT);
+			gameTimer.setStatus(ControllableTimer.STOP);
+			turnTimer.setStatus(ControllableTimer.STOP);
+		}
+	}
+	
+	/**
+	 * Sets the default local players and resets the game
+	 */
+	public void resetToLocalGameState() {
+		this.setPlayer1(PlayerManager.getInstance().getLocalPlayer1());
+		this.setPlayer2(PlayerManager.getInstance().getLocalPlayer2());
+		this.restartGame();
+		updateGameState(GameState.DEFAULT);
+	}
+	
+	/**
+	 * Unsets player 2 and resets the game
+	 */
+	public void resetToNetworkGameState() {
+		this.setPlayer1(PlayerManager.getInstance().getLocalPlayer1());
+		this.setPlayer2(null);
+		this.restartGame();
 	}
 	
 	/**

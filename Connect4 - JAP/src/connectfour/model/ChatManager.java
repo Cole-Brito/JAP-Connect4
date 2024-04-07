@@ -3,9 +3,9 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: March 24, 2024
+ * Last Modified: April 7, 2024
  * Algonquin College CET-CS
- * JAP - Assignment 2-2
+ * JAP - Assignment 3-2
  */
 
 package connectfour.model;
@@ -64,19 +64,40 @@ public class ChatManager {
 			oldValue = new MessageEventValue(messageHistory.get(messageHistory.size() - 1), messageHistory.size() - 1);
 		}
 		messageHistory.add(formattedMessage);
-		propertyChangedSupport.firePropertyChange("messageHistory", oldValue,
+		propertyChangedSupport.firePropertyChange(CHAT_HISTORY_PROPERTY_NAME, oldValue,
 				new MessageEventValue(formattedMessage, messageHistory.size() - 1));
 	}
 	
 	public void addMessage(String message, Player sender) {
-		String formattedMessage = String.format("[p:%s:%s]:%s", sender.getPlayerID().toString(), sender.getName(), message);
+		String formattedMessage = "";
+		if (sender != null) {
+			formattedMessage = String.format("[p:%s:%s]:%s", sender.getPlayerID().toString(), sender.getName(), message);
+		}
+		else {
+			formattedMessage = String.format("[p:%s:%s]:%s", "0", "null", message);			
+		}
 		MessageEventValue oldValue = null;
 		if (messageHistory.size() > 0) {
 			oldValue = new MessageEventValue(messageHistory.get(messageHistory.size() - 1), messageHistory.size() - 1);
 		}
 		messageHistory.add(formattedMessage);
-		propertyChangedSupport.firePropertyChange("messageHistory", oldValue,
+		propertyChangedSupport.firePropertyChange(CHAT_HISTORY_PROPERTY_NAME, oldValue,
 				new MessageEventValue(formattedMessage, messageHistory.size() - 1));
+	}
+	
+	/**
+	 * Adds a pre-formatted message to chat history.
+	 * Should be called when receiving a formatted chat message from server.
+	 * @param message The formatted message
+	 */
+	public void addFormattedMessage(String message) {
+		MessageEventValue oldValue = null;
+		if (messageHistory.size() > 0) {
+			oldValue = new MessageEventValue(messageHistory.get(messageHistory.size() - 1), messageHistory.size() - 1);
+		}
+		messageHistory.add(message);
+		propertyChangedSupport.firePropertyChange(CHAT_HISTORY_PROPERTY_NAME, oldValue,
+				new MessageEventValue(message, messageHistory.size() - 1));
 	}
 	
 	/**
@@ -93,7 +114,7 @@ public class ChatManager {
 			oldValue = new MessageEventValue(messageHistory.get(messageHistory.size() - 1), messageHistory.size() - 1);
 		}
 		messageHistory.add(formattedMessage);
-		propertyChangedSupport.firePropertyChange("messageHistory", oldValue,
+		propertyChangedSupport.firePropertyChange(CHAT_HISTORY_PROPERTY_NAME, oldValue,
 				new MessageEventValue(formattedMessage, messageHistory.size() - 1));
 	}
 	
@@ -105,6 +126,12 @@ public class ChatManager {
 		return Collections.unmodifiableList(messageHistory);
 	}
 	
+	
+	/********** PropertyChanged fields and methods **********/
+	
+	/** Property Name used to notify PropertyChange events when a message is added */
+	public static final String CHAT_HISTORY_PROPERTY_NAME = "ChatMessageHistory";
+	
 	/**
 	 * Registers a PropertyChangeListener to responds to changes to messageHistory.
 	 * Event will be fired when a new message is added.<br>
@@ -112,8 +139,9 @@ public class ChatManager {
 	 * 
 	 * @param listener The {@link PropertyChangeListener} that responds to new messages being added
 	 */
-	public void registerPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangedSupport.addPropertyChangeListener("messageHistory", listener);
+	public void registerPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		System.out.println(propertyName + " " + listener.toString());
+		propertyChangedSupport.addPropertyChangeListener(propertyName, listener);
 	}
 	
 	

@@ -103,7 +103,7 @@ public class GameBoardPanel implements PropertyChangeListener {
     public void updateFullBoard(int[][] tiles) {
     	assert(tiles.length == NUM_ROWS && tiles[0].length == NUM_COLUMNS);
     	for(int row = 0; row < tiles.length; ++row) {
-    		for(int column = 0; column < tiles.length; ++column) {
+    		for(int column = 0; column < tiles[0].length; ++column) {
     			updateBoardState(row, column, tiles[row][column]);
     		}
     	}

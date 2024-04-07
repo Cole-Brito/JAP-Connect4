@@ -3,9 +3,9 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: April 5, 2024
+ * Last Modified: April 7, 2024
  * Algonquin College CET-CS
- * JAP - Assignment 2-2
+ * JAP - Assignment 3-2
  */
 
 package connectfour.model.network;
@@ -46,6 +46,10 @@ public class NetworkMessage implements Serializable {
 	/** The Opcode (or message type) of the message */
 	public Opcode opcode;
 	
+	/**
+	 * Creates a new NetworkMessage
+	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 */
 	public NetworkMessage(Opcode opcode) {
 		this.opcode = opcode;
 	}
