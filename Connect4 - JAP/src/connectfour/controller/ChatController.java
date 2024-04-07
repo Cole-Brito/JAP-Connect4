@@ -14,6 +14,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import connectfour.model.ChatManager;
+import connectfour.model.GameManager;
+import connectfour.model.PlayerManager;
+import connectfour.model.network.NetworkManager;
+import connectfour.model.network.NetworkManager.SessionType;
 import connectfour.view.ChatTextInputField;
 
 /**
@@ -41,6 +45,22 @@ public class ChatController implements ActionListener {
 		textInputField.registerTextInputActionListener(this);
 		textInputField.registerSendButtonActionListener(this);
 	}
+	
+	/**
+	 * Sends a message to the ChatManager or across the network
+	 * @param message The chat message being sent
+	 */
+	private void sendChatMessage(String message) {
+		if (NetworkManager.getInstance().getSessionType() == SessionType.CLIENT) {
+			NetworkManager.getInstance().sendChatMessage(message);
+		}
+		else if (NetworkManager.getInstance().getSessionType() == SessionType.HOST) {
+			chatManager.addMessage(message, PlayerManager.getInstance().getLocalPlayer1());
+		}
+		else {
+			chatManager.addMessage(message, GameManager.getInstance().getActivePlayer());
+		}
+	}
 
 	/**
 	 * Responds to ActionEvents when registered as a listener.
@@ -52,7 +72,7 @@ public class ChatController implements ActionListener {
 		String inputText = textInputField.getInputText();
 		if (!inputText.isBlank())
 		{
-			chatManager.addMessage(inputText, "temp"); //TODO: Get active player
+			sendChatMessage(inputText);
 		}
 		textInputField.clearInputText();
 	}

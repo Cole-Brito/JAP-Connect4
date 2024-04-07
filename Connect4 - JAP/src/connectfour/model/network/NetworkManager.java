@@ -86,6 +86,7 @@ public class NetworkManager {
 			try {
 				serverSocket = new ServerSocketHandler(port);
 				serverSocket.start();
+				this.sessionType = SessionType.HOST;
 			} catch (Exception e) {
 				System.err.println("Failed to open server socket on port: " + port);
 				return -1;
@@ -111,6 +112,7 @@ public class NetworkManager {
 					System.err.println("Failed to close serverSocket");
 				}
 			}
+			this.sessionType = SessionType.OFFLINE;
 		}
 	}
 	
@@ -120,6 +122,7 @@ public class NetworkManager {
 				var socket = new Socket(address, port);
 				clientSocket = new ClientSocketHandler(socket);
 				clientSocket.start();
+				this.sessionType = SessionType.CLIENT;
 				System.out.println("Client socket opened on: " + socket.getInetAddress().getHostAddress() + ", " + port);
 				var player = PlayerManager.getInstance().getLocalPlayer1();
 				clientSocket.sendMessage(new PlayerUpdateNetworkMessage(Opcode.PLAYER_JOIN, 
@@ -146,6 +149,7 @@ public class NetworkManager {
 					System.err.println("Failed to close clientSocket");
 				}
 			}
+			this.sessionType = SessionType.OFFLINE;
 		}
 	}
 	

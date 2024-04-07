@@ -31,7 +31,7 @@ public class ServerSocketHandler extends Thread {
 		try {
 			server = new ServerSocket(port);
 			System.out.println("Server listening on port: " + port);
-			while(this.getServerState() != ServerState.STOPPED) {
+			while(this.getServerState() != ServerState.STOPPED && !server.isClosed()) {
 				Socket client = server.accept();
 				var clientHandler = new ClientSocketHandler(client);
 				clientSockets.add(clientHandler);
