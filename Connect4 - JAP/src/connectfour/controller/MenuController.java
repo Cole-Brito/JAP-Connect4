@@ -64,9 +64,11 @@ public class MenuController implements ActionListener {
     	case "mode":
     		break;
     	case "host":
+    		//TODO: temporary for testing, change to dialog
     		NetworkManager.getInstance().openServerSocket(35535);
     		break;
     	case "connect":
+    		//TODO: temporary for testing, change to dialog
     		NetworkManager.getInstance().openClientSocket(null, 35535);
     		break;
     	case "disconnect":

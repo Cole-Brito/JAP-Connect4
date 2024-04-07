@@ -36,6 +36,7 @@ public class ServerSocketHandler extends Thread {
 				var clientHandler = new ClientSocketHandler(client);
 				clientSockets.add(clientHandler);
 				clientHandler.start();
+				clientHandler.sendMessage(NetworkManager.getInstance().createHelloMessage());
 				System.out.println("Accepted Client Socket: " + client.getLocalAddress() + ", " + port);
 			}
 		} catch (IOException e) {
@@ -50,6 +51,14 @@ public class ServerSocketHandler extends Thread {
 	
 	public synchronized void setServerState(ServerState state) {
 		this.serverState = state;
+	}
+	
+	public synchronized void broadcastMessage(Object message) {
+		for (var client: clientSockets) {
+			if (client.isAlive() && !client.socket.isClosed()) {
+				client.sendMessage(message);
+			}
+		}
 	}
 	
 	public void closeServerSocket() {

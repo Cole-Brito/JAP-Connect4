@@ -40,7 +40,7 @@ public class ClientSocketHandler extends Thread{
 				setClientState(ClientState.STOPPED);
 			}
 			catch (Exception ex) {
-				//TODO: Don't stop client if Exception is thrown which doesn't impede operations
+				//TODO: Don't stop client if an Exception is thrown which doesn't impede operations
 				System.err.println(ex.getMessage());
 				setClientState(ClientState.STOPPED);
 			}

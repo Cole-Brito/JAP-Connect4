@@ -24,10 +24,15 @@ public class GameUpdateNetworkMessage extends NetworkMessage {
 	public Integer gameState;
 	
 	/**
-	 * Array of tiles states.
+	 * Array of tile states.
 	 * May be null.
 	 */
-	public Integer[] gameBoard;
+	public int[][] gameBoard;
+	
+	/**
+	 * The row of a single tile update
+	 */
+	public Integer row;
 	
 	/**
 	 * The column of a single tile update
@@ -35,12 +40,17 @@ public class GameUpdateNetworkMessage extends NetworkMessage {
 	public Integer column;
 	
 	/**
+	 * The state of a single tile update
+	 */
+	public Integer state;
+	
+	/**
 	 * Create a new GameUpdateNetworkMessage
 	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
 	 * @param gameState the new gameState. Leave null if unchanged.
 	 * @param gameBoard the updated array of tile states. Leave null if unchanged.
 	 */
-	public GameUpdateNetworkMessage(Opcode opcode, Integer gameState, Integer[] gameBoard) {
+	public GameUpdateNetworkMessage(Opcode opcode, Integer gameState, int[][] gameBoard) {
 		super(opcode);
 		this.gameState = gameState;
 		this.gameBoard = gameBoard;
@@ -52,8 +62,10 @@ public class GameUpdateNetworkMessage extends NetworkMessage {
 	 * @param gameState the new gameState. Leave null if unchanged.
 	 * @param gameBoard the updated array of tile states. Leave null if unchanged.
 	 */
-	public GameUpdateNetworkMessage(Opcode opcode, Integer column) {
+	public GameUpdateNetworkMessage(Opcode opcode, Integer row, Integer column, Integer state) {
 		super(opcode);
+		this.row = row;
 		this.column = column;
+		this.state = state;
 	}
 }

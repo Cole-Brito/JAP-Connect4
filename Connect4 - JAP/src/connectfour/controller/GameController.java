@@ -44,12 +44,30 @@ public class GameController implements ActionListener {
     	//TODO: move logic to this method to get active player
     	// and update game board.
     	//TODO: handle Network games as well
-    	if (NetworkManager.getInstance().getSessionType() == SessionType.OFFLINE) {
-    		Player player = gameManager.getActivePlayer(); //Placeholder
-                        
-            gameManager.tryPlaceTile(column, player);
-    	}
+    	var networkManager = NetworkManager.getInstance();
+    	switch(networkManager.getSessionType()) {
+		case CLIENT:
+		{
+			//TODO: send message to network manager
+		}
+			break;
+		case HOST:
+		{
+			// Use localPlayer1 as the host's player
+			gameManager.tryPlaceTile(column, PlayerManager.getInstance().getLocalPlayer1());
+		}
+			break;
+		case OFFLINE:
+		{
+			// Assume local players in offline mode
+            gameManager.tryPlaceTile(column, gameManager.getActivePlayer());
+		}
+			break;
+		default:
+			System.err.println("Received incorrect Network SessionType in GameController");
+			break;
     	
+    	}
     }
 
     /**

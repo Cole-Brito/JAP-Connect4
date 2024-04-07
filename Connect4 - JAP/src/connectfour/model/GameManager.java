@@ -3,9 +3,9 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: March 24, 2024
+ * Last Modified: April 6, 2024
  * Algonquin College CET-CS
- * JAP - Assignment 2-2
+ * JAP - Assignment 3-2
  */
 
 package connectfour.model;
@@ -84,7 +84,7 @@ public class GameManager {
 		
 		int currentPlayer = gameState.getPlayerID();
 		// If no player is active or wrong player is placing, don't allow tile placement
-		if (currentPlayer < 1 || activePlayer != getActivePlayer()) {
+		if (currentPlayer < 1 || activePlayer == null || activePlayer != getActivePlayer()) {
 			return false;
 		}
 		
@@ -139,6 +139,30 @@ public class GameManager {
 		switchPlayers();
 		return true;
 	}
+	
+	/**
+	 * Updates a tile on the game board without checking win states.
+	 * Typically done as a result of server updates on client.
+	 * @param row The row index of the tile
+	 * @param column The column index of the tile
+	 * @param state The new tile state
+	 */
+	public void updateGameTileDirect(int row, int column, int state) {
+		gameBoard.setTileState(row, column, state);
+		onGameBoardChanged(row, column, state);
+	}
+	
+	/**
+	 * Updates the enire gameboard without checking win states.
+	 * Typically done as a result of server updates on client.
+	 * @param tiles 2D array of tile states
+	 */
+	public void updateGameBoardDirect(int[][] tiles) {
+		if (tiles != null) {
+			gameBoard.setBoardState(tiles);
+			onGameBoardReset();			
+		}
+	}
 		
 	
 	/**
@@ -161,6 +185,22 @@ public class GameManager {
 	}
 	
 	/**
+	 * Gets the state of game board tiles
+	 * @return 2D array of tile states
+	 */
+	public int[][] getBoardState(){
+		return gameBoard.getBoardState();
+	}
+	
+	/**
+	 * Gets the current game state
+	 * @return gameState
+	 */
+	public GameState getGameState() {
+		return this.gameState;
+	}
+	
+	/**
 	 * Updates the game state. Notifies PropertyChangeListeners if the new state
 	 * is different than the old state.
 	 * @param state The new game state
@@ -169,6 +209,23 @@ public class GameManager {
 		var oldState = gameState;
 		if (state != gameState) {
 			gameState = state;
+			onGameStateChanged(gameState, oldState);
+		}
+	}
+	
+	/**
+	 * Updates the game state from integer ordinal. Notifies PropertyChangeListeners if the new state
+	 * is different than the old state.
+	 * @param gameStateOrdinal The integer value of the new game state
+	 */
+	public void updateGameState(Integer gameStateOrdinal) {
+		if (gameStateOrdinal == null || gameStateOrdinal < 0 || gameStateOrdinal >= GameState.values().length) {
+			return;
+		}
+		var oldState = gameState;
+		var newState = GameState.values()[gameStateOrdinal];
+		if (newState != gameState) {
+			gameState = newState;
 			onGameStateChanged(gameState, oldState);
 		}
 	}
@@ -214,6 +271,24 @@ public class GameManager {
 	 */
 	public Player getPlayer2() {
 		return player2;
+	}
+	
+	/**
+	 * Gets the current player 1
+	 * @return player1
+	 */
+	public void setPlayer1(Player p1) {
+		player1 = p1;
+		onPlayer1Changed(player1);
+	}
+	
+	/**
+	 * Gets the current player 2
+	 * @return player2
+	 */
+	public void setPlayer2(Player p2) {
+		player2 = p2;
+		onPlayer2Changed(p2);
 	}
 	
 	/**

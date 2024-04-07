@@ -3,6 +3,8 @@ package connectfour.model.network;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import connectfour.model.ChatManager;
 import connectfour.model.GameManager;
@@ -10,6 +12,8 @@ import connectfour.model.GameState;
 import connectfour.model.Player;
 import connectfour.model.PlayerManager;
 import connectfour.model.network.ClientSocketHandler.ClientState;
+import connectfour.model.network.HelloNetworkMessage.PlayerPayload;
+import connectfour.model.network.NetworkMessage.Opcode;
 
 public class NetworkManager {
 	/** The singleton instance of NetworkManager */
@@ -117,6 +121,9 @@ public class NetworkManager {
 				clientSocket = new ClientSocketHandler(socket);
 				clientSocket.start();
 				System.out.println("Client socket opened on: " + socket.getInetAddress().getHostAddress() + ", " + port);
+				var player = PlayerManager.getInstance().getLocalPlayer1();
+				clientSocket.sendMessage(new PlayerUpdateNetworkMessage(Opcode.PLAYER_JOIN, 
+						player.getPlayerID().toString(), player.getName(), null));
 				return true;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -142,6 +149,20 @@ public class NetworkManager {
 		}
 	}
 	
+	public void sendNetworkMessage(NetworkMessage message) {
+		if (sessionType == SessionType.HOST) {
+			serverSocket.broadcastMessage(message);
+		}
+		else if (sessionType == SessionType.CLIENT) {
+			clientSocket.sendMessage(message);
+		}
+	}
+	
+	/**
+	 * Handles incoming NetworkMessages based on the current session type and message opcode
+	 * @param message The NetworkMessage received
+	 * @param sender The socket that the message was received from
+	 */
 	public void handleIncomingMessage(NetworkMessage message, ClientSocketHandler sender) {
 		if (sessionType == SessionType.HOST) {
 			switch (message.opcode) {
@@ -152,7 +173,7 @@ public class NetworkManager {
 			{
 				var playerUpdate = (PlayerUpdateNetworkMessage)message;
 				if (playerUpdate != null) {
-					var player = PlayerManager.getInstance().addNetworkPlayer(playerUpdate.username, playerUpdate.uID, null);
+					var player = PlayerManager.getInstance().addNetworkPlayer(playerUpdate.username, playerUpdate.uID);
 					sender.setPlayer(player);
 				}
 			}
@@ -180,8 +201,9 @@ public class NetworkManager {
 			case GAMEBOARD_UPDATE_ALL:
 			{
 				//Cannot be done by clients. Server will ignore message
-				System.out.println("Client attempted to update full game board. Ignored by Server. " + 
-						"Sender: " + sender.getPlayer().getName() + ", " + sender.getPlayer().getPlayerID().toString());
+				System.out.println("Client attempted to update full game board. Ignored by Server."); 
+				if (sender.getPlayer() != null)
+					System.err.println("Sender: " + sender.getPlayer().getName() + ", " + sender.getPlayer().getPlayerID().toString());
 			}
 				break;
 			case GAMEBOARD_UPDATE_ONE:
@@ -195,8 +217,9 @@ public class NetworkManager {
 			case GAMESTATE_UPDATE:
 			{
 				//Cannot be done by clients. Server will ignore message
-				System.out.println("Client attempted to update game state. Ignored by Server. " + 
-						"Sender: " + sender.getPlayer().getName() + ", " + sender.getPlayer().getPlayerID().toString());
+				System.out.println("Client attempted to update game state. Ignored by Server."); 
+				if (sender.getPlayer() != null)
+					System.err.println("Sender: " + sender.getPlayer().getName() + ", " + sender.getPlayer().getPlayerID().toString());
 			}
 				break;
 			case MESSAGE_CREATE:
@@ -212,10 +235,14 @@ public class NetworkManager {
 				break;
 			case SESSION_TERMINATE:
 				//Cannot be done by clients. Server will ignore message
-				System.out.println("Client attempted to terminate session. Ignored by Server. " + 
-						"Sender: " + sender.getPlayer().getName() + ", " + sender.getPlayer().getPlayerID().toString());
+				System.out.println("Client attempted to terminate session. Ignored by Server."); 
+				if (sender.getPlayer() != null)
+					System.err.println("Sender: " + sender.getPlayer().getName() + ", " + sender.getPlayer().getPlayerID().toString());
 				break;
 			default:
+				System.err.println("Server Received invalid Opcode.");
+				if (sender.getPlayer() != null)
+					System.err.println("Sender: " + sender.getPlayer().getName() + ", " + sender.getPlayer().getPlayerID().toString());
 				break;
 				
 			}
@@ -223,13 +250,18 @@ public class NetworkManager {
 		else if (sessionType == SessionType.CLIENT) {
 			switch (message.opcode) {
 			case HELLO:
-				
+			{
+				var hello = (HelloNetworkMessage)message;
+				GameManager.getInstance().updateGameBoardDirect(hello.gameBoard);
+				GameManager.getInstance().updateGameState(hello.gameState);
+				addPlayersFromPayload(hello.players);
+			}
 				break;
 			case PLAYER_JOIN:
 			{
 				var playerUpdate = (PlayerUpdateNetworkMessage)message;
 				if (playerUpdate != null) {
-					PlayerManager.getInstance().addNetworkPlayer(playerUpdate.username, playerUpdate.uID, null);
+					PlayerManager.getInstance().addNetworkPlayer(playerUpdate.username, playerUpdate.uID);
 				}
 			}
 				break;
@@ -299,11 +331,17 @@ public class NetworkManager {
 		}
 	}
 	
+	/**
+	 * Handles NetworkMessage data received from a client socket
+	 * @param data The data that was sent, assumed to be a NetworkMessage
+	 * @param sender The socket that the data was received from
+	 */
 	public void onMessageReceived(Object data, ClientSocketHandler sender) {
 		try {
 			var message = (NetworkMessage)data;
 			if (message != null) {
-				handleIncomingMessage(message, sender);				
+				System.out.println("Message received: " + message.opcode);
+				handleIncomingMessage(message, sender);
 			}
 			else {
 				System.err.println("NetworkManager received message that not of type NetworkMessage");
@@ -312,5 +350,70 @@ public class NetworkManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Sends a GameUpdateNetworkMessage over the network
+	 * @param row The row index on game board to update. May be null
+	 * @param column The column index on game board to update. Should not be null
+	 * @param state The new state of the tile. May be null
+	 */
+	public void sendGameBoardUpdateMessage(Integer row, Integer column, Integer state) {
+		var message = new GameUpdateNetworkMessage(Opcode.GAMEBOARD_UPDATE_ONE, row, column, state);
+		sendNetworkMessage(message);
+	}
+	
+	/**
+	 * Sends a ChatNetworkMessage over the network
+	 * @param chatMessage The chat message to send
+	 */
+	public void sendChatMessage(String chatMessage) {
+		var message = new ChatNetworkMessage(Opcode.MESSAGE_CREATE, chatMessage);
+		sendNetworkMessage(message);
+	}
+	
+	/**
+	 * Add a list of players from a PlayerPayload array received from a NetworkMessage
+	 * @param payload The PlayerPayload array with the player info
+	 */
+	public void addPlayersFromPayload(HelloNetworkMessage.PlayerPayload[] payload) {
+		if (payload == null) {
+			return;
+		}
+		for(var p: payload) {
+			addPlayerFromPayload(p);
+		}
+	}
+	
+	/**
+	 * Add a player from a PlayerPayload received from a NetworkMessage
+	 * @param payload The PlayerPayload with the player info
+	 */
+	public void addPlayerFromPayload(PlayerPayload payload) {
+		if (payload == null) {
+			return;
+		}
+		var player = PlayerManager.getInstance().addNetworkPlayer(payload.username, payload.uID);
+		if (payload.playerState == 2 && player != null) {
+			GameManager.getInstance().setPlayer2(player);
+		}
+	}
+	
+	/**
+	 * Creates a message for the Hello opcode to send over the network
+	 * @return HelloNetworkMessage with necessary data
+	 */
+	public HelloNetworkMessage createHelloMessage() {	
+		
+		var message = new HelloNetworkMessage(Opcode.HELLO, 
+				GameManager.getInstance().getGameState().ordinal(), 
+				GameManager.getInstance().getBoardState());
+		List<PlayerPayload> payload = new ArrayList<>();
+		for(var player: PlayerManager.getInstance().getPlayers()) {
+			payload.add(message.new PlayerPayload(player.getName(), 
+					player.getPlayerID().toString(), player.getPlayerType().ordinal()));
+		}
+		
+		return message;
 	}
 }

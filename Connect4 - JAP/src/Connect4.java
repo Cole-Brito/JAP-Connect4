@@ -3,9 +3,9 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: March 24, 2024
+ * Last Modified: April 6, 2024
  * Algonquin College CET-CS
- * JAP - Assignment 2-2
+ * JAP - Assignment 3-2
  */
 
 import java.awt.event.WindowEvent;

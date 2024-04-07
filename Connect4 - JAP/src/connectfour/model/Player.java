@@ -26,9 +26,6 @@ public class Player {
 	/** The ID of the player, used to uniquely identify outside of username */
 	private final UUID uID;
 	
-	/** The client's socket connection to the server. */
-	private Socket clientSocket;
-	
 	/**
 	 * Instantiate a new player
 	 * @param name The username of the player
@@ -42,15 +39,13 @@ public class Player {
 	
 	/**
 	 * Instantiate a new player with a client socket connection
-	 * TODO: Remove socket from Player, moved to ClientSocketHandler
 	 * @param name The username of the player
 	 * @param type The PlayerType of the player
 	 * @param socket The client's socket connection to the server
 	 */
-	Player(String name, String id, PlayerType type, Socket socket){
+	Player(String name, String id, PlayerType type){
 		this.username = name;
 		this.playerType = type;
-		this.clientSocket = socket;
 		this.uID = UUID.fromString(id);
 	}
 	
@@ -92,19 +87,6 @@ public class Player {
 	 */
 	public UUID getPlayerID() {
 		return uID;
-	}
-	
-	/**
-	 * Attempt to close this player's client socket connection
-	 */
-	public void closeClientSocket() {
-		if (clientSocket != null) {
-			try {
-				clientSocket.close();
-			} catch (IOException e) {
-				System.err.println("Failed to close client socket for: " + username);
-			}
-		}
 	}
 	
 	/**

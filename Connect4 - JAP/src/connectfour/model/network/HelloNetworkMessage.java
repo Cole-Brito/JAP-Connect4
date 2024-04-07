@@ -29,12 +29,22 @@ public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 	 * @param gameBoard the array of tile states
 	 * @param players the list of players
 	 */
-	public HelloNetworkMessage(Opcode opcode, Integer gameState, Integer[] gameBoard, PlayerPayload[] players) {
+	public HelloNetworkMessage(Opcode opcode, Integer gameState, int[][] gameBoard, PlayerPayload[] players) {
 		super(opcode, gameState, gameBoard);
 		this.players = players;
 	}
+	
+	/**
+	 * Create a new HelloNetworkMessage
+	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param gameState the initial gameState
+	 * @param gameBoard the array of tile states
+	 */
+	public HelloNetworkMessage(Opcode opcode, Integer gameState, int[][] gameBoard) {
+		super(opcode, gameState, gameBoard);
+	}
 
-	class PlayerPayload{
+	public class PlayerPayload{
 		/**
 		 * The player's username.
 		 */
@@ -54,5 +64,11 @@ public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 		 * </list>
 		 */
 		public Integer playerState;
+		
+		public PlayerPayload(String name, String id, Integer state) {
+			this.username = name;
+			this.uID = id;
+			this.playerState = state;
+		}
 	}
 }

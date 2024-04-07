@@ -3,7 +3,7 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: April 5, 2024
+ * Last Modified: April 6, 2024
  * Algonquin College CET-CS
  * JAP - Assignment 3-2
  */
@@ -42,7 +42,10 @@ public class PlayerManager {
 	/** The list of players */
 	private ArrayList<Player> players;
 	
-	/** Default local player 1, should never be null */
+	/** 
+	 * Default local player 1, should never be null 
+	 * Also used as local player in network games
+	 */
 	private Player localPlayer1;
 	/** Default local player 2, should never be null */
 	private Player localPlayer2;
@@ -86,12 +89,13 @@ public class PlayerManager {
 	 * @param id - the GUID of the player
 	 * @return the player that was added, or null if no player was added
 	 */
-	public Player addNetworkPlayer(String username, String id, Socket socket) {
+	public Player addNetworkPlayer(String username, String id) {
 		if (playerExists(id)) {
-			System.err.println("Attempt to add player with conflicting UUID: " + username + ", " + id);
+			System.out.println("Player already exsist with given UUID: " + username + ", " + id);
+			System.out.println("Expected behaviour during Hello Network Message");
 			return null;
 		}
-		Player player = new Player(username, id, PlayerType.NETWORK, socket);
+		Player player = new Player(username, id, PlayerType.NETWORK);
 		if(players.add(player)) {
 			onPlayerListChanged(null, player);
 			return player;
@@ -168,6 +172,24 @@ public class PlayerManager {
 	 */
 	public Player getLocalPlayer2() {
 		return localPlayer2;
+	}
+	
+	/**
+	 * Resets the player list and sets initial players to only the local client player
+	 * TODO: May not be required, local players should not interfere with network
+	 */
+	public void setDefaultNetworkPlayers() {
+		this.players.clear();
+		this.players.add(localPlayer1);
+	}
+	
+	/**
+	 * Resets the player list and sets initial players to only the local client player
+	 */
+	public void setDefaultLocalPlayers() {
+		this.players.clear();
+		this.players.add(localPlayer1);
+		this.players.add(localPlayer2);
 	}
 
 	/**
