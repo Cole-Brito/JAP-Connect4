@@ -48,7 +48,7 @@ public class GameController implements ActionListener {
     	switch(networkManager.getSessionType()) {
 		case CLIENT:
 		{
-			//TODO: send message to network manager
+			networkManager.sendGameBoardUpdateMessage(null, column, null);
 		}
 			break;
 		case HOST:

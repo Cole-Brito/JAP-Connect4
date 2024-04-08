@@ -17,6 +17,13 @@ public class PlayerUpdateNetworkMessage extends NetworkMessage {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/** State ID to use for player 1 */
+	public static final int PLAYER_1_STATE = 1;
+	/** State ID to use for player 2 */
+	public static final int PLAYER_2_STATE = 2;
+	/** State ID to use for default (spectator) players */
+	public static final int PLAYER_DEFAULT_STATE = 0;
+	
 	/**
 	 * The player's username. May be null.
 	 */

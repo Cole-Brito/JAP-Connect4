@@ -84,7 +84,7 @@ public class GameManager {
 		
 		int currentPlayer = gameState.getPlayerID();
 		// If no player is active or wrong player is placing, don't allow tile placement
-		if (currentPlayer < 1 || activePlayer == null || activePlayer != getActivePlayer()) {
+		if (currentPlayer < 1 || activePlayer == null || !activePlayer.equals(getActivePlayer())) {
 			return false;
 		}
 		
@@ -95,19 +95,12 @@ public class GameManager {
 		
 		int placedRow = -1;
 		//Setting the state of the tile based on the active player
-		//Could probably condense most of this with ternary operators
-		if (gameState == GameState.PLAYER_1_TURN) {
+		if (gameState == GameState.PLAYER_1_TURN || gameState == GameState.PLAYER_2_TURN) {
 			placedRow = gameBoard.setTileInColumn(column, currentPlayer);
 			if (placedRow < 0) {
 				return false;
 			}
 		} 
-		else if (gameState == GameState.PLAYER_2_TURN) {
-			placedRow = gameBoard.setTileInColumn(column, currentPlayer);
-			if (placedRow < 0) {
-				return false;
-			}
-		}
 		else {
 			return false;
 		}
@@ -115,18 +108,16 @@ public class GameManager {
 		onGameBoardChanged(placedRow, column, currentPlayer);
 		
 		if (gameState == GameState.PLAYER_1_TURN) {
-			if (gameBoard.checkWinStates((short)placedRow, column, currentPlayer)) {
+			if (gameBoard.checkWinStates(placedRow, column, currentPlayer)) {
 				updateGameState(GameState.PLAYER_1_WIN);
-				++player1WinCount;
-				onGameWinCountChanged();
+				setPlayer1WinCount(player1WinCount + 1);
 				return true;
 			}
 		} 
 		else if (gameState == GameState.PLAYER_2_TURN) {
-			if (gameBoard.checkWinStates((short)placedRow, column, currentPlayer)) {
+			if (gameBoard.checkWinStates(placedRow, column, currentPlayer)) {
 				updateGameState(GameState.PLAYER_2_WIN);
-				++player2WinCount;
-				onGameWinCountChanged();
+				setPlayer2WinCount(player2WinCount + 1);
 				return true;
 			}
 		}
@@ -153,7 +144,7 @@ public class GameManager {
 	}
 	
 	/**
-	 * Updates the enire gameboard without checking win states.
+	 * Updates the entire gameboard without checking win states.
 	 * Typically done as a result of server updates on client.
 	 * @param tiles 2D array of tile states
 	 */
@@ -230,12 +221,8 @@ public class GameManager {
 		if (gameStateOrdinal == null || gameStateOrdinal < 0 || gameStateOrdinal >= GameState.values().length) {
 			return;
 		}
-		var oldState = gameState;
 		var newState = GameState.values()[gameStateOrdinal];
-		if (newState != gameState) {
-			gameState = newState;
-			onGameStateChanged(gameState, oldState);
-		}
+		updateGameState(newState);
 	}
 	
 	/**
@@ -258,7 +245,8 @@ public class GameManager {
 	 * Does not reset board state
 	 */
 	public void startGame() {
-		if (player2 != null && gameState != GameState.PLAYER_1_TURN && gameState != GameState.PLAYER_2_TURN) {
+		if (player1 != null && player2 != null && 
+				gameState != GameState.PLAYER_1_TURN && gameState != GameState.PLAYER_2_TURN) {
 			updateGameState(GameState.PLAYER_1_TURN);
 		}
 	}
@@ -272,7 +260,7 @@ public class GameManager {
 		onGameBoardReset();
 		gameTimer.setStatus(ControllableTimer.RESET);
 		turnTimer.setStatus(ControllableTimer.RESET);
-		if (player2 != null) {
+		if (player1 != null && player2 != null) {
 			updateGameState(GameState.PLAYER_1_TURN);
 		}
 		else {
@@ -294,9 +282,15 @@ public class GameManager {
 	
 	/**
 	 * Unsets player 2 and resets the game
+	 * @param hosting If this is the host, player 1 is set to default
 	 */
-	public void resetToNetworkGameState() {
-		this.setPlayer1(PlayerManager.getInstance().getLocalPlayer1());
+	public void resetToNetworkGameState(boolean hosting) {
+		if (hosting) {
+			this.setPlayer1(PlayerManager.getInstance().getLocalPlayer1());			
+		}
+		else {
+			this.setPlayer1(null);
+		}
 		this.setPlayer2(null);
 		this.restartGame();
 	}
@@ -322,8 +316,9 @@ public class GameManager {
 	 * @return player1
 	 */
 	public void setPlayer1(Player p1) {
+		var oldPlayer = player1;
 		player1 = p1;
-		onPlayer1Changed(player1);
+		onPlayer1Changed(oldPlayer);
 	}
 	
 	/**
@@ -331,8 +326,9 @@ public class GameManager {
 	 * @return player2
 	 */
 	public void setPlayer2(Player p2) {
+		var oldPlayer = player2;
 		player2 = p2;
-		onPlayer2Changed(p2);
+		onPlayer2Changed(oldPlayer);
 	}
 	
 	/**
@@ -365,6 +361,24 @@ public class GameManager {
 	 */
 	public int getPlayer2WinCount() {
 		return player2WinCount;
+	}
+	
+	/**
+	 * Sets the player 1 win count
+	 * @param count new win count
+	 */
+	public void setPlayer1WinCount(int count) {
+		player1WinCount = count;
+		onGameWinCountChanged();
+	}
+	
+	/**
+	 * Sets the player 2 win count
+	 * @param count new win count
+	 */
+	public void setPlayer2WinCount(int count) {
+		player2WinCount = count;
+		onGameWinCountChanged();
 	}
 	
 	/**

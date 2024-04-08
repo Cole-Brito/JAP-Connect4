@@ -100,4 +100,9 @@ public class Player {
 		}
 		return super.equals(obj);
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("[%s : %s : %s]", username, uID.toString(), playerType.toString());
+	}
 }

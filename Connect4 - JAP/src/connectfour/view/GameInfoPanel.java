@@ -131,7 +131,12 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener, Loc
 	 */
 	public void setPlayer1(Player p1) {
         this.player1 = p1;
-        player1Label.setText(localizedPlayerText + " 1: " + p1.getName());
+        if (player1 != null) {
+        	player1Label.setText(localizedPlayerText + " 1: " + p1.getName());        	
+        }
+        else {
+        	player1Label.setText("N/A");
+        }
     }
 
 	/**
@@ -140,7 +145,12 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener, Loc
 	 */
     public void setPlayer2(Player p2) {
         this.player2 = p2;
-        player2Label.setText(localizedPlayerText + " 2: " + p2.getName());
+        if (player2 != null) {
+        	player2Label.setText(localizedPlayerText + " 2: " + p2.getName());        	
+        }
+        else {
+        	player2Label.setText("N/A");
+        }
     }
 
     /**
@@ -213,34 +223,34 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener, Loc
 		case GameManager.GAME_PLAYER1_CHANGE_PROPERTY_NAME:
 		{
 			var player = (Player)evt.getNewValue();
-			if (player != null) {
-				setPlayer1(player);
-				return;
-			}
+			setPlayer1(player);
 		}
 		break;
 		case GameManager.GAME_PLAYER2_CHANGE_PROPERTY_NAME:
 		{
 			var player = (Player)evt.getNewValue();
-			if (player != null) {
-				setPlayer2(player);
-				return;
-			}
+			setPlayer2(player);
 		}
 		break;
 		case PlayerManager.PLAYER_UPDATE_PROPERTY_NAME:
 		{
 			var player = (Player)evt.getNewValue();
 			if (player != null) {
-				setPlayer2(player);
+				if (player.equals(player1)) {
+					setPlayer1(player1);
+				}
+				else if (player.equals(player2)) {
+					setPlayer2(player);					
+				}
 				return;
 			}
 		}
 		break;
+		default:
+			System.err.println("Property was null or unexpected type in GameInfoPanel#propertyChange"
+					+ " for property name: " + evt.getPropertyName());
+			break;
 		}
-		
-		System.err.println("evt.getNewValue() was null or unexpected type in GameInfoPanel#propertyChange"
-				+ " for property name: " + evt.getPropertyName());
 	}
 
     /**

@@ -10,6 +10,8 @@
 
 package connectfour.model.network;
 
+import java.io.Serializable;
+
 public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 
 	/**
@@ -53,10 +55,10 @@ public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 	 * @param p2wins the player 2 win count
 	 */
 	public HelloNetworkMessage(Opcode opcode, Integer gameState, int[][] gameBoard, Integer p1wins, Integer p2wins) {
-		super(opcode, gameState, gameBoard);
+		super(opcode, gameState, gameBoard, p1wins, p2wins);
 	}
 
-	public class PlayerPayload{
+	public class PlayerPayload implements Serializable{
 		/**
 		 * The player's username.
 		 */

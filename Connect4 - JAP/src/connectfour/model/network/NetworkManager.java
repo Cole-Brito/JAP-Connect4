@@ -3,6 +3,7 @@ package connectfour.model.network;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import connectfour.model.ChatManager;
 import connectfour.model.GameManager;
+import connectfour.model.GameManager.GameWinCountChangedEvent;
 import connectfour.model.GameState;
 import connectfour.model.Player;
 import connectfour.model.PlayerManager;
@@ -36,12 +38,16 @@ public class NetworkManager implements PropertyChangeListener {
 	public static int MIN_PORT_NUMBER = 1024;
 	public static int MAX_PORT_NUMBER = 65535;
 	
+	/**
+	 * Valid network session types
+	 */
 	public enum SessionType{
 		OFFLINE,
 		HOST,
 		CLIENT
 	}
 	
+	/** The current session type */
 	private SessionType sessionType = SessionType.OFFLINE;
 	
 	/**
@@ -64,6 +70,10 @@ public class NetworkManager implements PropertyChangeListener {
 		
 	}
 	
+	/**
+	 * Gets the current session type
+	 * @return {@link SessionType}
+	 */
 	public SessionType getSessionType() {
 		return sessionType;
 	}
@@ -78,14 +88,17 @@ public class NetworkManager implements PropertyChangeListener {
 			closeClientSocket();
 		}
 		
-		if (serverSocket == null) {
+		PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1().getPlayerID().toString(), "Host");
+		if (serverSocket == null || serverSocket.server.isClosed()) {
 			try {
 				serverSocket = new ServerSocketHandler(port);
 				serverSocket.start();
 				this.sessionType = SessionType.HOST;
 				PlayerManager.getInstance().setDefaultNetworkPlayers();
+				GameManager.getInstance().resetToNetworkGameState(true);
 			} catch (Exception e) {
 				System.err.println("Failed to open server socket on port: " + port);
+				e.printStackTrace();
 				return -1;
 			}
 		}
@@ -115,6 +128,9 @@ public class NetworkManager implements PropertyChangeListener {
 	public boolean openClientSocket(String address, int port) {
 		if (sessionType == SessionType.OFFLINE) {
 			try {
+				GameManager.getInstance().resetToNetworkGameState(false);
+				PlayerManager.getInstance().setDefaultNetworkPlayers();
+				PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1().getPlayerID().toString(), "Client");
 				var socket = new Socket(address, port);
 				clientSocket = new ClientSocketHandler(socket);
 				clientSocket.start();
@@ -133,6 +149,9 @@ public class NetworkManager implements PropertyChangeListener {
 				e.printStackTrace();
 			}
 		}
+		
+		PlayerManager.getInstance().setDefaultLocalPlayers();
+		GameManager.getInstance().resetToLocalGameState();
 		return false;
 	}
 	
@@ -178,6 +197,10 @@ public class NetworkManager implements PropertyChangeListener {
 				if (playerUpdate != null) {
 					var player = PlayerManager.getInstance().addNetworkPlayer(playerUpdate.username, playerUpdate.uID);
 					sender.setPlayer(player);
+					if (GameManager.getInstance().getPlayer2() == null) {
+						GameManager.getInstance().setPlayer2(player);
+						System.out.println("Player 2 set by PLAYER_JOIN: " + GameManager.getInstance().getPlayer2());
+					}
 				}
 			}
 				break;
@@ -255,8 +278,11 @@ public class NetworkManager implements PropertyChangeListener {
 			case HELLO:
 			{
 				var hello = (HelloNetworkMessage)message;
-				GameManager.getInstance().updateGameBoardDirect(hello.gameBoard);
-				GameManager.getInstance().updateGameState(hello.gameState);
+				var gameManager = GameManager.getInstance();
+				gameManager.updateGameState(hello.gameState);
+				gameManager.updateGameBoardDirect(hello.gameBoard);
+				gameManager.setPlayer1WinCount(hello.player1WinCount);
+				gameManager.setPlayer2WinCount(hello.player2WinCount);
 				addPlayersFromPayload(hello.players);
 			}
 				break;
@@ -280,15 +306,34 @@ public class NetworkManager implements PropertyChangeListener {
 			{
 				var playerUpdate = (PlayerUpdateNetworkMessage)message;
 				if (playerUpdate != null) {
+					System.out.println("PLAYER_UPDATE message: " + playerUpdate.uID + ", " + playerUpdate.username + ", " + playerUpdate.playerState);
 					//TODO: rename player or promote (/demote) player to active player
+					var player = PlayerManager.getInstance().getPlayer(playerUpdate.uID);
+					if (player != null) {
+						if (playerUpdate.username != null) {
+							PlayerManager.getInstance().updatePlayerName(playerUpdate.uID, playerUpdate.username);
+						}
+						if (playerUpdate.playerState == PlayerUpdateNetworkMessage.PLAYER_1_STATE) {
+							GameManager.getInstance().setPlayer1(player);
+							System.out.println("Set player 1: " + player.getName());
+						}
+						else if (playerUpdate.playerState == PlayerUpdateNetworkMessage.PLAYER_2_STATE) {
+							System.out.println("Set player 2: " + player.getName());
+							GameManager.getInstance().setPlayer2(player);
+						}
+					}
+					else {
+						System.err.println("PLAYER_UPDATE could not find player in PlayerManager: " + 
+							playerUpdate.uID + ": " + playerUpdate.username);
+					}
 				}
 			}
 				break;
 			case GAMEBOARD_UPDATE_ALL:
 			{
 				var gameUpdate = (GameUpdateNetworkMessage)message;
-				if (gameUpdate != null) {
-					//TODO: 
+				if (gameUpdate != null && gameUpdate.gameBoard != null) {
+					GameManager.getInstance().updateGameBoardDirect(gameUpdate.gameBoard);
 				}
 			}
 				break;
@@ -296,7 +341,13 @@ public class NetworkManager implements PropertyChangeListener {
 			{
 				var gameUpdate = (GameUpdateNetworkMessage)message;
 				if (gameUpdate != null) {
-					//TODO: update one tile
+					if (gameUpdate.row == null || gameUpdate.column == null || gameUpdate.state == null) {
+						System.err.println("GAMEBOARD_UPDATE_ONE received GameUpdateNetworkMessage with null row or column");
+						System.out.println("GameUpdateNetworkMessage: [" + gameUpdate.row + ", " + gameUpdate.column + ", " + gameUpdate.state + "]");
+					}
+					else {
+						GameManager.getInstance().updateGameTileDirect(gameUpdate.row, gameUpdate.column, gameUpdate.state);						
+					}
 				}
 			}
 				break;
@@ -317,7 +368,7 @@ public class NetworkManager implements PropertyChangeListener {
 			{
 				var messageUpdate = (ChatNetworkMessage)message;
 				if (messageUpdate != null && messageUpdate.message != null) {
-					System.out.println("Message Create: " + sender.getPlayer());
+					System.out.println("Message Create: " + messageUpdate.message);
 					ChatManager.getInstance().addFormattedMessage(messageUpdate.message);
 				}
 				else {
@@ -364,6 +415,29 @@ public class NetworkManager implements PropertyChangeListener {
 	 */
 	public void sendGameBoardUpdateMessage(Integer row, Integer column, Integer state) {
 		var message = new GameUpdateNetworkMessage(Opcode.GAMEBOARD_UPDATE_ONE, row, column, state);
+		System.out.println("Sending GameBoard update: [" + message.row + ", " + message.column + ", " + message.state + "]");
+		sendNetworkMessage(message);
+	}
+	
+	/**
+	 * Sends a GameUpdateNetworkMessage over the network
+	 * @param row The row index on game board to update. May be null
+	 * @param column The column index on game board to update. Should not be null
+	 * @param state The new state of the tile. May be null
+	 */
+	public void sendGameBoardFullUpdateMessage(int[][] gameBoard) {
+		var message = new GameUpdateNetworkMessage(Opcode.GAMEBOARD_UPDATE_ALL, null, gameBoard);
+		sendNetworkMessage(message);
+	}
+	
+	/**
+	 * Sends a GameUpdateNetworkMessage over the network
+	 * @param state The new game state. May be null.
+	 * @param p1Wins The updated player 1 win count. May be null.
+	 * @param p2Wins The updated player 2 win count. May be null.
+	 */
+	public void sendGameStateUpdateMessage(GameState state, Integer p1Wins, Integer p2Wins) {
+		var message = new GameUpdateNetworkMessage(Opcode.GAMESTATE_UPDATE, state.ordinal(), null, p1Wins, p2Wins);
 		sendNetworkMessage(message);
 	}
 	
@@ -375,7 +449,7 @@ public class NetworkManager implements PropertyChangeListener {
 		if (player != null) {
 			Integer playerState = 0;
 			// We assume host is always player 1 for now
-			if (sessionType == SessionType.HOST && GameManager.getInstance().getPlayer2().equals(player)) {
+			if (sessionType == SessionType.HOST && player.equals(GameManager.getInstance().getPlayer2())) {
 				playerState = 2;
 			}
 			var message = new PlayerUpdateNetworkMessage(Opcode.PLAYER_JOIN, 
@@ -405,6 +479,7 @@ public class NetworkManager implements PropertyChangeListener {
 		if (player != null) {
 			var message = new PlayerUpdateNetworkMessage(Opcode.PLAYER_UPDATE, 
 					player.getPlayerID().toString(), player.getName(), playerState);
+			sendNetworkMessage(message);
 		}
 	}
 	
@@ -423,6 +498,7 @@ public class NetworkManager implements PropertyChangeListener {
 	 */
 	public void addPlayersFromPayload(HelloNetworkMessage.PlayerPayload[] payload) {
 		if (payload == null) {
+			System.out.println("PlayerPayload array was null in addPlayersFromPayload");
 			return;
 		}
 		for(var p: payload) {
@@ -436,11 +512,23 @@ public class NetworkManager implements PropertyChangeListener {
 	 */
 	public void addPlayerFromPayload(PlayerPayload payload) {
 		if (payload == null) {
+			System.out.println("PlayerPayload was null in addPlayerFromPayload");
 			return;
 		}
 		var player = PlayerManager.getInstance().addNetworkPlayer(payload.username, payload.uID);
-		if (payload.playerState == 2 && player != null) {
-			GameManager.getInstance().setPlayer2(player);
+		if (player != null) {
+			System.out.println("Added player: " + player.getName() + ": " + player.getPlayerID() + ", " + payload.playerState);
+			if (payload.playerState == 1) {
+				GameManager.getInstance().setPlayer1(player);
+				System.out.println("Player 1 set from payload: " + GameManager.getInstance().getPlayer1());
+			}
+			else if (payload.playerState == 2) {
+				GameManager.getInstance().setPlayer2(player);
+				System.out.println("Player 2 set from payload: " + GameManager.getInstance().getPlayer2());
+			}
+		}
+		else {
+			System.out.println("Did not add player from payload: " + payload.uID + ": " + payload.username);
 		}
 	}
 	
@@ -449,15 +537,23 @@ public class NetworkManager implements PropertyChangeListener {
 	 * @return HelloNetworkMessage with necessary data
 	 */
 	public HelloNetworkMessage createHelloMessage() {	
-		
+		var gameManager = GameManager.getInstance();
 		var message = new HelloNetworkMessage(Opcode.HELLO, 
-				GameManager.getInstance().getGameState().ordinal(), 
-				GameManager.getInstance().getBoardState());
+				gameManager.getGameState().ordinal(), 
+				gameManager.getBoardState(),
+				gameManager.getPlayer1WinCount(),
+				gameManager.getPlayer2WinCount());
 		List<PlayerPayload> payload = new ArrayList<>();
 		for(var player: PlayerManager.getInstance().getPlayers()) {
+			Integer playerState = 0;
+			if (gameManager.getPlayer1().equals(player)) {playerState = 1;}
+			else if (gameManager.getPlayer2().equals(player)) {playerState = 2;}
 			payload.add(message.new PlayerPayload(player.getName(), 
-					player.getPlayerID().toString(), player.getPlayerType().ordinal()));
+					player.getPlayerID().toString(), playerState));
 		}
+		
+		message.players = new PlayerPayload[payload.size()];
+		message.players = payload.toArray(message.players);
 		
 		return message;
 	}
@@ -472,16 +568,61 @@ public class NetworkManager implements PropertyChangeListener {
 		if (sessionType == SessionType.HOST) {
 			switch(evt.getPropertyName()) {
 			case GameManager.GAME_BOARD_TILE_PROPERTY_NAME:
+			{
+				var gameUpdate = (GameManager.GameBoardPropertyChangedEvent)evt.getNewValue();
+				if (gameUpdate != null) {
+					sendGameBoardUpdateMessage(gameUpdate.row, gameUpdate.column, gameUpdate.state);
+				}
+			}
 				break;
 			case GameManager.GAME_BOARD_FULL_PROPERTY_NAME:
+			{
+				var gameBoard = (int[][])evt.getNewValue();
+				if (gameBoard != null) {
+					sendGameBoardFullUpdateMessage(gameBoard);
+				}
+			}
 				break;
 			case GameManager.GAME_STATE_PROPERTY_NAME:
+			{
+				//var oldState = (GameState)evt.getOldValue();
+				var newState = (GameState)evt.getNewValue();
+				if (newState != null) {
+					sendGameStateUpdateMessage(newState, null, null);
+				}
+			}
 				break;
 			case GameManager.GAME_WIN_COUNT_PROPERTY_NAME:
+			{
+				var winCountEvent = (GameWinCountChangedEvent)evt.getNewValue();
+				if (winCountEvent != null) {
+					sendGameBoardUpdateMessage(null, winCountEvent.player1WinCount, winCountEvent.player2WinCount);
+				}
+			}
 				break;
 			case GameManager.GAME_PLAYER1_CHANGE_PROPERTY_NAME:
+			{
+				var oldP1 = (Player)evt.getOldValue();
+				var newP1 = (Player)evt.getNewValue();
+				if (newP1 == null) {
+					sendPlayerUpdateMessage(null, PlayerUpdateNetworkMessage.PLAYER_DEFAULT_STATE);
+				}
+				if (!newP1.equals(oldP1)) {
+					sendPlayerUpdateMessage(newP1, PlayerUpdateNetworkMessage.PLAYER_1_STATE);
+				}
+			}
 				break;
 			case GameManager.GAME_PLAYER2_CHANGE_PROPERTY_NAME:
+			{
+				var oldP2 = (Player)evt.getOldValue();
+				var newP2 = (Player)evt.getNewValue();
+				if (newP2 == null) {
+					sendPlayerUpdateMessage(null, PlayerUpdateNetworkMessage.PLAYER_DEFAULT_STATE);
+				}
+				else if (!newP2.equals(oldP2)) {
+					sendPlayerUpdateMessage(newP2, PlayerUpdateNetworkMessage.PLAYER_2_STATE);
+				}
+			}
 				break;
 			case PlayerManager.PLAYER_LIST_PROPERTY_NAME:
 			{

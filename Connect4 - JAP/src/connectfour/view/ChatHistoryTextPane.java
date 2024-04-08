@@ -130,20 +130,26 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 	public void addTextFromSender(String message) throws IllegalArgumentException, IllegalStateException {
 		var matcher = chatIdentifierRegex.matcher(message);
 		if(matcher.matches()) {
-			var uid = matcher.group("uID");
 			switch(matcher.group("type")) {
 			case "p":
+				var uid = matcher.group("uID");
 				var player = PlayerManager.getInstance().getPlayer(uid);
 				if (player == null) {
 					System.out.println("Did not find player: " + matcher.group("name") + ", UID: " + uid);
+					for(var p: PlayerManager.getInstance().getPlayers()) {
+						System.out.println(p.getName() + ": " + p.getPlayerID() + ", " + p.getPlayerType());
+					}
 				}
-				else if (GameManager.getInstance().getPlayer1().equals(player)) {
+				else if (player.equals(GameManager.getInstance().getPlayer1())) {
 					addText(matcher.group("name") + ": " + matcher.group("message"), TextStyle.PLAYER1);
 				}
-				else if (GameManager.getInstance().getPlayer2().equals(player)) {
+				else if (player.equals(GameManager.getInstance().getPlayer2())) {
 					addText(matcher.group("name") + ": " + matcher.group("message"), TextStyle.PLAYER2);
 				}
 				else {
+					System.out.println(message);
+					System.out.println(GameManager.getInstance().getPlayer1());
+					System.out.println(GameManager.getInstance().getPlayer2());
 					addText(matcher.group("name") + ": " + matcher.group("message"), TextStyle.SPECTATOR);
 				}
 				break;
@@ -186,7 +192,6 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
-		System.out.println(evt.getPropertyName());
 		if(evt.getPropertyName() == ChatManager.CHAT_HISTORY_PROPERTY_NAME){
 			ChatManager.MessageEventValue newValue = (ChatManager.MessageEventValue)evt.getNewValue();
 			if (newValue != null)

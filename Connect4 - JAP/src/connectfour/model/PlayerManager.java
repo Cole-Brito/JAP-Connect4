@@ -3,7 +3,7 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: April 6, 2024
+ * Last Modified: April 7, 2024
  * Algonquin College CET-CS
  * JAP - Assignment 3-2
  */
@@ -91,12 +91,13 @@ public class PlayerManager {
 	 */
 	public Player addNetworkPlayer(String username, String id) {
 		if (playerExists(id)) {
-			System.out.println("Player already exsist with given UUID: " + username + ", " + id);
+			System.out.println("Player already exists with given UUID: " + username + ", " + id);
 			System.out.println("Expected behaviour during Hello Network Message");
+			//TODO:
 			for(var p: players) {
 				System.out.println(p.getName() + ": " + p.getPlayerID() + ", " + p.getPlayerType());
 			}
-			return null;
+			return getPlayer(id);
 		}
 		Player player = new Player(username, id, PlayerType.NETWORK);
 		if(players.add(player)) {
@@ -136,6 +137,10 @@ public class PlayerManager {
 		if (player != null && !player.getName().equals(newUsername)) {
 			player.setName(newUsername);
 			onPlayerUpdated(player);
+		}
+		else {
+			System.out.println("Player not found in updatePlayerName or player name was the same: " + 
+					uID + ": " + newUsername);
 		}
 	}
 	
