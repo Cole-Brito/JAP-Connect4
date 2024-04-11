@@ -1,9 +1,20 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: April 11, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 3-2
+ */
+
 package connectfour.model.network;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,7 +168,11 @@ public class NetworkManager implements PropertyChangeListener {
 				//clientSocket.sendMessage(new PlayerUpdateNetworkMessage(Opcode.PLAYER_JOIN, 
 				//		player.getPlayerID().toString(), player.getName(), null));
 				return true;
-			} catch (IOException e) {
+			}
+			catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

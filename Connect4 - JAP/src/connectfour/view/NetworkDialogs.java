@@ -54,7 +54,7 @@ public class NetworkDialogs {
 	                errorLbl.setText("Port number cannot be empty");
 	            } else if (!isValidPort(portNumberField.getText())) {
 	                errorLbl.setText("Port number must be between " + NetworkManager.MIN_PORT_NUMBER +
-	                		" and " + NetworkManager.MIN_PORT_NUMBER);
+	                		" and " + NetworkManager.MAX_PORT_NUMBER);
 	            } else {
 	            	// Clearing error label
 	                errorLbl.setText("");
@@ -105,7 +105,7 @@ public class NetworkDialogs {
 	                errorLbl.setText("Ip address cannot be empty");
 	            } else if (!isValidPort(portNumberField.getText())) {
 	                errorLbl.setText("Port number must be between " + NetworkManager.MIN_PORT_NUMBER +
-	                		" and " + NetworkManager.MIN_PORT_NUMBER);
+	                		" and " + NetworkManager.MAX_PORT_NUMBER);
 	            } else {
 	            	// Clearing error label
 	                errorLbl.setText("");
