@@ -54,6 +54,7 @@ public class NetworkDialogs {
 		 
 		if (result == JOptionPane.OK_OPTION) {
 			String playerName = playerNameField.getText(); // have to change player labels still
+	        PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1(), playerName);
 	        int portNumber = Integer.parseInt(portNumberField.getText());
 	        NetworkManager.getInstance().openServerSocket(portNumber);
 		 }

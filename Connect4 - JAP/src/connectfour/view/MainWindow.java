@@ -340,16 +340,16 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 			break;
 		case PLAYER_1_TURN:
 			//TODO: Replace text with player's names
-			rightLabel.setText("Player 1's Turn");
+			rightLabel.setText(GameManager.getInstance().getPlayer1().getName() + "'s Turn");
 			break;
 		case PLAYER_1_WIN:
-			rightLabel.setText("PLAYER 1 WINS!");
+			rightLabel.setText(GameManager.getInstance().getPlayer1().getName() + " WINS!");
 			break;
 		case PLAYER_2_TURN:
-			rightLabel.setText("Player 2's Turn");
+			rightLabel.setText(GameManager.getInstance().getPlayer2().getName() + "'s Turn");
 			break;
 		case PLAYER_2_WIN:
-			rightLabel.setText("PLAYER 2 WINS!");
+			rightLabel.setText(GameManager.getInstance().getPlayer2().getName() + " WINS!");
 			break;
 		default:
 			break;
@@ -363,8 +363,7 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 	 */
 	public void displayAbout() {
 		JOptionPane.showMessageDialog(null, 
-				"This game is made by Paul Squires and Cole Brito, "
-				+ "It was created for the Algonquin College Computer Engineering Technology Course (CET-CS)");
+				LocaleManager.getInstance().getKeywordFromActiveLanguage("HelpMenu.About.Dialog"));
 	}
 	
 	/**
@@ -372,7 +371,7 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 	 */
 	public void displayControls() {
 		JOptionPane.showMessageDialog(null, 
-				"To play click on the column you wish to drop a piece! 4 in a row wins!");
+				LocaleManager.getInstance().getKeywordFromActiveLanguage("HelpMenu.HowToPlay.Dialog"));
 	}
 
 	/**

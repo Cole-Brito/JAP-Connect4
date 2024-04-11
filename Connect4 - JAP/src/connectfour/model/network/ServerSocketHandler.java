@@ -53,8 +53,11 @@ public class ServerSocketHandler extends Thread {
 				System.out.println("Accepted Client Socket: " + client.getLocalAddress() + ", " + port);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Output error if we didn't manually close server
+			if (serverState != ServerState.STOPPED) {
+				closeServerSocket();
+				e.printStackTrace();				
+			}
 		}	
 	}
 	
@@ -92,7 +95,9 @@ public class ServerSocketHandler extends Thread {
 	public void closeServerSocket() {
 		setServerState(ServerState.STOPPED);
 		try {
-			this.server.close();
+			if (!server.isClosed()) {
+				this.server.close();				
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
