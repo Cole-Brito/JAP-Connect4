@@ -18,6 +18,7 @@ import connectfour.model.locale.LocaleManager;
 import connectfour.model.network.NetworkManager;
 import connectfour.model.network.NetworkManager.SessionType;
 import connectfour.view.MainWindow;
+import connectfour.view.NetworkDialogs;
 import connectfour.model.GameManager;
 
 /**
@@ -33,6 +34,8 @@ public class MenuController implements ActionListener {
 	private GameManager gameManager;
 	/**Reference to MainWindow*/
 	private MainWindow mainWindow;
+	/**Reference to NetworkDialogs*/
+	private NetworkDialogs networkDialog;
 	
 	/**
 	 * Instantiate the MenuController and set the GameManager and MainWindow reference
@@ -41,6 +44,7 @@ public class MenuController implements ActionListener {
 	public MenuController(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
 		this.gameManager = GameManager.getInstance();
+		this.networkDialog = new NetworkDialogs();
 	}
 
 	/**
@@ -70,12 +74,10 @@ public class MenuController implements ActionListener {
     	case "mode":
     		break;
     	case "host":
-    		//TODO: temporary for testing, change to dialog
-    		NetworkManager.getInstance().openServerSocket(35535);
+    		networkDialog.diplayHostSetup();
     		break;
     	case "connect":
-    		//TODO: temporary for testing, change to dialog
-    		NetworkManager.getInstance().openClientSocket(null, 35535);
+    		networkDialog.displayConnectionSetup();
     		break;
     	case "disconnect":
     		NetworkManager.getInstance().closeServerSocket();

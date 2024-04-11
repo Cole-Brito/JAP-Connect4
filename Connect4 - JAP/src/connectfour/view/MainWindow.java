@@ -372,7 +372,7 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 	 */
 	public void displayControls() {
 		JOptionPane.showMessageDialog(null, 
-				"To play click on the column you wish to drop a piece!");
+				"To play click on the column you wish to drop a piece! 4 in a row wins!");
 	}
 
 	/**
