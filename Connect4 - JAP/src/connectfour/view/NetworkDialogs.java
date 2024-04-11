@@ -1,3 +1,13 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: April 11, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 3-2
+ */
+
 package connectfour.view;
 
 import javax.swing.JLabel;

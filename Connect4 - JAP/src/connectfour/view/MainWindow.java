@@ -339,7 +339,6 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 			rightLabel.setText("DRAW");
 			break;
 		case PLAYER_1_TURN:
-			//TODO: Replace text with player's names
 			rightLabel.setText(GameManager.getInstance().getPlayer1().getName() + "'s Turn");
 			break;
 		case PLAYER_1_WIN:
