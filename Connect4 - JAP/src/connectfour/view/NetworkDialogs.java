@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import connectfour.model.PlayerManager;
 import connectfour.model.network.NetworkManager;
 
 /**
@@ -42,7 +43,8 @@ public class NetworkDialogs {
 	            } else if (portNumberField.getText().isEmpty()) {
 	                errorLbl.setText("Port number cannot be empty");
 	            } else if (!isValidPort(portNumberField.getText())) {
-	                errorLbl.setText("Port number must be between 10000 and 35535");
+	                errorLbl.setText("Port number must be between " + NetworkManager.MIN_PORT_NUMBER +
+	                		" and " + NetworkManager.MIN_PORT_NUMBER);
 	            } else {
 	            	// Clearing error label
 	                errorLbl.setText("");
@@ -91,7 +93,8 @@ public class NetworkDialogs {
 	            } else if (ipAddressField.getText().isEmpty()) {
 	                errorLbl.setText("Ip address cannot be empty");
 	            } else if (!isValidPort(portNumberField.getText())) {
-	                errorLbl.setText("Port number must be between 10000 and 35535");
+	                errorLbl.setText("Port number must be between " + NetworkManager.MIN_PORT_NUMBER +
+	                		" and " + NetworkManager.MIN_PORT_NUMBER);
 	            } else {
 	            	// Clearing error label
 	                errorLbl.setText("");
@@ -101,6 +104,7 @@ public class NetworkDialogs {
 		 
 		if (result == JOptionPane.OK_OPTION) {
 	        String playerName = playerNameField.getText();
+	        PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1(), playerName);
 	        int portNumber = Integer.parseInt(portNumberField.getText());
 	        String ipAddress = ipAddressField.getText();
 	        NetworkManager.getInstance().openClientSocket(ipAddress, portNumber);
@@ -110,12 +114,12 @@ public class NetworkDialogs {
 	/**
 	 * Helper method to test if the port number is within accepted range
 	 * @param portText - the port number to be tested
-	 * @return
+	 * @return true if the port is valid
 	 */
 	private boolean isValidPort(String portText) {
 	    try {
 	        int portNumber = Integer.parseInt(portText);
-	        return (portNumber <= 35535 && portNumber >= 10000);
+	        return (portNumber <= NetworkManager.MAX_PORT_NUMBER && portNumber >= NetworkManager.MIN_PORT_NUMBER);
 	    } catch (NumberFormatException e) {
 	    	
 	        return false;

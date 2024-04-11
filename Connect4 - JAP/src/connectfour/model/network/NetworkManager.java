@@ -95,7 +95,6 @@ public class NetworkManager implements PropertyChangeListener {
 			return -1;
 		}
 		
-		PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1().getPlayerID().toString(), "Host");
 		if (serverSocket == null || serverSocket.server.isClosed()) {
 			try {
 				serverSocket = new ServerSocketHandler(port);
@@ -148,7 +147,6 @@ public class NetworkManager implements PropertyChangeListener {
 			try {
 				GameManager.getInstance().resetToNetworkGameState(false);
 				PlayerManager.getInstance().setDefaultNetworkPlayers();
-				PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1().getPlayerID().toString(), "Client");
 				var socket = new Socket(address, port);
 				clientSocket = new ClientSocketHandler(socket);
 				clientSocket.start();
@@ -222,10 +220,17 @@ public class NetworkManager implements PropertyChangeListener {
 				var playerUpdate = (PlayerUpdateNetworkMessage)message;
 				if (playerUpdate != null) {
 					var player = PlayerManager.getInstance().addNetworkPlayer(playerUpdate.username, playerUpdate.uID);
-					sender.setPlayer(player);
-					if (GameManager.getInstance().getPlayer2() == null) {
-						GameManager.getInstance().setPlayer2(player);
-						System.out.println("Player 2 set by PLAYER_JOIN: " + GameManager.getInstance().getPlayer2());
+					if (player != null) {
+						sender.setPlayer(player);
+						ChatManager.getInstance().addSystemMessage(player.getName() + " has joined.");
+						if (GameManager.getInstance().getPlayer2() == null) {
+							GameManager.getInstance().setPlayer2(player);
+							ChatManager.getInstance().addSystemMessage(player.getName() + " is now Player 2.");
+							System.out.println("Player 2 set by PLAYER_JOIN: " + GameManager.getInstance().getPlayer2());
+						}
+					}
+					else {
+						System.err.println("Player could not be added: " + playerUpdate.uID + ", " + playerUpdate.username);
 					}
 				}
 			}
@@ -244,8 +249,8 @@ public class NetworkManager implements PropertyChangeListener {
 				var playerUpdate = (PlayerUpdateNetworkMessage)message;
 				if (playerUpdate != null && sender.getPlayer() != null) {
 					// Sender can only update themselves
-					if (sender.getPlayer().getPlayerID().toString().equals(playerUpdate.uID)){
-						PlayerManager.getInstance().updatePlayerName(null, null);					
+					if (sender.getPlayer().idMatchesPlayerID(playerUpdate.uID)){
+						PlayerManager.getInstance().updatePlayerName(sender.getPlayer(), playerUpdate.username);					
 					}
 				}
 			}

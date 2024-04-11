@@ -90,6 +90,15 @@ public class Player {
 	}
 	
 	/**
+	 * Checks if a given string matches the player's UUID
+	 * @param id The id to compare
+	 * @return true if the id matches
+	 */
+	public boolean idMatchesPlayerID(String id) {
+		return uID.toString().equals(id);
+	}
+	
+	/**
 	 * Player objects are considered equal if their UUIDs are the same
 	 */
 	@Override

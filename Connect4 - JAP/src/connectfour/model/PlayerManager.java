@@ -127,8 +127,7 @@ public class PlayerManager {
 	}
 	
 	/**
-	 * Updates the username of a player with the given ID, and also notifies
-	 * PropertyChangeListeners
+	 * Updates the username of a player with the given ID, and also notifies PropertyChangeListeners
 	 * @param uID The UUID of the player
 	 * @param newUsername the new username for the player
 	 */
@@ -142,6 +141,15 @@ public class PlayerManager {
 			System.out.println("Player not found in updatePlayerName or player name was the same: " + 
 					uID + ": " + newUsername);
 		}
+	}
+	
+	/**
+	 * Updates the username of a given player, and also notifies PropertyChangeListeners
+	 * @param player The player to update
+	 * @param newUsername the new username for the player
+	 */
+	public void updatePlayerName(Player player, String newUsername) {
+		updatePlayerName(player.getPlayerID().toString(), newUsername);
 	}
 	
 	/**
