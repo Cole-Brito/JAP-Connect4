@@ -16,6 +16,7 @@ import java.net.InetAddress;
 
 import connectfour.model.locale.LocaleManager;
 import connectfour.model.network.NetworkManager;
+import connectfour.model.network.NetworkManager.SessionType;
 import connectfour.view.MainWindow;
 import connectfour.model.GameManager;
 
@@ -52,14 +53,19 @@ public class MenuController implements ActionListener {
 		String item = e.getActionCommand();
     	switch(item) {
     	case "load":
+    		//TODO: may be removed
     		break;
     	case "save":
+    		//TODO: may be removed
     		break;
     	case "restart":	
     		System.out.println("Restarting...");
-    		gameManager.restartGame();
+    		if (NetworkManager.getInstance().getSessionType() != SessionType.CLIENT) {
+    			gameManager.restartGame();    			
+    		}
     		break;
     	case "playerlist":
+    		//TODO:
     		break;
     	case "mode":
     		break;
@@ -72,6 +78,8 @@ public class MenuController implements ActionListener {
     		NetworkManager.getInstance().openClientSocket(null, 35535);
     		break;
     	case "disconnect":
+    		NetworkManager.getInstance().closeServerSocket();
+    		NetworkManager.getInstance().closeClientSocket(true);
     		break;
     	case "english":
     		LocaleManager.getInstance().setActiveLanguageSet("EN");
@@ -83,6 +91,7 @@ public class MenuController implements ActionListener {
     		mainWindow.displayControls();
     		break;
     	case "theme":
+    		//TODO: may be removed
     		break;
     	case "about":
     		mainWindow.displayAbout();

@@ -3,8 +3,6 @@ package connectfour.model.network;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +13,15 @@ import connectfour.model.GameManager.GameWinCountChangedEvent;
 import connectfour.model.GameState;
 import connectfour.model.Player;
 import connectfour.model.PlayerManager;
-import connectfour.model.PlayerType;
-import connectfour.model.network.ClientSocketHandler.ClientState;
 import connectfour.model.network.HelloNetworkMessage.PlayerPayload;
 import connectfour.model.network.NetworkMessage.Opcode;
 
+/**
+ * Handles all network functionality.
+ * Sends messages across client socket connections.
+ * Receives and parses messages from sockets to perform actions.
+ * Functionality changes depending on session type being Host or Client
+ */
 public class NetworkManager implements PropertyChangeListener {
 	/** The singleton instance of NetworkManager */
 	private static NetworkManager _instance;
@@ -35,7 +37,9 @@ public class NetworkManager implements PropertyChangeListener {
 		return _instance;
 	}
 	
+	/** The lowest acceptable port number. 0-1023 are reserved */
 	public static int MIN_PORT_NUMBER = 1024;
+	/** The highest acceptable port number, max of 16 bit number */
 	public static int MAX_PORT_NUMBER = 65535;
 	
 	/**
@@ -80,12 +84,15 @@ public class NetworkManager implements PropertyChangeListener {
 	
 	/**
 	 * Attempts to open the server socket on a given port
-	 * @param port
-	 * @return
+	 * @param port The port to listen on
+	 * @return the port number server is listening on, or -1 in case of errors
 	 */
 	public int openServerSocket(int port) {
 		if (sessionType == SessionType.CLIENT) {
-			closeClientSocket();
+			closeClientSocket(true);
+		}
+		if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {
+			return -1;
 		}
 		
 		PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1().getPlayerID().toString(), "Host");
@@ -109,10 +116,15 @@ public class NetworkManager implements PropertyChangeListener {
 		return -1;
 	}
 	
+	/**
+	 * Closes the server socket, then reset PlayerManager and GameManager states 
+	 * to defaults for offline session.
+	 */
 	public void closeServerSocket() {
 		if (sessionType == sessionType.HOST) {
 			if (serverSocket != null && !serverSocket.server.isClosed()) {
 				try {
+					sendNetworkMessage(new NetworkMessage(Opcode.SESSION_TERMINATE));
 					serverSocket.closeServerSocket();
 					System.out.println("Server socket closed");
 				} catch (Exception e) {
@@ -125,6 +137,12 @@ public class NetworkManager implements PropertyChangeListener {
 		}
 	}
 	
+	/**
+	 * Opens the client socket on a given ip address and port
+	 * @param address The IP address to connect to
+	 * @param port The port number to connect to
+	 * @return true if the socket connects successfully, false otherwise
+	 */
 	public boolean openClientSocket(String address, int port) {
 		if (sessionType == SessionType.OFFLINE) {
 			try {
@@ -155,10 +173,18 @@ public class NetworkManager implements PropertyChangeListener {
 		return false;
 	}
 	
-	public void closeClientSocket() {
+	/**
+	 * Closes the client socket, then reset PlayerManager and GameManager states
+	 * to defaults for offline sessions.
+	 * @param notifyServer if closing the socket should send a PlayerLeave message to server first
+	 */
+	public void closeClientSocket(boolean notifyServer) {
 		if (sessionType == sessionType.CLIENT) {
 			if (clientSocket != null && !clientSocket.socket.isClosed()) {
 				try {
+					if (notifyServer) {
+						sendPlayerLeaveMessage(PlayerManager.getInstance().getLocalPlayer1());						
+					}
 					clientSocket.closeClientSocket();
 					System.out.println("Client socket closed");
 				} catch (Exception e) {
@@ -378,6 +404,8 @@ public class NetworkManager implements PropertyChangeListener {
 				break;
 			case SESSION_TERMINATE:
 				//TODO: close session
+				closeClientSocket(false);
+				System.out.println("Session Terminated");
 				break;
 			default:
 				break;
@@ -538,11 +566,13 @@ public class NetworkManager implements PropertyChangeListener {
 	 */
 	public HelloNetworkMessage createHelloMessage() {	
 		var gameManager = GameManager.getInstance();
+		// Set game board and game state
 		var message = new HelloNetworkMessage(Opcode.HELLO, 
 				gameManager.getGameState().ordinal(), 
 				gameManager.getBoardState(),
 				gameManager.getPlayer1WinCount(),
 				gameManager.getPlayer2WinCount());
+		// Iterate over players to create PlayerPayloads for each one
 		List<PlayerPayload> payload = new ArrayList<>();
 		for(var player: PlayerManager.getInstance().getPlayers()) {
 			Integer playerState = 0;
@@ -552,6 +582,7 @@ public class NetworkManager implements PropertyChangeListener {
 					player.getPlayerID().toString(), playerState));
 		}
 		
+		//Convert PlayerLayload list to array
 		message.players = new PlayerPayload[payload.size()];
 		message.players = payload.toArray(message.players);
 		
@@ -559,7 +590,7 @@ public class NetworkManager implements PropertyChangeListener {
 	}
 
 	/**
-	 * PropertyChange event that responds to Game State changes
+	 * PropertyChange event that responds to all relevant model changes.
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {

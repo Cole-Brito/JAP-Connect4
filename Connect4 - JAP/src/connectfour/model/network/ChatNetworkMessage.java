@@ -10,6 +10,10 @@
 
 package connectfour.model.network;
 
+/**
+ * A network message containing a chat message as the payload.
+ * Chat message is formatted with sender info when sent by the server.
+ */
 public class ChatNetworkMessage extends NetworkMessage {
 	/**
 	 * Serial Version UID, used to compare class versions when deserializing

@@ -202,8 +202,13 @@ public class GameManager {
 			gameState = state;
 			onGameStateChanged(gameState, oldState);
 			if (gameState == GameState.PLAYER_1_TURN || gameState == GameState.PLAYER_2_TURN) {
-				gameTimer.setStatus(ControllableTimer.START);
-				turnTimer.setStatus(ControllableTimer.START);
+				if (oldState == GameState.PLAYER_1_TURN || oldState == GameState.PLAYER_2_TURN) {
+					turnTimer.setStatus(ControllableTimer.RESET);
+				}
+				else {
+					gameTimer.setStatus(ControllableTimer.START);
+					turnTimer.setStatus(ControllableTimer.START);					
+				}
 			}
 			else {
 				gameTimer.setStatus(ControllableTimer.STOP);

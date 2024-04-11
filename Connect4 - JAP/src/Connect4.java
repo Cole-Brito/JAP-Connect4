@@ -143,7 +143,7 @@ public class Connect4 {
 			public void windowClosing(WindowEvent e) {
 				// TODO Auto-generated method stub
 				NetworkManager.getInstance().closeServerSocket();
-				NetworkManager.getInstance().closeClientSocket();
+				NetworkManager.getInstance().closeClientSocket(true);
 				mainWindow.dispose();
 			}
 			
