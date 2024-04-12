@@ -10,6 +10,9 @@
 
 package connectfour.model.network;
 
+/**
+ * A NetworkMessage that can represent a change to game state, game board, or win counts
+ */
 public class GameUpdateNetworkMessage extends NetworkMessage {
 
 	/**
@@ -56,7 +59,7 @@ public class GameUpdateNetworkMessage extends NetworkMessage {
 	
 	/**
 	 * Create a new GameUpdateNetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param opcode {@link Opcode} The message opcode
 	 * @param gameState the new gameState. Leave null if unchanged.
 	 * @param gameBoard the updated array of tile states. Leave null if unchanged.
 	 */
@@ -68,9 +71,10 @@ public class GameUpdateNetworkMessage extends NetworkMessage {
 	
 	/**
 	 * Create a new GameUpdateNetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
-	 * @param gameState the new gameState. Leave null if unchanged.
-	 * @param gameBoard the updated array of tile states. Leave null if unchanged.
+	 * @param opcode {@link Opcode} The message opcode
+	 * @param row The row index of a tile state update
+	 * @param column The column index of a tile state update
+	 * @param state The new tile state
 	 */
 	public GameUpdateNetworkMessage(Opcode opcode, Integer row, Integer column, Integer state) {
 		super(opcode);
@@ -81,7 +85,7 @@ public class GameUpdateNetworkMessage extends NetworkMessage {
 	
 	/**
 	 * Create a new GameUpdateNetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param opcode {@link Opcode} The message opcode
 	 * @param gameState the new gameState. Leave null if unchanged.
 	 * @param gameBoard the updated array of tile states. Leave null if unchanged.
 	 * @param p1wins the player 1 win count

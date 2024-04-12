@@ -27,7 +27,7 @@ public class ChatNetworkMessage extends NetworkMessage {
 
 	/**
 	 * Create a new GameUpdateNetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param opcode {@link Opcode} The message opcode
 	 * @param message The chat message that was sent
 	 */
 	public ChatNetworkMessage(Opcode opcode, String message) {

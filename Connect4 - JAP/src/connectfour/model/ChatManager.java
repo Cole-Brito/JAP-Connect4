@@ -51,8 +51,9 @@ public class ChatManager {
 	}
 	
 	/**
-	 * <p>Adds a message to messageHistory using a player as the sender.
-	 * Player messages are prefixed with [p:PlayerName] where PlayerName is the sender.</p>
+	 * <p>Adds a message to messageHistory using a player username as the sender.
+	 * Player messages are prefixed with [p:PlayerID:PlayerName] where PlayerName is the sender,
+	 * and PlayerID is 0 when added through this method. </p>
 	 * This function invokes a PropertyChangeEvent on messageHistory
 	 * @param message The message to add
 	 * @param sender The name of the sender
@@ -68,6 +69,14 @@ public class ChatManager {
 				new MessageEventValue(formattedMessage, messageHistory.size() - 1));
 	}
 	
+	/**
+	 * <p>Adds a message to messageHistory using a Player object sender.
+	 * Player messages are prefixed with [p:PlayerID:PlayerName] where PlayerName is the sender userame,
+	 * and PlayerID is the sender's UUID. </p>
+	 * This function invokes a PropertyChangeEvent on messageHistory
+	 * @param message The message to add
+	 * @param sender The player object that is sending the message
+	 */
 	public void addMessage(String message, Player sender) {
 		String formattedMessage = "";
 		if (sender != null) {
@@ -137,6 +146,7 @@ public class ChatManager {
 	 * Event will be fired when a new message is added.<br>
 	 * Note that the PropertyChangeEvent will use {@link MessageEventValue} as old and new values.
 	 * 
+	 * @param propertyName The name of the property for the listener to respond to.
 	 * @param listener The {@link PropertyChangeListener} that responds to new messages being added
 	 */
 	public void registerPropertyChangeListener(String propertyName, PropertyChangeListener listener) {

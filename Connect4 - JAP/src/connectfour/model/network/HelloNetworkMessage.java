@@ -12,6 +12,10 @@ package connectfour.model.network;
 
 import java.io.Serializable;
 
+/**
+ * A class the represents a NetworkMessage containing all necessary information
+ * for a new client connections. Contains Game States, Game Board, and Player List.
+ */
 public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 
 	/**
@@ -26,7 +30,7 @@ public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 
 	/**
 	 * Create a new HelloNetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param opcode {@link Opcode} The message opcode
 	 * @param gameState the initial gameState
 	 * @param gameBoard the array of tile states
 	 * @param players the list of players
@@ -38,7 +42,7 @@ public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 	
 	/**
 	 * Create a new HelloNetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param opcode {@link Opcode} The message opcode
 	 * @param gameState the initial gameState
 	 * @param gameBoard the array of tile states
 	 */
@@ -48,7 +52,7 @@ public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 	
 	/**
 	 * Create a new HelloNetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param opcode {@link Opcode} The message opcode
 	 * @param gameState the initial gameState
 	 * @param gameBoard the array of tile states
 	 * @param p1wins the player 1 win count
@@ -58,6 +62,9 @@ public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 		super(opcode, gameState, gameBoard, p1wins, p2wins);
 	}
 
+	/**
+	 * An inner class to represent Player objects in the HelloMessage, so player list can be sent to clients.
+	 */
 	public class PlayerPayload implements Serializable{
 		/**
 		 * The player's username.
@@ -71,11 +78,10 @@ public class HelloNetworkMessage extends GameUpdateNetworkMessage {
 		
 		/**
 		 * The player's state.
-		 * <list>
-		 * <li>1 = player 1</li>
-		 * <li>2 = player 2</li>
-		 * <li>0 = default (spectator)</li>
-		 * </list>
+		 * <br>
+		 * <br>1 = player 1
+		 * <br>2 = player 2
+		 * <br>0 = default (spectator)
 		 */
 		public Integer playerState;
 		

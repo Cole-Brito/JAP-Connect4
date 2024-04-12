@@ -12,6 +12,10 @@ package connectfour.model.network;
 
 import java.io.Serializable;
 
+/**
+ * A object intended to be sent over the network to client sockets.
+ * Contains an Opcode to determine which type of message this is.
+ */
 public class NetworkMessage implements Serializable {
 	
 	/**
@@ -48,7 +52,7 @@ public class NetworkMessage implements Serializable {
 	
 	/**
 	 * Creates a new NetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param opcode {@link Opcode} The message opcode
 	 */
 	public NetworkMessage(Opcode opcode) {
 		this.opcode = opcode;

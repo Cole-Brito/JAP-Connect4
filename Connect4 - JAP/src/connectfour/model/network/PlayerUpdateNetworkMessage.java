@@ -10,6 +10,10 @@
 
 package connectfour.model.network;
 
+/**
+ * A NetworkMessage representing changes to a Player.
+ * Contains The player's name, UUID, and if the player is Player 1, Player 2, or a spectator.
+ */
 public class PlayerUpdateNetworkMessage extends NetworkMessage {
 
 	/**
@@ -36,17 +40,16 @@ public class PlayerUpdateNetworkMessage extends NetworkMessage {
 	
 	/**
 	 * The player's new state. May be null.
-	 * <list>
-	 * <li>1 = player 1</li>
-	 * <li>2 = player 2</li>
-	 * <li>0 = default (spectator)</li>
-	 * </list>
+	 * <br>
+	 * <br>1 = player 1
+	 * <br>2 = player 2
+	 * <br>0 = default (spectator)
 	 */
 	public Integer playerState;
-	
+
 	/**
 	 * Create a new PlayerUpdateNetworkMessage
-	 * @param opcode {@link NetworkMessage#Opcode} The message opcode
+	 * @param opcode {@link Opcode} The message opcode
 	 * @param userID The UUID of the player. Should not be empty or null.
 	 * @param username The username of the player. Leave null if not updating.
 	 * @param playerState The active state of the player. Leave null if not updating.

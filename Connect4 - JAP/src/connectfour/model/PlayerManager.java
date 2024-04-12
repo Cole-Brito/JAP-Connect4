@@ -85,7 +85,7 @@ public class PlayerManager {
 	
 	/**
 	 * Adds a remote player with the given socket
-	 * @param userName - name of the user being created 
+	 * @param username - name of the user being created 
 	 * @param id - the GUID of the player
 	 * @return the player that was added, or null if no player was added
 	 */

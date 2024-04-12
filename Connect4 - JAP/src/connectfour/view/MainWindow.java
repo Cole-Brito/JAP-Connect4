@@ -3,9 +3,9 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: March 24, 2024
+ * Last Modified: April 7, 2024
  * Algonquin College CET-CS
- * JAP - Assignment 2-2
+ * JAP - Assignment 3-2
  */
 
 package connectfour.view;
@@ -339,15 +339,19 @@ public class MainWindow extends JFrame implements PropertyChangeListener, Locale
 			rightLabel.setText("DRAW");
 			break;
 		case PLAYER_1_TURN:
+			if (GameManager.getInstance().getPlayer1() != null)
 			rightLabel.setText(GameManager.getInstance().getPlayer1().getName() + "'s Turn");
 			break;
 		case PLAYER_1_WIN:
+			if (GameManager.getInstance().getPlayer1() != null)
 			rightLabel.setText(GameManager.getInstance().getPlayer1().getName() + " WINS!");
 			break;
 		case PLAYER_2_TURN:
+			if (GameManager.getInstance().getPlayer2() != null)
 			rightLabel.setText(GameManager.getInstance().getPlayer2().getName() + "'s Turn");
 			break;
 		case PLAYER_2_WIN:
+			if (GameManager.getInstance().getPlayer2() != null)
 			rightLabel.setText(GameManager.getInstance().getPlayer2().getName() + " WINS!");
 			break;
 		default:

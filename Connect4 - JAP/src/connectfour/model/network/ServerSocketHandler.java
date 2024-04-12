@@ -6,6 +6,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class that handles the server socket on a separate thread
+ */
 public class ServerSocketHandler extends Thread {
 	
 	/** The state of this server socket */
@@ -79,7 +82,7 @@ public class ServerSocketHandler extends Thread {
 	
 	/**
 	 * Broadcasts object data across all connected clients
-	 * @param message
+	 * @param message The NetworkMessage to send to all clients
 	 */
 	public synchronized void broadcastMessage(Object message) {
 		for (var client: clientSockets) {
@@ -106,7 +109,7 @@ public class ServerSocketHandler extends Thread {
 	
 	/**
 	 * Removes a single client connection from this server
-	 * @param client
+	 * @param client The client socket to remove
 	 */
 	public void closeClientSocket(ClientSocketHandler client) {
 		if (clientSockets.remove(client)) {

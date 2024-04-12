@@ -57,8 +57,11 @@ public class NetworkManager implements PropertyChangeListener {
 	 * Valid network session types
 	 */
 	public enum SessionType{
+		/** Offline session. No network actions are used. */
 		OFFLINE,
+		/** This application is connected as the host */
 		HOST,
+		/** This application is connected as a client */
 		CLIENT
 	}
 	
@@ -210,6 +213,12 @@ public class NetworkManager implements PropertyChangeListener {
 		}
 	}
 	
+	/**
+	 * Send any type of {@link NetworkMessage} over the network.
+	 * Broadcasts to all clients when sent from the server.
+	 * Only sends to server when sent from a client.
+	 * @param message The NetworkMessage to send
+	 */
 	public void sendNetworkMessage(NetworkMessage message) {
 		if (sessionType == SessionType.HOST) {
 			serverSocket.broadcastMessage(message);
@@ -325,11 +334,11 @@ public class NetworkManager implements PropertyChangeListener {
 			{
 				var hello = (HelloNetworkMessage)message;
 				var gameManager = GameManager.getInstance();
+				addPlayersFromPayload(hello.players);
 				gameManager.updateGameState(hello.gameState);
 				gameManager.updateGameBoardDirect(hello.gameBoard);
 				gameManager.setPlayer1WinCount(hello.player1WinCount);
 				gameManager.setPlayer2WinCount(hello.player2WinCount);
-				addPlayersFromPayload(hello.players);
 			}
 				break;
 			case PLAYER_JOIN:
@@ -469,9 +478,7 @@ public class NetworkManager implements PropertyChangeListener {
 	
 	/**
 	 * Sends a GameUpdateNetworkMessage over the network
-	 * @param row The row index on game board to update. May be null
-	 * @param column The column index on game board to update. Should not be null
-	 * @param state The new state of the tile. May be null
+	 * @param gameBoard A 2D array of tile states of the game board
 	 */
 	public void sendGameBoardFullUpdateMessage(int[][] gameBoard) {
 		var message = new GameUpdateNetworkMessage(Opcode.GAMEBOARD_UPDATE_ALL, null, gameBoard);

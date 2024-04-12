@@ -3,9 +3,9 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: March 24, 2024
+ * Last Modified: April 7, 2024
  * Algonquin College CET-CS
- * JAP - Assignment 2-2
+ * JAP - Assignment 3-2
  */
 
 package connectfour.model;
@@ -27,7 +27,7 @@ public class Player {
 	private final UUID uID;
 	
 	/**
-	 * Instantiate a new player
+	 * Instantiate a new player, with a random UUID
 	 * @param name The username of the player
 	 * @param type The PlayerType of the player
 	 */
@@ -40,8 +40,8 @@ public class Player {
 	/**
 	 * Instantiate a new player with a client socket connection
 	 * @param name The username of the player
+	 * @param id The UUID of the player
 	 * @param type The PlayerType of the player
-	 * @param socket The client's socket connection to the server
 	 */
 	Player(String name, String id, PlayerType type){
 		this.username = name;
@@ -110,6 +110,9 @@ public class Player {
 		return super.equals(obj);
 	}
 	
+	/**
+	 * Gets a formatted string with player's name, UUID, and player type
+	 */
 	@Override
 	public String toString() {
 		return String.format("[%s : %s : %s]", username, uID.toString(), playerType.toString());

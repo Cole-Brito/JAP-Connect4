@@ -8,6 +8,9 @@ import java.net.Socket;
 import connectfour.model.Player;
 import connectfour.model.network.ServerSocketHandler.ServerState;
 
+/**
+ * Class to handle client sockets on a separate thread
+ */
 public class ClientSocketHandler extends Thread{
 	
 	/**
@@ -88,7 +91,7 @@ public class ClientSocketHandler extends Thread{
 	
 	/**
 	 * Sets the player associated with this client socket
-	 * @param player
+	 * @param player The Player object
 	 */
 	public synchronized void setPlayer(Player player) {
 		this.player = player;

@@ -290,6 +290,7 @@ public class GameManager {
 	 * @param hosting If this is the host, player 1 is set to default
 	 */
 	public void resetToNetworkGameState(boolean hosting) {
+		updateGameState(GameState.DEFAULT);
 		if (hosting) {
 			this.setPlayer1(PlayerManager.getInstance().getLocalPlayer1());			
 		}
@@ -317,8 +318,8 @@ public class GameManager {
 	}
 	
 	/**
-	 * Gets the current player 1
-	 * @return player1
+	 * sets the current player 1
+	 * @param p1 The new Player 1
 	 */
 	public void setPlayer1(Player p1) {
 		var oldPlayer = player1;
@@ -327,8 +328,8 @@ public class GameManager {
 	}
 	
 	/**
-	 * Gets the current player 2
-	 * @return player2
+	 * Sets the current player 2
+	 * @param p2 The new Player 2
 	 */
 	public void setPlayer2(Player p2) {
 		var oldPlayer = player2;
@@ -470,6 +471,7 @@ public class GameManager {
 	
 	/**
 	 * Notify PropertyChangeListeners when player1 changes
+	 * @param oldPlayer1 The previous player 1, before the change
 	 */
 	public void onPlayer1Changed(Player oldPlayer1) {
 		propertyChangedSupport.firePropertyChange(GAME_PLAYER1_CHANGE_PROPERTY_NAME, oldPlayer1, player1);
@@ -477,6 +479,7 @@ public class GameManager {
 	
 	/**
 	 * Notify PropertyChangeListeners when player2 changes
+	 * @param oldPlayer2 The previous player 2, before the change
 	 */
 	public void onPlayer2Changed(Player oldPlayer2) {
 		propertyChangedSupport.firePropertyChange(GAME_PLAYER2_CHANGE_PROPERTY_NAME, oldPlayer2, player2);

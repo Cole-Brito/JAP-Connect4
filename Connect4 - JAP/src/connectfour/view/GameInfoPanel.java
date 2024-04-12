@@ -3,9 +3,9 @@
  * Authors: Cole Brito, Paul Squires 
  * Section: 301
  * Professor: Daniel Cormier
- * Last Modified: March 24, 2024
+ * Last Modified: April 7, 2024
  * Algonquin College CET-CS
- * JAP - Assignment 2-2
+ * JAP - Assignment 3-2
  */
 
 package connectfour.view;
@@ -127,7 +127,7 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener, Loc
 	
 	/**
 	 * sets the players chosen name
-	 * @param name - Name that player 1 has entered
+	 * @param p1 The player to set as player 1
 	 */
 	public void setPlayer1(Player p1) {
         this.player1 = p1;
@@ -141,7 +141,7 @@ public class GameInfoPanel extends JPanel implements PropertyChangeListener, Loc
 
 	/**
 	 * sets the players chosen name
-	 * @param name - Name that player 2 has entered
+	 * @param p2 The player to set as player 2
 	 */
     public void setPlayer2(Player p2) {
         this.player2 = p2;
