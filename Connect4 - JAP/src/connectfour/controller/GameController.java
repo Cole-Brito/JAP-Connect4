@@ -13,11 +13,10 @@ package connectfour.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import connectfour.model.*;
+import connectfour.model.GameManager;
+import connectfour.model.PlayerManager;
 import connectfour.model.network.NetworkManager;
-import connectfour.model.network.NetworkManager.SessionType;
 import connectfour.view.GameBoardTile;
-import connectfour.view.MainWindow;
 
 /**
  * Controller that responds to actions on the GameBoard UI panels.

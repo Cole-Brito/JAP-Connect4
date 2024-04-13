@@ -12,16 +12,15 @@ package connectfour.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
 
 import javax.swing.JDialog;
 
+import connectfour.model.GameManager;
 import connectfour.model.locale.LocaleManager;
 import connectfour.model.network.NetworkManager;
 import connectfour.model.network.NetworkManager.SessionType;
 import connectfour.view.MainWindow;
 import connectfour.view.NetworkDialogs;
-import connectfour.model.GameManager;
 
 /**
  * Controller that responds to Menu UI elements and relays

@@ -12,7 +12,6 @@ package connectfour.view;
 
 import java.awt.Color;
 
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,7 +19,6 @@ import javax.swing.JTextField;
 
 import connectfour.model.PlayerManager;
 import connectfour.model.network.NetworkManager;
-import connectfour.model.network.NetworkManager.SessionType;
 
 /**
  * Class for displaying the dialogs used to establish a network connection

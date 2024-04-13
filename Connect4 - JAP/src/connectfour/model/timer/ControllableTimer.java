@@ -9,10 +9,6 @@
 package connectfour.model.timer;
 import java.awt.EventQueue;
 
-import javax.swing.text.View;
-
-import connectfour.view.GameInfoPanel;
-
 /**
 ControllableTimer:  A timer that can be started and stopped.
 @author Daniel Cormier

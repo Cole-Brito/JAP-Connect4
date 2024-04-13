@@ -10,8 +10,10 @@
 
 package connectfour.view;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /**
  * JButton used to display a single tile on the game board.

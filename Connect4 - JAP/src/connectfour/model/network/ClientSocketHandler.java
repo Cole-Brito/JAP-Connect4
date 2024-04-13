@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import connectfour.model.Player;
-import connectfour.model.network.ServerSocketHandler.ServerState;
 
 /**
  * Class to handle client sockets on a separate thread

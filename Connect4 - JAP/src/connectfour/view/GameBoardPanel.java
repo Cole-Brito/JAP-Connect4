@@ -11,16 +11,15 @@
 package connectfour.view;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import connectfour.model.GameManager;
-import connectfour.model.GameManager.GameBoardPropertyChangedEvent;
 /**
  * Class to generate and control the behavior of the game board
  * @author Cole Brito, Paul Squires

@@ -10,14 +10,9 @@
 
 package connectfour.model.locale;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;

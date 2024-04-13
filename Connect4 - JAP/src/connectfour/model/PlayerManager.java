@@ -12,13 +12,10 @@ package connectfour.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
-import connectfour.model.GameManager.GameBoardPropertyChangedEvent;
 
 /**
  * Tracks a list of Players and their Player Types
