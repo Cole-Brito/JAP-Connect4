@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
 
+import javax.swing.JDialog;
+
 import connectfour.model.locale.LocaleManager;
 import connectfour.model.network.NetworkManager;
 import connectfour.model.network.NetworkManager.SessionType;
@@ -78,6 +80,9 @@ public class MenuController implements ActionListener {
     		break;
     	case "connect":
     		networkDialog.displayConnectionSetup();
+    		if (NetworkManager.getInstance().getSessionType() != SessionType.CLIENT) {
+    			var dialog = new JDialog(mainWindow, "Could not start server.");
+    		}
     		break;
     	case "disconnect":
     		NetworkManager.getInstance().closeServerSocket();

@@ -28,14 +28,18 @@ public class ServerSocketHandler extends Thread {
 	/** A list of all client sockets connected to this server */
 	private List<ClientSocketHandler> clientSockets;
 	
+	private Object lockObject;
+	
 	/**
 	 * Creates a new ServerSocketHandler with the given port number.
 	 * Does not start the server immediately,
 	 * @param port The port for this server to listen on.
 	 */
-	public ServerSocketHandler(int port) {
+	public ServerSocketHandler(int port, Object lockObject) {
 		this.port = port;
+		this.serverState = ServerState.STOPPED;
 		clientSockets = new ArrayList<>();
+		this.lockObject = lockObject;
 	}
 	
 	/**
@@ -43,10 +47,22 @@ public class ServerSocketHandler extends Thread {
 	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		// Attempt to open server
 		try {
 			server = new ServerSocket(port);
 			System.out.println("Server listening on port: " + port);
+			setServerState(ServerState.RUNNING);
+		} catch (Exception e) {
+			closeServerSocket();
+			e.printStackTrace();
+		}
+		
+		// Notify lock monitor after server socket connects (or not)
+		synchronized (lockObject) {
+			lockObject.notifyAll();			
+		}
+		
+		try {
 			while(this.getServerState() != ServerState.STOPPED && !server.isClosed()) {
 				Socket client = server.accept();
 				var clientHandler = new ClientSocketHandler(client);
@@ -61,7 +77,10 @@ public class ServerSocketHandler extends Thread {
 				closeServerSocket();
 				e.printStackTrace();				
 			}
-		}	
+		} catch (Exception e) {
+			//TODO: Do we want to close server here?
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -98,7 +117,7 @@ public class ServerSocketHandler extends Thread {
 	public void closeServerSocket() {
 		setServerState(ServerState.STOPPED);
 		try {
-			if (!server.isClosed()) {
+			if (server != null && !server.isClosed()) {
 				this.server.close();				
 			}
 		} catch (IOException e) {

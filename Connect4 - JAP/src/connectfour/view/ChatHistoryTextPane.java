@@ -88,10 +88,6 @@ public class ChatHistoryTextPane extends JTextPane implements PropertyChangeList
 		initStyles();
 		this.setEditable(false);
 		styleDoc = getStyledDocument();
-		
-		//TEMP - for testing chat box
-		//this.addText("[System]: Chat History\n", TextStyle.SYSTEM);
-		//this.addText("[Player]: Test Message\nTest\n", TextStyle.PLAYER1);
 	}
 	
 	/**

@@ -10,7 +10,6 @@
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.UUID;
 
 import connectfour.controller.ChatController;
 import connectfour.controller.GameController;
@@ -97,8 +96,9 @@ public class Connect4 {
 		var chatManager = ChatManager.getInstance();
 		chatManager.addSystemMessage("Welcome to Connect4!");
 		chatManager.registerPropertyChangeListener(ChatManager.CHAT_HISTORY_PROPERTY_NAME, mainWindow.chatHistoryTextPane);
-		chatManager.addMessage("Hello", gameManager.getPlayer1());
-		chatManager.addMessage("Hi", gameManager.getPlayer2());
+		//chatManager.addMessage("Hello", gameManager.getPlayer1());
+		//chatManager.addMessage("Hi", gameManager.getPlayer2());
+		chatManager.addSystemMessage("Welcome to Connect4!");
 
 		//Register NetworkManager as PropertyChangeListener for all models
 		var networkManager = NetworkManager.getInstance();

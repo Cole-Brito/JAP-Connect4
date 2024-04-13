@@ -231,6 +231,14 @@ public class GameManager {
 	}
 	
 	/**
+	 * Checks if game is in an active state
+	 * @return true if gameState represents a player's turn
+	 */
+	public boolean isGameActive() {
+		return gameState == GameState.PLAYER_1_TURN || gameState == GameState.PLAYER_2_TURN;
+	}
+	
+	/**
 	 * Swaps active players between Player1 and Player2.
 	 * Updates GameState.
 	 */
@@ -324,6 +332,11 @@ public class GameManager {
 	public void setPlayer1(Player p1) {
 		var oldPlayer = player1;
 		player1 = p1;
+		if (player1 == null) {
+			if (isGameActive()) {
+				updateGameState(gameState.DEFAULT);
+			}
+		}
 		onPlayer1Changed(oldPlayer);
 	}
 	
@@ -334,6 +347,11 @@ public class GameManager {
 	public void setPlayer2(Player p2) {
 		var oldPlayer = player2;
 		player2 = p2;
+		if (player2 == null) {
+			if (isGameActive()) {
+				updateGameState(gameState.DEFAULT);
+			}
+		}
 		onPlayer2Changed(oldPlayer);
 	}
 	

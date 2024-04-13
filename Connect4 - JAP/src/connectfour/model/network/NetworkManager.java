@@ -26,6 +26,7 @@ import connectfour.model.Player;
 import connectfour.model.PlayerManager;
 import connectfour.model.network.HelloNetworkMessage.PlayerPayload;
 import connectfour.model.network.NetworkMessage.Opcode;
+import connectfour.model.network.ServerSocketHandler.ServerState;
 
 /**
  * Handles all network functionality.
@@ -85,7 +86,7 @@ public class NetworkManager implements PropertyChangeListener {
 	 * Sets initial states.
 	 */
 	private NetworkManager() {
-		
+		this.sessionType = sessionType.OFFLINE;
 	}
 	
 	/**
@@ -109,13 +110,28 @@ public class NetworkManager implements PropertyChangeListener {
 			return -1;
 		}
 		
-		if (serverSocket == null || serverSocket.server.isClosed()) {
+		if (serverSocket == null || serverSocket.getServerState() == ServerState.STOPPED) {
 			try {
-				serverSocket = new ServerSocketHandler(port);
-				serverSocket.start();
-				this.sessionType = SessionType.HOST;
-				PlayerManager.getInstance().setDefaultNetworkPlayers();
-				GameManager.getInstance().resetToNetworkGameState(true);
+				Object lock = new Object();
+				serverSocket = new ServerSocketHandler(port, lock);
+				
+				// Wait for serverSocket to open the socket and set state properly
+				// This prevents race condition on checking server state
+				synchronized (lock) {
+					try {
+						serverSocket.start();
+						lock.wait(1000);						
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				if (serverSocket.getServerState() == ServerState.RUNNING) {
+					this.sessionType = SessionType.HOST;
+					PlayerManager.getInstance().setDefaultNetworkPlayers();
+					GameManager.getInstance().resetToNetworkGameState(true);					
+					return port;
+				}				
 			} catch (Exception e) {
 				System.err.println("Failed to open server socket on port: " + port);
 				e.printStackTrace();
@@ -135,7 +151,7 @@ public class NetworkManager implements PropertyChangeListener {
 	 */
 	public void closeServerSocket() {
 		if (sessionType == sessionType.HOST) {
-			if (serverSocket != null && !serverSocket.server.isClosed()) {
+			if (serverSocket != null && serverSocket.server != null && !serverSocket.server.isClosed()) {
 				try {
 					sendNetworkMessage(new NetworkMessage(Opcode.SESSION_TERMINATE));
 					serverSocket.closeServerSocket();
@@ -265,6 +281,20 @@ public class NetworkManager implements PropertyChangeListener {
 				if (playerUpdate != null) {
 					var player = PlayerManager.getInstance().removePlayer(playerUpdate.uID);
 					serverSocket.closeClientSocket(sender);
+					ChatManager.getInstance().addSystemMessage(player.getName() + " disconnected.");
+					if (player.equals(GameManager.getInstance().getPlayer1())) {
+						GameManager.getInstance().setPlayer1(null);
+					}
+					if (player.equals(GameManager.getInstance().getPlayer2())) {
+						GameManager.getInstance().setPlayer2(null);
+						for (var p: PlayerManager.getInstance().getPlayers()) {
+							if (!p.equals(GameManager.getInstance().getPlayer1())){
+								GameManager.getInstance().setPlayer2(p);
+								ChatManager.getInstance().addSystemMessage(p.getName() + " is now Player 2.");
+								break;
+							}
+						}
+					}
 				}
 			}
 				break;
@@ -432,9 +462,9 @@ public class NetworkManager implements PropertyChangeListener {
 			}
 				break;
 			case SESSION_TERMINATE:
-				//TODO: close session
 				closeClientSocket(false);
 				System.out.println("Session Terminated");
+				ChatManager.getInstance().addSystemMessage("The Host terminated the session. You are now offline.");
 				break;
 			default:
 				break;

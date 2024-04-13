@@ -30,7 +30,7 @@ public class ChatController implements ActionListener {
 	private final ChatManager chatManager;
 	
 	/** 
-	 * The input text field on te UI. Stored so the field can be cleared
+	 * The input text field on the UI. Stored so the field can be cleared
 	 * when the chat message is sent using Send button or Enter key.
 	 */
 	private final ChatTextInputField textInputField;
@@ -58,7 +58,12 @@ public class ChatController implements ActionListener {
 			chatManager.addMessage(message, PlayerManager.getInstance().getLocalPlayer1());
 		}
 		else {
-			chatManager.addMessage(message, GameManager.getInstance().getActivePlayer());
+			if (GameManager.getInstance().getActivePlayer() != null) {
+				chatManager.addMessage(message, GameManager.getInstance().getActivePlayer());				
+			}
+			else {
+				chatManager.addMessage(message, PlayerManager.getInstance().getLocalPlayer1());
+			}
 		}
 	}
 

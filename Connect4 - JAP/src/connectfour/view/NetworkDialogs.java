@@ -10,6 +10,9 @@
 
 package connectfour.view;
 
+import java.awt.Color;
+
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,6 +20,7 @@ import javax.swing.JTextField;
 
 import connectfour.model.PlayerManager;
 import connectfour.model.network.NetworkManager;
+import connectfour.model.network.NetworkManager.SessionType;
 
 /**
  * Class for displaying the dialogs used to establish a network connection
@@ -36,6 +40,7 @@ public class NetworkDialogs {
 		JLabel playerLbl = new JLabel("Name: ");
 		JLabel portLbl = new JLabel("Port: ");
 		JLabel errorLbl = new JLabel("");
+		errorLbl.setForeground(Color.red);
 		
 		hostPanel.add(playerLbl);
 		hostPanel.add(playerNameField);
@@ -66,7 +71,9 @@ public class NetworkDialogs {
 			String playerName = playerNameField.getText(); // have to change player labels still
 	        PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1(), playerName);
 	        int portNumber = Integer.parseInt(portNumberField.getText());
-	        NetworkManager.getInstance().openServerSocket(portNumber);
+	        if (NetworkManager.getInstance().openServerSocket(portNumber) < 0) {
+	        	JOptionPane.showMessageDialog(null, "Could not open server on port " + portNumber);
+    		}
 		 }
 	}
 	
@@ -118,7 +125,10 @@ public class NetworkDialogs {
 	        PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1(), playerName);
 	        int portNumber = Integer.parseInt(portNumberField.getText());
 	        String ipAddress = ipAddressField.getText();
-	        NetworkManager.getInstance().openClientSocket(ipAddress, portNumber);
+	       if (!NetworkManager.getInstance().openClientSocket(ipAddress, portNumber)) {
+	        	JOptionPane.showMessageDialog(null, "Could not connect to server: " + ipAddress + ":" + portNumber);
+	       }
+	        
 		}
 	}
 	
