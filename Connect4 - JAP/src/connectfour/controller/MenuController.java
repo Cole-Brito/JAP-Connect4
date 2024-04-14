@@ -21,6 +21,7 @@ import connectfour.model.network.NetworkManager;
 import connectfour.model.network.NetworkManager.SessionType;
 import connectfour.view.MainWindow;
 import connectfour.view.NetworkDialogs;
+import connectfour.view.PlayerListDialog;
 
 /**
  * Controller that responds to Menu UI elements and relays
@@ -37,6 +38,8 @@ public class MenuController implements ActionListener {
 	private MainWindow mainWindow;
 	/**Reference to NetworkDialogs*/
 	private NetworkDialogs networkDialog;
+	/** Reference to PlayerListDialog */
+	private PlayerListDialog playerListDialog;
 	
 	/**
 	 * Instantiate the MenuController and set the GameManager and MainWindow reference
@@ -46,6 +49,7 @@ public class MenuController implements ActionListener {
 		this.mainWindow = mainWindow;
 		this.gameManager = GameManager.getInstance();
 		this.networkDialog = new NetworkDialogs();
+		this.playerListDialog = new PlayerListDialog();
 	}
 
 	/**
@@ -70,7 +74,7 @@ public class MenuController implements ActionListener {
     		}
     		break;
     	case "playerlist":
-    		//TODO:
+    		playerListDialog.showPlayerList();
     		break;
     	case "mode":
     		break;

@@ -88,6 +88,7 @@ public class NetworkDialogs {
 		JLabel portLbl = new JLabel("Port: ");
 		JLabel ipLbl = new JLabel("IP: ");
 		JLabel errorLbl = new JLabel("");
+		errorLbl.setForeground(Color.red);
 		
 		connectionPanel.add(playerLbl);
 		connectionPanel.add(playerNameField);
@@ -102,11 +103,11 @@ public class NetworkDialogs {
 	        result = JOptionPane.showConfirmDialog(null, connectionPanel, "Host Info", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 	        // Checking for if all fields are filled and if port number is within range
 	        if (result == JOptionPane.OK_OPTION) {
-	            if (playerNameField.getText().isEmpty()) {
+	            if (playerNameField.getText().isBlank()) {
 	                errorLbl.setText("Name cannot be empty");
-	            } else if (portNumberField.getText().isEmpty()) {
+	            } else if (portNumberField.getText().isBlank()) {
 	                errorLbl.setText("Port number cannot be empty");
-	            } else if (ipAddressField.getText().isEmpty()) {
+	            } else if (ipAddressField.getText().isBlank()) {
 	                errorLbl.setText("Ip address cannot be empty");
 	            } else if (!isValidPort(portNumberField.getText())) {
 	                errorLbl.setText("Port number must be between " + NetworkManager.MIN_PORT_NUMBER +
@@ -120,7 +121,7 @@ public class NetworkDialogs {
 		 
 		if (result == JOptionPane.OK_OPTION) {
 	        String playerName = playerNameField.getText();
-	        PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1(), playerName);
+	        PlayerManager.getInstance().updatePlayerName(PlayerManager.getInstance().getLocalPlayer1(), playerName.trim());
 	        int portNumber = Integer.parseInt(portNumberField.getText());
 	        String ipAddress = ipAddressField.getText();
 	       if (!NetworkManager.getInstance().openClientSocket(ipAddress, portNumber)) {

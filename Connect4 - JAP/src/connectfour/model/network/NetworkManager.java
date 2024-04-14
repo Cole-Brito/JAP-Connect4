@@ -301,6 +301,7 @@ public class NetworkManager implements PropertyChangeListener {
 			case PLAYER_UPDATE:
 			{
 				var playerUpdate = (PlayerUpdateNetworkMessage)message;
+				System.out.println("Received Player Update: " + playerUpdate.uID + ": " + playerUpdate.username);
 				if (playerUpdate != null && sender.getPlayer() != null) {
 					// Sender can only update themselves
 					if (sender.getPlayer().idMatchesPlayerID(playerUpdate.uID)){
@@ -398,13 +399,15 @@ public class NetworkManager implements PropertyChangeListener {
 						if (playerUpdate.username != null) {
 							PlayerManager.getInstance().updatePlayerName(playerUpdate.uID, playerUpdate.username);
 						}
-						if (playerUpdate.playerState == PlayerUpdateNetworkMessage.PLAYER_1_STATE) {
-							GameManager.getInstance().setPlayer1(player);
-							System.out.println("Set player 1: " + player.getName());
-						}
-						else if (playerUpdate.playerState == PlayerUpdateNetworkMessage.PLAYER_2_STATE) {
-							System.out.println("Set player 2: " + player.getName());
-							GameManager.getInstance().setPlayer2(player);
+						if (playerUpdate.playerState != null) {
+							if (playerUpdate.playerState == PlayerUpdateNetworkMessage.PLAYER_1_STATE) {
+								GameManager.getInstance().setPlayer1(player);
+								System.out.println("Set player 1: " + player.getName());
+							}
+							else if (playerUpdate.playerState == PlayerUpdateNetworkMessage.PLAYER_2_STATE) {
+								System.out.println("Set player 2: " + player.getName());
+								GameManager.getInstance().setPlayer2(player);
+							}
 						}
 					}
 					else {
