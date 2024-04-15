@@ -27,13 +27,14 @@ public class ServerSocketHandler extends Thread {
 	private ServerState serverState;
 	/** A list of all client sockets connected to this server */
 	private List<ClientSocketHandler> clientSockets;
-	
+	/** A lock object used to synchronize with this thread */
 	private Object lockObject;
 	
 	/**
 	 * Creates a new ServerSocketHandler with the given port number.
 	 * Does not start the server immediately,
 	 * @param port The port for this server to listen on.
+	 * @param lockObject The lock Object for synchronizing with NetworkManager
 	 */
 	public ServerSocketHandler(int port, Object lockObject) {
 		this.port = port;

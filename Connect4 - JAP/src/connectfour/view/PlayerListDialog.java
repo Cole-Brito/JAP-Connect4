@@ -1,7 +1,16 @@
+/**
+ * Connect4
+ * Authors: Cole Brito, Paul Squires 
+ * Section: 301
+ * Professor: Daniel Cormier
+ * Last Modified: April 14, 2024
+ * Algonquin College CET-CS
+ * JAP - Assignment 3-2
+ */
+
 package connectfour.view;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -14,7 +23,14 @@ import connectfour.model.PlayerType;
 import connectfour.model.network.NetworkManager;
 import connectfour.model.network.NetworkManager.SessionType;
 
+/**
+ * Displays a list of players and allows player to rename local players
+ */
 public class PlayerListDialog {
+	
+	/**
+	 * Display the dialog, populated with players from PlayerManager
+	 */
 	public void showPlayerList() {
 		var playerManager = PlayerManager.getInstance();
 		var p1 = playerManager.getLocalPlayer1();
